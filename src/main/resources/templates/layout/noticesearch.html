@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search Page</title>
+    <link rel="stylesheet" th:href="@{css/noticeSearch.css}" href="../../static/css/noticeSearch.css">
+    <!-- jQuery and jQuery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
+
+    <script>
+        $(function() {
+            // Set locale to Japanese for the datepicker
+            $.datepicker.setDefaults($.datepicker.regional['ja']);
+
+            // Initialize the date picker for beginYmd and endYmd with Japanese localization
+            $("#beginYmd, #endYmd").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeYear: true,
+            changeMonth: true,
+            showMonthAfterYear: true,
+            yearSuffix: '年',
+            regional: 'ja'      // Enable changing the month
+            });
+
+            // Handle collapse/expand functionality
+            $(".search-close").on("click", function(e) {
+                e.preventDefault();
+                var $contentRows = $(".search-criteria tr:not(:first-child):not(:last-child)");
+
+                if ($contentRows.is(":visible")) {
+                    $contentRows.hide();
+                    $(this).text("Search Criteria Open");
+                } else {
+                    $contentRows.show();
+                    $(this).text("Search Criteria Close");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div th:replace="~{fragments/Navbar :: Navbar}"></div>
+<div class="breadcrumb-container">
+    <div class="breadcrumb">
+        <span>TOP</span>
+        <span class="separator">&gt;</span>
+        <span>Admin Menu</span>
+        <span class="separator">&gt;</span>
+        <span>Notice List</a></span>
+    </div>
+    <div class="page-number">S15</div>
+</div>
+<form id="searchForm" th:action="@{/search}" method="get">
+    <table class="search-criteria">
+        <tr>
+            <td colspan="3" class="header">Search Criteria</td>
+            <td colspan="1" class="header">
+                <a href="#" class="search-close">Search Criteria Close</a>
+            </td>
+        </tr>
+        <tr class="content-row">
+            <td class="label">Display period</td>
+            <td>
+                <input type="text" id="beginYmd" name="beginYmd" placeholder="YYYYMMDD"/>
+                ~
+                <input type="text" id="endYmd" name="endYmd" placeholder="YYYYMMDD"/>
+            </td>
+            <td class="label">Severity</td>
+            <td>
+                <input type="checkbox" id="importantFlg" name="importantFlg" value='Y'/>
+                <label for="importantFlg" style="margin-top:-100px">Show only important</label>
+            </td>
+        </tr>
+        <tr class="content-row">
+            <td class="label">Subject of publication</td>
+            <td colspan="3" >
+                <select name="subject">
+                    <option value="every">every</option>
+                </select>
+            </td>
+        </tr>
+        <tr class="content-row1">
+            <td class="label">title</td>
+            <td>
+                <input type="text" id="title" name="title"/>
+            </td>
+            <td class="label">this paper</td>
+            <td>
+                <input type="text" id="text" name="text"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="button-row">
+                <button type="button" class="new-btn" onclick="window.location.href='/register'">new</button>
+                <button type="submit" class="search-btn">search</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<!-- Only display table if there are results -->
+<div class="results-info" th:if="${#lists.size(baseInfos) > 0}">
+    <p th:text="${#lists.size(baseInfos)} + ' hit 1~'+${#lists.size(baseInfos)}+' display'"></p>
+</div>
+
+<table class="results-table" th:if="${#lists.size(baseInfos) > 0}">
+    <thead>
+    <tr>
+        <th>Display period</th>
+        <th>Subject of publication</th>
+        <th>title</th>
+        <th>update</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="baseInfo : ${baseInfos}">
+        <td th:text="${#dates.format(baseInfo.beginYmd, 'yyyy-MM-dd')} + ' ~ '+ ${#dates.format(baseInfo.endYmd, 'yyyy-MM-dd')}"></td>
+        <td>every</td>
+        <td>
+            <a href="#">
+                <span th:text="${baseInfo.title}"></span>
+            </a>
+        </td>
+        <td th:text="${#dates.format(baseInfo.updTimestamp, 'yyyy/MM/dd HH:mm:ss')}">2024/09/12 10:04:44<br/>Katsuhiro Sekito</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

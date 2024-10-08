@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toray.ojt.web.mapper.BaseInfoMapper">
+<!--    search querry-->
+    <select id="searchBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoSearchDto"
+            resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">
+        SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp
+        FROM base_info
+        WHERE 1=1
+        <if test="title != null and title != ''">
+            AND TITLE LIKE '%' || #{title} || '%'
+        </if>
+        <if test="text != null and text != ''">
+            AND Text LIKE '%' || #{text} || '%'
+        </if>
+        <if test="importantFlg != null ">
+            AND Important_Flg = 'Y'
+        </if>
+        <if test="endYmd != null and endYmd != ''">
+            AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+        </if>
+
+        ORDER BY CASE WHEN important_flg = 'Y' THEN 1 ELSE 0
+        END DESC
+
+
+    </select>
+
+<!--    SELECT QUERRY FOR GET ROLE AND ROLE NAME-->
+    <select id="fetchRoles" resultType="com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto">
+        SELECT ROLE, ROLE_NAME as roleName
+        FROM base_info_view_role_name
+    </select>
+
+<!--    insert querry-->
+
+    <insert id="insertBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoInsertDto">
+        <if test="importantFlg != null ">
+          INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
+          BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
+          VALUES (base_info_seq.nextval, SYSTIMESTAMP, 'user2', SYSTIMESTAMP, 'user2',
+          TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , #{importantFlg}, #{title}, #{text})
+        </if>
+        INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
+        BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
+        VALUES (base_info_seq.nextval, SYSTIMESTAMP, 'user2', SYSTIMESTAMP, 'user2',
+        TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , 'N', #{title}, #{text})
+        <!-- Ensure you set the SEQ_INFO value back to the DTO -->
+        <selectKey keyProperty="seqInfo" resultType="long" order="AFTER">
+            SELECT base_info_seq.currval FROM dual
+        </selectKey>
+    </insert>
+
+    <insert id="insertBaseInfoRole" parameterType="com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto">
+        INSERT INTO base_info_view_role (SEQ_INFO, ROLE)
+        VALUES (base_info_seq.currval, #{role})
+    </insert>
+</mapper>
+
