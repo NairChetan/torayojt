@@ -1,5 +1,6 @@
 package com.toray.ojt.web.mapper;
 
+import com.toray.ojt.web.dto.BaseInfoDTO;
 import com.toray.ojt.web.dto.BaseInfoInsertDto;
 import com.toray.ojt.web.dto.BaseInfoSearchDto;
 
@@ -7,11 +8,10 @@ import com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto;
 import com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto;
 import org.apache.ibatis.annotations.Mapper;
 
-
 import java.util.List;
-
 @Mapper
 public interface BaseInfoMapper {
+    List<BaseInfoDTO> findBaseInfo();
     // Search based on the BaseInfoSearchDto criteria
     List<BaseInfoSearchDto> searchBaseInfo(BaseInfoSearchDto searchDto);
 
@@ -23,5 +23,3 @@ public interface BaseInfoMapper {
     // Insert into base_info_view_role
     void insertBaseInfoRole(BaseInfoViewRoleInsertDto baseInfoViewRoleInsertDto);
 }
-
-

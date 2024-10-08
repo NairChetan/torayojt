@@ -4,6 +4,7 @@ import com.toray.ojt.web.dto.BaseInfoInsertDto;
 import com.toray.ojt.web.dto.BaseInfoSearchDto;
 import com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto;
 import com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto;
+import com.toray.ojt.web.dto.BaseInfoDTO;
 import com.toray.ojt.web.mapper.BaseInfoMapper;
 import com.toray.ojt.web.service.BaseInfoService;
 import org.slf4j.Logger;
@@ -53,6 +54,10 @@ public class BaseInfoServiceImpl implements BaseInfoService {
             throw new RuntimeException("Invalid date format. Please use dd-MM-yyyy", e);
         }
     }
+    public List<BaseInfoDTO> getBaseInfo() {
+        return baseInfoMapper.findBaseInfo();
+    }
+
 
     @Override
     @Transactional

@@ -5,10 +5,12 @@ import com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto;
 import com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto;
 import com.toray.ojt.web.entity.BaseInfo;
 import com.toray.ojt.web.dto.BaseInfoSearchDto;
+import com.toray.ojt.web.dto.BaseInfoDTO;
 
 import java.util.List;
 
 public interface BaseInfoService {
+    List<BaseInfoDTO> getBaseInfo();
     List<BaseInfoSearchDto> searchBaseInfo(BaseInfoSearchDto searchDto);
 
     List<BaseinfoViewRoleNameGetDto> getRoles();  // Fetch roles from base_info_view_role_name

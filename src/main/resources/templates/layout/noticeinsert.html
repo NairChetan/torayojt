@@ -26,18 +26,27 @@
             $.get('/roles', function(roles) {
                 roles.forEach(function(role) {
                     let checkbox = `<div class="checkbox-item">
-                                        <input type="checkbox" name="roles" value="${role.role}" />
+                                        <input type="checkbox" name="roles" class="item-checkbox" value="${role.role}" checked />
                                         <label>[${role.role}] ${role.roleName}</label>
                                     </div>`;
                     $('.checkbox-list').append(checkbox);
                 });
             });
+
+            // Toggle all checkboxes on button click
+            $('.all-btn').click(function() {
+                let allChecked = $('.item-checkbox').length === $('.item-checkbox:checked').length;
+                // If all are checked, uncheck them; otherwise, check them
+                $('.item-checkbox').prop('checked', !allChecked);
+            });
         });
     </script>
 
 
+
 </head>
 <body>
+<div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
     <div class="breadcrumb">
         <span>TOP</span>
@@ -48,7 +57,7 @@
         <span class="separator">&gt;</span>
         <span>Notice Detail</span>
     </div>
-<!--    <div class="page-number">S15</div>-->
+    <div class="page-number">S17</div>
 </div>
 
 <div class="form-container">

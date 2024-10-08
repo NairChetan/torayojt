@@ -1,8 +1,101 @@
-* body{
-   padding:10px
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 100;
+    src: url(https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2) format('woff2');
 }
-/* Header Styling */
 
+/* Apply Roboto font to the entire document */
+body {
+    margin-right: 22px;
+    margin-left: 22px;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.content {
+    margin-top: 10px;
+}
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+.notice, .guide {
+    background-color: #f3f0f9;
+    border: 1px solid #000000;
+    border-radius: 0px;
+    padding: 15px;
+    width: 30%;
+    height: 250px;
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: 0px;
+    margin-top: 15px;
+}
+
+.notice h4, .guide h4 {
+    position: absolute;
+    top: -25px;
+    left: 15px;
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.notice ul li, .guide ul li {
+    list-style-type: none;
+}
+
+/* Combined container for ToDo List and Answer List */
+.todo-answer-container {
+    width: 65%;
+    margin-top: 0px;
+}
+
+/* ToDo List Section */
+.todo-list {
+    margin-right: 0px;
+    margin-bottom: 25px;
+}
+
+#todo-checkbox {
+    color: blue;
+}
+
+/* Answer List Section */
+.answer-list {
+    margin-right: 0px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #000000;
+}
+
+td {
+    padding: 0px;
+    text-align: left;
+}
+
+td a {
+    text-decoration: none;
+    color: blue;
+}
+
+th {
+    padding: 3px;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+/* top.css */
+/* Header Styling */
 .header-logo {
     display: flex;
     justify-content: space-between;
@@ -151,148 +244,4 @@
     font-size: 12px;
     height: 20px;
     border: 1px solid #ccc;
-}
-.breadcrumb-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3px;
-}
-
-.breadcrumb {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-}
-
-.breadcrumb .separator {
-    margin: 0 8px;
-    color: #666;
-}
-
-.page-number {
-    font-size: 14px;
-}
-
-/* Search Criteria Styles */
-
-.search-criteria {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.search-criteria .header {
-    background-color: #C0C0C0;
-    padding: 5px;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-.search-criteria .search-close {
-       text-align: right;
-
-   }
-
-.search-criteria td {
-    padding: 5px;
-    border: 1px solid #ccc;
-}
-
-.search-criteria .label {
-    width: 150px;
-    background-color: #F5F5F5;
-}
-
-.search-criteria input[type="text"],
-.search-criteria select {
-    width: 200px;
-    padding: 2px;
-}
-
-.button-row {
-    text-align: right;
-}
-
-.new-btn,
-.search-btn {
-    margin-left: 10px;
-    padding: 2px 10px;
-}
-
-.search-criteria .search-close {
-    color: #FFFFFF;
-    font-weight:5px;
-    text-decoration: none;
-    cursor: pointer;
-    display: block;
-    text-align: right;
-}
-
-.search-criteria .header {
-    background-color: #C0C0C0;
-}
-/* Results Styles */
-.results-info {
-    margin: 10px 0;
-}
-
-.results-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.results-table th,
-.results-table td {
-    border: 1px solid #ccc;
-    padding: 5px;
-}
-.results-table th,
-  {
-    border: 1px solid #ccc;
-    padding: 5px;
-    vertical-align: middle;
-    text-align: center;
-}
-
-
-.results-table th {
-    text-align: center;
-    background-color: #F5F5F5;
-}
-.results-table a {
-    color: blue;
-    text-decoration: none;
-}
-
-.results-table a:hover {
-    text-decoration: underline;
-}
-
-/* Updated background color for input fields */
-.search-criteria input[type="text"],
-.search-criteria select,
-.search-criteria input[type="checkbox"] {
-    background-color: #EBF3F9;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-.search-criteria select {
-    width: 700px;
-}
-
-.content-row1 input[type="text"] {
-width: 400px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .label {
-        width: 100px;
-    }
-
-    .condition-table td,
-    .content-table td {
-        display: block;
-        width: 100%;
-    }
 }

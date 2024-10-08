@@ -36,11 +36,16 @@
 <!--    insert querry-->
 
     <insert id="insertBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoInsertDto">
+        <if test="importantFlg != null ">
+          INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
+          BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
+          VALUES (base_info_seq.nextval, SYSTIMESTAMP, 'user2', SYSTIMESTAMP, 'user2',
+          TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , #{importantFlg}, #{title}, #{text})
+        </if>
         INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
         BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
         VALUES (base_info_seq.nextval, SYSTIMESTAMP, 'user2', SYSTIMESTAMP, 'user2',
-        TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , #{importantFlg}, #{title}, #{text})
-
+        TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , 'N', #{title}, #{text})
         <!-- Ensure you set the SEQ_INFO value back to the DTO -->
         <selectKey keyProperty="seqInfo" resultType="long" order="AFTER">
             SELECT base_info_seq.currval FROM dual

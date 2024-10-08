@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toray.ojt.web.mapper.TGuideMapper">
+    <select id="findTGuide" resultType="com.toray.ojt.web.dto.TGuideDTO">
+        SELECT
+        TITLE AS title,
+        END_YMD AS endYmd,
+        IMPORTANT_FLG AS importantFlg
+        FROM T_GUIDE
+        WHERE CURRENT_DATE BETWEEN BEGIN_YMD AND END_YMD
+        ORDER BY IMPORTANT_FLG desc
+    </select>
+</mapper>
