@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Content Registration</title>
+    <link rel="stylesheet" th:href="@{css/noticeinsert.css}">
+
+    <!-- jQuery and jQuery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+        $(function() {
+            // Initialize date picker for display period
+            $("#beginYmd, #endYmd").datepicker({
+                dateFormat: "dd-mm-yy"
+            });
+        });
+    </script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Fetch roles via AJAX
+            $.get('/roles', function(roles) {
+                roles.forEach(function(role) {
+                    let checkbox = `<div class="checkbox-item">
+                                        <input type="checkbox" name="roles" value="${role.role}" />
+                                        <label>[${role.role}] ${role.roleName}</label>
+                                    </div>`;
+                    $('.checkbox-list').append(checkbox);
+                });
+            });
+        });
+    </script>
+
+
+</head>
+<body>
+<div class="breadcrumb-container">
+    <div class="breadcrumb">
+        <span>TOP</span>
+        <span class="separator">&gt;</span>
+        <span>Admin Menu</span>
+        <span class="separator">&gt;</span>
+        <span><a href="/search" style="text-decoration:none">Notice List</a></span>
+        <span class="separator">&gt;</span>
+        <span>Notice Detail</span>
+    </div>
+<!--    <div class="page-number">S15</div>-->
+</div>
+
+<div class="form-container">
+    <div class="header-buttons">
+        <a href="/search" class="back-link">Back</a>
+        <button type="button" class="register-btn">register</button>
+    </div>
+
+    <form id="contentForm" th:action="@{/register}" method="post">
+        <div class="section">
+            <h2>Display Condition</h2>
+            <table class="condition-table">
+                <tr>
+                    <td class="label">Display Period</td>
+                    <td>
+                        <input type="text" id="beginYmd" name="beginYmd" />
+                        ~
+                        <input type="text" id="endYmd" name="endYmd" />
+                    </td>
+                    <td class="label">Importance</td>
+                    <td>
+                        <input type="checkbox" id="importantFlg" name="importantFlg" value="Y"/>
+                        <label for="importantFlg">Important</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Open List   <button type="button" class="all-btn">all</button></td>
+                    <td colspan="3">
+
+                        <div class="checkbox-list">
+
+                            <div class="checkbox-item">
+
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Create</td>
+                    <td></td>
+                    <td class="label">Update</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Display Content</h2>
+            <table class="content-table">
+                <tr>
+                    <td class="label">Title</td>
+                    <td>
+                        <input type="text" id="title" name="title" class="full-width" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Content</td>
+                    <td>
+                        <textarea id="text" name="text" class="full-width" rows="10"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Attachment File</td>
+                    <td>
+                        <input type="file" id="attachment" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+
+    <div class="footer-buttons">
+        <a href="/search" class="back-link">Back</a>
+        <button type="submit" form="contentForm" class="register-btn">register</button>
+    </div>
+</div>
+</body>
+</html>

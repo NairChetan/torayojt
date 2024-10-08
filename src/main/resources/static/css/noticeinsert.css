@@ -1,0 +1,118 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.breadcrumb-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.breadcrumb .separator {
+    margin: 0 8px;
+    color: #666;
+}
+
+.page-number {
+    font-size: 14px;
+}
+
+.form-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Header and Footer Buttons */
+.header-buttons,
+.footer-buttons {
+    text-align: right;
+    margin: 10px 0;
+}
+
+.back-link,
+.register-btn {
+    margin-left: 10px;
+    padding: 2px 10px;
+    text-decoration: none;
+}
+
+/* Section Styles */
+.section {
+    margin-bottom: 20px;
+}
+
+.section h2 {
+    background-color: #C0C0C0;
+    padding: 5px;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Table Styles */
+.condition-table,
+.content-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.condition-table td,
+.content-table td {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.label {
+    background-color: #F5F5F5;
+    width: 150px;
+    font-weight: normal;
+}
+
+/* Form Controls */
+input[type="text"],
+textarea {
+    padding: 2px;
+}
+
+.full-width {
+    width: 98%;
+}
+
+/* Checkbox List */
+.checkbox-list {
+    height: 100px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+.checkbox-item {
+    margin-bottom: 3px;
+}
+
+.all-btn {
+    margin-bottom: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .label {
+        width: 100px;
+    }
+
+    .condition-table td,
+    .content-table td {
+        display: block;
+        width: 100%;
+    }
+}
+
