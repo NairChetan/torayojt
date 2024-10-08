@@ -3,9 +3,37 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.toray.ojt.web.mapper.UserDetailsMapper">
-    <select id="findUserNameByPartyId" parameterType="String" resultType="com.toray.ojt.web.entity.UserDetails">
-        SELECT PARTY_ID, PARTY_NAME_KJ, PARTY_NAME_KN, PARTY_NAME_EN
+
+    <!-- Result Map for UserDetails -->
+    <resultMap id="UserDetailsResultMap" type="com.toray.ojt.web.entity.UserDetails">
+        <result property="partyId" column="PARTY_ID"/>
+        <result property="partyKind" column="PARTY_KIND"/>
+        <result property="partyNameKj" column="PARTY_NAME_KJ"/>
+        <result property="partyNameKn" column="PARTY_NAME_KN"/>
+        <result property="partyNameEn" column="PARTY_NAME_EN"/>
+        <result property="zipCode" column="ZIP_CODE"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="tel" column="TEL"/>
+        <result property="fax" column="FAX"/>
+        <result property="email" column="EMAIL"/>
+        <result property="state" column="STATE"/>
+        <result property="updTimestamp" column="UPD_TIMESTAMP"/>
+        <result property="updUserid" column="UPD_USERID"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="email2" column="EMAIL2"/>
+        <result property="email3" column="EMAIL3"/>
+        <result property="email4" column="EMAIL4"/>
+        <result property="email5" column="EMAIL5"/>
+        <result property="crtTimestamp" column="CRT_TIMESTAMP"/>
+        <result property="crtUserid" column="CRT_USERID"/>
+        <result property="sortNo" column="SORT_NO"/>
+    </resultMap>
+
+    <!-- SQL Select Statement -->
+    <select id="findUserNameByPartyId" parameterType="String" resultMap="UserDetailsResultMap">
+        SELECT *
         FROM BASE_PARTY
         WHERE PARTY_ID = #{partyId}
     </select>
+
 </mapper>

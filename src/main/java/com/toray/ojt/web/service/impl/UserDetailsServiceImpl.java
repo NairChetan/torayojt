@@ -14,7 +14,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userDetailsMapper = userDetailsMapper;
     }
     @Override
-    public UserDetails findByPartyId(String partyId) {
+    public UserDetails findUserNameByPartyId(String partyId) {
         UserDetails userDetails = userDetailsMapper.findUserNameByPartyId(partyId);
         return userDetails;
     }

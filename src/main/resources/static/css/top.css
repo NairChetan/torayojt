@@ -1,0 +1,247 @@
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 100;
+    src: url(https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2) format('woff2');
+}
+
+/* Apply Roboto font to the entire document */
+body {
+    margin-right: 22px;
+    margin-left: 22px;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.content {
+    margin-top: 10px;
+}
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
+.notice, .guide {
+    background-color: #f3f0f9;
+    border: 1px solid #000000;
+    border-radius: 0px;
+    padding: 15px;
+    width: 30%;
+    height: 250px;
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: 0px;
+    margin-top: 15px;
+}
+
+.notice h4, .guide h4 {
+    position: absolute;
+    top: -25px;
+    left: 15px;
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.notice ul li, .guide ul li {
+    list-style-type: none;
+}
+
+/* Combined container for ToDo List and Answer List */
+.todo-answer-container {
+    width: 65%;
+    margin-top: 0px;
+}
+
+/* ToDo List Section */
+.todo-list {
+    margin-right: 0px;
+    margin-bottom: 25px;
+}
+
+#todo-checkbox {
+    color: blue;
+}
+
+/* Answer List Section */
+.answer-list {
+    margin-right: 0px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #000000;
+}
+
+td {
+    padding: 0px;
+    text-align: left;
+}
+
+td a {
+    text-decoration: none;
+    color: blue;
+}
+
+th {
+    padding: 3px;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+/* top.css */
+/* Header Styling */
+.header-logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 2px solid #E0E0E0;
+    background-color: #ffffff;
+    padding-top:0px;
+}
+
+.logo-text {
+    display: flex;
+    justify-content:space-between;
+    gap:13px;
+    align-items: flex-start;
+}
+
+.company-name {
+    font-size: 15px;
+    font-weight: bold;
+    color: #04419D;
+    margin-top: 15px;
+}
+
+.company-slogan {
+    font-size: 12px;
+    color: #000000;
+    font-weight: bold;
+    margin-top: 19px;
+}
+.logo-text img{
+    margin-top: 15px;
+    width:200px;
+}
+.login-name{
+  margin-left:300px;
+  margin-top: 15px;
+}
+.logout {
+    color: #04419D;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right:20px;
+    margin-top: 15px;
+}
+
+.logout:hover {
+    text-decoration: underline;
+}
+
+/* Main Menu Styling */
+.header-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap:1px;
+    border-top: 4px solid #51718b;
+    background-color:#d8d8d8;
+    padding-top:3px ;
+    padding-bottom:0px;
+}
+.header-menu nav ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+.header-menu nav ul li {
+    position: relative;
+    list-style-type: none;
+}
+.header-menu nav ul li a {
+    margin-left: 50px;
+    text-decoration: none;
+    color: #333;
+    padding-top:1px ;
+    padding-bottom:10px;
+    font-weight:2px;
+    padding-right:1px;
+}
+.header-menu nav ul li a:hover{
+  background-color:#ffffff;
+  padding:2px;
+}
+/* Dropdown styles */
+.header-menu nav ul li .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50px;
+    background-color: #ffffff;
+    width: 250px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    border-radius: 5px;
+    padding: 0;
+}
+
+/* Parent list item */
+.header-menu nav ul li {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+/* Dropdown items */
+.header-menu nav ul li .dropdown li {
+    padding: 0;
+    margin: 0;
+}
+
+/* Dropdown links */
+.header-menu nav ul li .dropdown li a {
+    color: black;
+    background-color: white;
+    padding: 5px;
+    display: block;
+    border-bottom: 1px solid #e0e0e0;
+    margin:0;
+}
+
+/* Add hover effect on links */
+.header-menu nav ul li .dropdown li a:hover {
+    background-color: #e5e5e5;
+}
+
+/* Show the dropdown on hover */
+.header-menu nav ul li:hover .dropdown {
+    display: block;
+}
+.header-menu nav ul li.active a {
+    background-color: #f2f2f2;
+    padding:2.5px;
+}
+
+.header-menu nav ul .right-side {
+    display: flex;
+    align-items:right;
+    margin-left:30px;
+    gap: 70px;
+}
+.header-menu nav ul li select {
+    padding: 2px 5px;
+    font-weight: bold;
+    font-size: 12px;
+    height: 20px;
+    border: 1px solid #ccc;
+}

@@ -6,13 +6,14 @@ import com.toray.ojt.web.service.BaseAttributeService;
 import com.toray.ojt.web.service.UserDetailsService;
 import com.toray.ojt.web.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-// Import HttpSession
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ public class LoginController {
     private final UserService userService;
     private final UserDetailsService userDetailsService;
     private final BaseAttributeService baseAttributeService;
+
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     public LoginController(UserService userService, UserDetailsService userDetailsService, BaseAttributeService baseAttributeService) {
         this.userService = userService;
@@ -34,11 +37,17 @@ public class LoginController {
         model.addAttribute("error", null);
         return "layout/login";
     }
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.invalidate();
+        return "redirect:/";
+    }
 
     @GetMapping("/loginsuccess")
-    public String loginsuccess(Model model,HttpSession session) {
-        model.addAttribute("userId",session.getAttribute("userId"));
-        model.addAttribute("role",session.getAttribute("role"));
+    public String loginsuccess(Model model, HttpSession session) {
+        model.addAttribute("userId", session.getAttribute("userId"));
+        model.addAttribute("role", session.getAttribute("role"));
+        model.addAttribute("userName", session.getAttribute("userNameEn"));
         return "layout/loginsuccess";
     }
 
@@ -62,8 +71,10 @@ public class LoginController {
         }
 
         // Retrieve user details and role
-        UserDetails userDetails = userDetailsService.findByPartyId(user.getPartyId());
+        UserDetails userDetails = userDetailsService.findUserNameByPartyId(user.getPartyId());
+        log.debug("UserDetails: {}", userDetails);
         String basePartyAttribute = baseAttributeService.findAttributeNameByPartyId(user.getPartyId());
+        System.out.println(basePartyAttribute);
 
         // Add user information to session
         session.setAttribute("userId", user.getPartyId());
@@ -88,8 +99,9 @@ public class LoginController {
         returnData.put("userNameEn", userDetails.getPartyNameEn());
         returnData.put("Role", basePartyAttribute);
         System.out.println(returnData);
-
-        // If credentials are valid, redirect to home page or dashboard
+        if(basePartyAttribute.equalsIgnoreCase("base_admin")) {
+            return "redirect:/toppage";
+        }
         return "redirect:/loginsuccess";
     }
 }
