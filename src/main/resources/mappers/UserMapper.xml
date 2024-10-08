@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.toray.ojt.web.mapper.UserMapper">
+    <!-- Result Map to map database columns to User entity properties -->
+    <resultMap id="UserResultMap" type="com.toray.ojt.web.entity.User">
+        <id property="partyId" column="PARTY_ID" />
+        <result property="accountId" column="ACCOUNT_ID" />
+        <result property="accountPassword" column="ACCOUNT_PASSWORD" />
+        <result property="state" column="STATE" />
+        <result property="expDate" column="EXP_DATE" />
+        <result property="failedLoginCount" column="FAILED_LOGIN_COUNT" />
+        <result property="updTimestamp" column="UPD_TIMESTAMP" />
+        <result property="updUserid" column="UPD_USERID" />
+        <result property="failedLoginAttempts" column="FAILED_LOGIN_ATTEMPTS" />
+        <result property="accountKind" column="ACCOUNT_KIND" />
+        <result property="lastLoginDate" column="LAST_LOGIN_DATE" />
+        <result property="crtTimestamp" column="CRT_TIMESTAMP" />
+        <result property="crtUserid" column="CRT_USERID" />
+        <result property="dataUpdTimestamp" column="DATA_UPD_TIMESTAMP" />
+        <result property="dataUpdUserid" column="DATA_UPD_USERID" />
+        <result property="emailLoginState" column="EMAIL_LOGIN_STATE" />
+    </resultMap>
+
+    <!-- SQL to find user by account ID -->
+    <select id="findByAccountId" parameterType="String" resultMap="UserResultMap">
+        SELECT * FROM BASE_PARTY_ACCOUNT WHERE ACCOUNT_ID = #{accountId}
+    </select>
+</mapper>
+
