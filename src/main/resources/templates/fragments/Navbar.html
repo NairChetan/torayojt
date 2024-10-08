@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Navbar</title>
+</head>
+<body>
+
+<!-- src/main/resources/templates/fragments/navbar.html -->
+<header th:fragment="Navbar">
+    <!-- Logo section moved outside the header -->
+    <div class="header-logo">
+        <div class="logo-text">
+            <img style="width:80px;margin-top: 10px;" th:src="@{/images/Toray.png}">
+            <p class="company-slogan">Innovation by Chemistry</p>
+            <img th:src="@{/images/gips.jpg}">
+            <p class="login-name" >Katsuhiro Sekito</p>
+        </div>
+        <!-- Logout option aligned to the right -->
+        <a href="#" class="logout">Logout</a>
+    </div>
+
+    <!-- Main navigation bar starts here -->
+    <div class="header-menu">
+        <nav>
+            <ul>
+                <li class="active"><a href="#">TOP</a></li>
+                <li class="#request-menu"><a href="#">Request Menu</a></li>
+                <li class="#answer-menu"> <a href="#">Answer Menu</a></li>
+                <li class="#search"><a href="#">Search</a></li>
+                <li class="#search-list"><a href="#">Search List</a></li>
+                <li class="#report-menu"><a href="#">Report Menu</a></li>
+                <li class="#report-menu"><a href="#">更新日時</a></li>
+
+                <div class="right-side">
+                    <!-- Admin Menu with Dropdown -->
+                    <li>
+                        <a href="#">Admin Menu</a>
+                        <ul class="dropdown">
+                            <li><a href="#">Notice</a></li>
+                            <li><a href="#">GIPS Guide</a></li>
+                            <li><a href="#">Group</a></li>
+                            <li><a href="#">User</a></li>
+                            <li><a href="#">Maintenance</a></li>
+                            <li><a href="#">Refresh DB Info</a></li>
+                            <li><a href="#">DB Definition</a></li>
+                            <li><a href="#">Confirmation of the authority</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Language Select -->
+                    <li >
+                        <select>
+                            <option>English</option>
+                            <option>Japanese</option>
+                        </select>
+                    </li>
+                </div>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+</body>
+</html>
