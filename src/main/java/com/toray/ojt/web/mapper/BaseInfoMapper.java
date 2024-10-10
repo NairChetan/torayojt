@@ -1,12 +1,9 @@
 package com.toray.ojt.web.mapper;
 
-import com.toray.ojt.web.dto.BaseInfoDTO;
-import com.toray.ojt.web.dto.BaseInfoInsertDto;
-import com.toray.ojt.web.dto.BaseInfoSearchDto;
+import com.toray.ojt.web.dto.*;
 
-import com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto;
-import com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 @Mapper
@@ -22,4 +19,18 @@ public interface BaseInfoMapper {
 
     // Insert into base_info_view_role
     void insertBaseInfoRole(BaseInfoViewRoleInsertDto baseInfoViewRoleInsertDto);
+
+    //Fecth notice details based on seqInfo
+    BaseInfoDetailsBasedOnSeqInfoDto getBaseInfoBySeqInfo(@Param("seqInfo") Long seqInfo);
+
+    //Fetch the roles based on seqInfo
+    List<BaseInfoRoleBasedOnSeqInfoDto> getRolesBySeqInfo(Long seqInfo);
+
+    void deleteBySeqInfo(Long seqInfo);
+
+    //Update
+    int updateNotice(@Param("baseInfo") BaseInfoUpdateDto baseInfo);
+
+    BaseInfoUpdateDto getNoticeBySeqInfo(Long seqInfo);
+
 }

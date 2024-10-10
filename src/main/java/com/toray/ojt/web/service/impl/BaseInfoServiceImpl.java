@@ -1,10 +1,6 @@
 package com.toray.ojt.web.service.impl;
 
-import com.toray.ojt.web.dto.BaseInfoInsertDto;
-import com.toray.ojt.web.dto.BaseInfoSearchDto;
-import com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto;
-import com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto;
-import com.toray.ojt.web.dto.BaseInfoDTO;
+import com.toray.ojt.web.dto.*;
 import com.toray.ojt.web.mapper.BaseInfoMapper;
 import com.toray.ojt.web.service.BaseInfoService;
 import org.slf4j.Logger;
@@ -63,6 +59,21 @@ public class BaseInfoServiceImpl implements BaseInfoService {
     @Transactional
     public void insertBaseInfoRole(BaseInfoViewRoleInsertDto roleInsertDto) {
         baseInfoMapper.insertBaseInfoRole(roleInsertDto);
+    }
+
+    @Override
+    public BaseInfoDetailsBasedOnSeqInfoDto getBaseInfoBySeqInfo(Long seqInfo) {
+        return baseInfoMapper.getBaseInfoBySeqInfo(seqInfo);
+    }
+
+    @Override
+    public List<BaseInfoRoleBasedOnSeqInfoDto> getRolesBySeqInfo(Long seqInfo) {
+        return baseInfoMapper.getRolesBySeqInfo(seqInfo);
+    }
+
+    @Override
+    public void deleteBaseInfoBySeqInfo(Long seqInfo) {
+        baseInfoMapper.deleteBySeqInfo(seqInfo);
     }
 
     private void convertDates(BaseInfoInsertDto dto) throws ParseException {

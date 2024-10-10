@@ -38,13 +38,15 @@
                 }
             });
         });
+
+
     </script>
 </head>
 <body>
 <div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
     <div class="breadcrumb">
-        <span>TOP</span>
+        <span><a href="/toppage" style="text-decoration:none">TOP</a></span>
         <span class="separator">&gt;</span>
         <span>Admin Menu</span>
         <span class="separator">&gt;</span>
@@ -119,7 +121,7 @@
         <td th:text="${#dates.format(baseInfo.beginYmd, 'yyyy-MM-dd')} + ' ~ '+ ${#dates.format(baseInfo.endYmd, 'yyyy-MM-dd')}"></td>
         <td>every</td>
         <td>
-            <a href="#">
+            <a th:href="@{/noticeDetail/{seqInfo}(seqInfo=${baseInfo.seqInfo})}">
                 <span th:text="${baseInfo.title}"></span>
             </a>
         </td>

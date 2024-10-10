@@ -13,6 +13,7 @@ public class BaseInfoSearchDto {
     private Date beginYmd;
     private Date endYmd;
     private Timestamp updTimestamp;
+    private Long seqInfo;
 
     public String getImportantFlg() {
         return importantFlg;
@@ -61,5 +62,13 @@ public class BaseInfoSearchDto {
 
     public void setUpdTimestamp(Timestamp updTimestamp) {
         this.updTimestamp = updTimestamp;
+    }
+
+    public Long getSeqInfo() {
+        return seqInfo;
+    }
+
+    public void setSeqInfo(Long seqInfo) {
+        this.seqInfo = seqInfo;
     }
 }

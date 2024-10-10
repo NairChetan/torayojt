@@ -5,7 +5,7 @@
 <!--    search querry-->
     <select id="searchBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoSearchDto"
             resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">
-        SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp
+        SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp,SEQ_INFO as seqInfo
         FROM base_info
         WHERE 1=1
         <if test="title != null and title != ''">
@@ -42,10 +42,12 @@
           VALUES (base_info_seq.nextval, SYSTIMESTAMP, 'user2', SYSTIMESTAMP, 'user2',
           TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , #{importantFlg}, #{title}, #{text})
         </if>
+        <if test="importantFlg == null ">
         INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
         BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
         VALUES (base_info_seq.nextval, SYSTIMESTAMP, 'user2', SYSTIMESTAMP, 'user2',
         TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , 'N', #{title}, #{text})
+        </if>
         <!-- Ensure you set the SEQ_INFO value back to the DTO -->
         <selectKey keyProperty="seqInfo" resultType="long" order="AFTER">
             SELECT base_info_seq.currval FROM dual
@@ -56,5 +58,36 @@
         INSERT INTO base_info_view_role (SEQ_INFO, ROLE)
         VALUES (base_info_seq.currval, #{role})
     </insert>
+
+
+    <select id="getBaseInfoBySeqInfo" resultType="com.toray.ojt.web.dto.BaseInfoDetailsBasedOnSeqInfoDto">
+        SELECT
+        CRT_TIMESTAMP as crtTimestamp,
+        CRT_USERID as crtUserId,
+        UPD_TIMESTAMP as updTimestamp,
+        UPD_USERID as updUserId,
+        SEQ_INFO as seqInfo,
+        BEGIN_YMD as beginYmd,
+        END_YMD as endYmd,
+        IMPORTANT_FLG as importantFlg,
+        TITLE as title,
+        TEXT as text,
+        ATTACH_CLASS_NO as attachClassNo
+        FROM
+        BASE_INFO
+        WHERE
+        SEQ_INFO = #{seqInfo}
+    </select>
+    <select id="getRolesBySeqInfo" parameterType="long" resultType="com.toray.ojt.web.dto.BaseInfoRoleBasedOnSeqInfoDto">
+        SELECT ROLE AS role
+        FROM BASE_INFO_VIEW_ROLE
+        WHERE SEQ_INFO = #{seqInfo}
+    </select>
+
+    <delete id="deleteBySeqInfo">
+        DELETE FROM base_info
+        WHERE seq_info = #{seqInfo}
+    </delete>
+
 </mapper>
 

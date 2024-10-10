@@ -156,7 +156,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3px;
+    margin-top:6px;
+    margin-bottom: 6px;
 }
 
 .breadcrumb {

@@ -1,23 +1,18 @@
 package com.toray.ojt.web.controller;
 
-import com.toray.ojt.web.dto.BaseInfoInsertDto;
-import com.toray.ojt.web.dto.BaseInfoSearchDto;
-import com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto;
-import com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto;
+import com.toray.ojt.web.dto.*;
 import com.toray.ojt.web.service.BaseInfoService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -98,5 +93,34 @@ public class BaseInfoController {
 
         // Redirect to some view, perhaps the same form page or a confirmation page
         return "layout/noticeinsert"; // Change to the actual form page or success page
+    }
+
+
+    @GetMapping("/noticeDetail/{seqInfo}")
+    public String getNoticeDetail(@PathVariable Long seqInfo, Model model) {
+        BaseInfoDetailsBasedOnSeqInfoDto notice = baseInfoService.getBaseInfoBySeqInfo(seqInfo);
+        System.out.println(notice.getSeqInfo());
+        model.addAttribute("notice", notice);
+        return "layout/noticeDetails";  // The Thymeleaf view name
+    }
+
+
+    @GetMapping("/noticeDetail/roles/{seqInfo}")
+    public ResponseEntity<List<String>> getRolesBySeqInfo(@PathVariable Long seqInfo) {
+        // Fetch the list of DTOs from the service
+        List<BaseInfoRoleBasedOnSeqInfoDto> roleDtos = baseInfoService.getRolesBySeqInfo(seqInfo);
+
+        // Map the DTOs to extract only the role names (Strings)
+        List<String> roles = roleDtos.stream()
+                .map(BaseInfoRoleBasedOnSeqInfoDto::getRole) // Assuming getRole() returns the role name as String
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(roles); // Return the list of role names
+    }
+
+    @DeleteMapping("/{seqInfo}")
+    public ResponseEntity<Void> deleteBaseInfo(@PathVariable Long seqInfo) {
+        baseInfoService.deleteBaseInfoBySeqInfo(seqInfo);
+        return ResponseEntity.noContent().build(); // 204 No Content
     }
 }
