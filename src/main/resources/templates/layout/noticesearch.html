@@ -43,12 +43,10 @@
 <body>
 <div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
-    <div class="breadcrumb">
-        <span>TOP</span>
-        <span class="separator">&gt;</span>
-        <span>Admin Menu</span>
-        <span class="separator">&gt;</span>
-        <span>Notice List</a></span>
+    <div class="breadcrumb-container">
+        <div class="breadcrumb"><span><a href="/toppage" style="text-decoration:none">TOP</a></span> <span
+                class="separator">&gt;</span> <span>Admin Menu</span> <span class="separator">&gt;</span> <span>Notice List</a></span>
+        </div>
     </div>
     <div class="page-number">S15</div>
 </div>
@@ -75,7 +73,7 @@
         </tr>
         <tr class="content-row">
             <td class="label">Subject of publication</td>
-            <td colspan="3" >
+            <td colspan="3">
                 <select name="subject">
                     <option value="every">every</option>
                 </select>
@@ -123,7 +121,9 @@
                 <span th:text="${baseInfo.title}"></span>
             </a>
         </td>
-        <td th:text="${#dates.format(baseInfo.updTimestamp, 'yyyy/MM/dd HH:mm:ss')}">2024/09/12 10:04:44<br/>Katsuhiro Sekito</td>
+        <td th:text="${#dates.format(baseInfo.updTimestamp, 'yyyy/MM/dd HH:mm:ss')}">2024/09/12 10:04:44<br/>Katsuhiro
+            Sekito
+        </td>
     </tr>
     </tbody>
 </table>

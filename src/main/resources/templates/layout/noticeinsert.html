@@ -19,7 +19,6 @@
     </script>
 
 
-
     <script type="text/javascript">
         $(document).ready(function() {
             // Fetch roles via AJAX
@@ -43,20 +42,14 @@
     </script>
 
 
-
 </head>
 <body>
 <div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
-    <div class="breadcrumb">
-        <span>TOP</span>
-        <span class="separator">&gt;</span>
-        <span>Admin Menu</span>
-        <span class="separator">&gt;</span>
-        <span><a href="/search" style="text-decoration:none">Notice List</a></span>
-        <span class="separator">&gt;</span>
-        <span>Notice Detail</span>
-    </div>
+    <div class="breadcrumb"><span><a href="/toppage" style="text-decoration:none">TOP</a></span> <span
+            class="separator">&gt;</span> <span>Admin Menu</span> <span class="separator">&gt;</span> <span><a
+            href="/search" style="text-decoration:none">Notice List</a></span> <span class="separator">&gt;</span>
+        <span>Notice Detail</span></div>
     <div class="page-number">S17</div>
 </div>
 
@@ -73,9 +66,9 @@
                 <tr>
                     <td class="label">Display Period</td>
                     <td>
-                        <input type="text" id="beginYmd" name="beginYmd" />
+                        <input type="text" id="beginYmd" name="beginYmd"/>
                         ~
-                        <input type="text" id="endYmd" name="endYmd" />
+                        <input type="text" id="endYmd" name="endYmd"/>
                     </td>
                     <td class="label">Importance</td>
                     <td>
@@ -84,7 +77,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Open List   <button type="button" class="all-btn">all</button></td>
+                    <td class="label">Open List
+                        <button type="button" class="all-btn">all</button>
+                    </td>
                     <td colspan="3">
 
                         <div class="checkbox-list">
@@ -111,7 +106,7 @@
                 <tr>
                     <td class="label">Title</td>
                     <td>
-                        <input type="text" id="title" name="title" class="full-width" />
+                        <input type="text" id="title" name="title" class="full-width"/>
                     </td>
                 </tr>
                 <tr>
@@ -123,7 +118,7 @@
                 <tr>
                     <td class="label">Attachment File</td>
                     <td>
-                        <input type="file" id="attachment" />
+                        <input type="file" id="attachment"/>
                     </td>
                 </tr>
             </table>
