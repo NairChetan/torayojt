@@ -25,37 +25,26 @@ public class BaseInfoController {
     }
 
     @GetMapping("/search")
-    public String searchBaseInfo(@RequestParam(required = false) String title,
-                                 @RequestParam(required = false) String text,
-                                 @RequestParam(required = false) String importantFlg,
-                                 @RequestParam(required = false)  @DateTimeFormat(pattern = "yyyy-MM-dd") Date endYmd,
-                                 Model model) {
-
-        // Check if search parameters are empty (initial page load)
-        if (title == null && text == null && importantFlg == null && endYmd == null) {
-            // Do not perform the search, simply return the page with no results
-            model.addAttribute("baseInfos", Collections.emptyList());
-            return "layout/noticesearch"; // Thymeleaf template name
-        }
-
-
-        // Populate the search DTO with the request parameters
-        BaseInfoSearchDto searchDto = new BaseInfoSearchDto();
-        searchDto.setTitle(title);
-        searchDto.setText(text);
-        searchDto.setImportantFlg(importantFlg);
-        searchDto.setEndYmd(endYmd);
-        System.out.println("importantFlg: " + importantFlg);
-        System.out.println("Received endYmd: " + endYmd);
-
-        // Pass the search DTO to the service
-        List<BaseInfoSearchDto> baseInfos = baseInfoService.searchBaseInfo(searchDto);
-
-        // Add the result to the model for Thymeleaf to render
-        model.addAttribute("baseInfos", baseInfos);
-
-        return "layout/noticesearch"; // Thymeleaf template name
+    public String getGuideList(Model model) {
+        List<BaseInfoSearchDto> resultList = baseInfoService.getAllBaseInfo();
+        model.addAttribute("baseInfos", resultList);
+        return "layout/noticesearch";
     }
+    // To fetch filtered guide data
+    @GetMapping("/list")
+    @ResponseBody
+    public List<BaseInfoSearchDto> getSearchBaseInfo(
+            @RequestParam(required = false) String beginYmd,
+            @RequestParam(required = false) String endYmd,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String text,
+            @RequestParam(required = false) String importantFlg
+    ) {
+
+
+        return baseInfoService.searchBaseInfo(beginYmd, endYmd, title, text, importantFlg);
+    }
+
 // to get the roles in the openlist
     @GetMapping("/roles")
     public ResponseEntity<List<BaseinfoViewRoleNameGetDto>> getRoles() {
@@ -122,5 +111,52 @@ public class BaseInfoController {
     public ResponseEntity<Void> deleteBaseInfo(@PathVariable Long seqInfo) {
         baseInfoService.deleteBaseInfoBySeqInfo(seqInfo);
         return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
+
+
+    // Add this method to handle the GET request and load the form
+    @GetMapping("/noticeUpdate/{seqInfo}")
+    public String showUpdateForm(@PathVariable("seqInfo") Long seqInfo, Model model) {
+        BaseInfoDetailsBasedOnSeqInfoDto notice= baseInfoService.getBaseInfoBySeqInfo(seqInfo);// Assuming service gets the data
+        model.addAttribute("baseInfoUpdateDto", notice);
+        System.out.println("ee:");
+        System.out.println(notice.getSeqInfo());
+        return "layout/noticeupdate";
+    }
+
+
+    // New PUT mapping for updating base info and roles
+    @PutMapping("/noticeUpdate/{seqInfo}")
+    public ResponseEntity<String> updateBaseInfo(@PathVariable("seqInfo") Long seqInfo,
+                                                 @ModelAttribute BaseInfoUpdateDto baseInfoUpdateDto,
+                                                 @RequestParam List<String> roles) {
+
+        // Step 1: Set the seqInfo in the DTO
+        baseInfoUpdateDto.setSeqInfo(seqInfo);
+        System.out.println("ee:");
+        System.out.println(baseInfoUpdateDto.getSeqInfo());
+
+        // Step 2: Update the base_info table
+        int updatedRows = baseInfoService.updateBaseInfo(baseInfoUpdateDto);
+
+        if (updatedRows > 0) {
+            // Step 3: Delete existing roles for the given seqInfo
+            baseInfoService.deleteBaseInfoRoles(seqInfo);
+
+            // Step 4: Insert new roles into the base_info_view_role table
+            for (String role : roles) {
+                BaseInfoViewRoleInsertDto roleInsertDto = new BaseInfoViewRoleInsertDto();
+                roleInsertDto.setSeqInfo(seqInfo);
+                roleInsertDto.setRole(role);
+                baseInfoService.insertBaseInfoRoleWithSeqInfo(roleInsertDto);
+            }
+
+            // Return success message
+            return ResponseEntity.ok("Base info and roles updated successfully");
+        } else {
+            // Handle case where base info could not be found or updated
+            return ResponseEntity.status(404).body("Base info not found");
+        }
     }
 }

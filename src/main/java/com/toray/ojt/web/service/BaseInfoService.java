@@ -8,7 +8,12 @@ import java.util.List;
 
 public interface BaseInfoService {
     List<BaseInfoDTO> getBaseInfo();
-    List<BaseInfoSearchDto> searchBaseInfo(BaseInfoSearchDto searchDto);
+
+    List<BaseInfoSearchDto> getAllBaseInfo();
+    List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg);
+
+
+
 
     List<BaseinfoViewRoleNameGetDto> getRoles();  // Fetch roles from base_info_view_role_name
 
@@ -20,5 +25,14 @@ public interface BaseInfoService {
     List<BaseInfoRoleBasedOnSeqInfoDto> getRolesBySeqInfo(Long seqInfo);
 
     void deleteBaseInfoBySeqInfo(Long seqInfo);
+
+    // Update base info in base_info table
+    int updateBaseInfo(BaseInfoUpdateDto baseInfoUpdateDto);
+
+    // Delete roles by seqInfo from base_info_view_role
+    void deleteBaseInfoRoles(Long seqInfo);
+
+    // Insert roles into base_info_view_role table
+    void insertBaseInfoRoleWithSeqInfo(BaseInfoViewRoleInsertDto roleInsertDto);
 
 }

@@ -8,6 +8,7 @@
         $(document).ready(function() {
             // On document ready, or when you want to trigger fetching of roles
             var seqInfo = [[${notice.seqInfo}]];  // Get seqInfo from Thymeleaf
+                      console.log("seq",seqInfo);
 
             // Ajax call to fetch roles based on seqInfo
             $.ajax({
@@ -43,7 +44,6 @@
         $(document).ready(function() {
     $('.delete-btn').click(function() {
         var seqInfo = [[${notice.seqInfo}]]; // Get seq_info from the button's data attribute
-
         if (confirm('Are you sure you want to delete this record?')) {
             $.ajax({
                 url: '/' + seqInfo, // API endpoint

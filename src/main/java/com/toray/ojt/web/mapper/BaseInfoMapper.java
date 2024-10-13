@@ -10,7 +10,9 @@ import java.util.List;
 public interface BaseInfoMapper {
     List<BaseInfoDTO> findBaseInfo();
     // Search based on the BaseInfoSearchDto criteria
-    List<BaseInfoSearchDto> searchBaseInfo(BaseInfoSearchDto searchDto);
+    List<BaseInfoSearchDto> getBaseInfo();
+
+    List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg);
 
     List<BaseinfoViewRoleNameGetDto> fetchRoles();  // Fetch roles from base_info_view_role_name table
 
@@ -28,9 +30,17 @@ public interface BaseInfoMapper {
 
     void deleteBySeqInfo(Long seqInfo);
 
-    //Update
-    int updateNotice(@Param("baseInfo") BaseInfoUpdateDto baseInfo);
 
-    BaseInfoUpdateDto getNoticeBySeqInfo(Long seqInfo);
+    // Update base_info based on seq_info
+    int updateBaseInfo(BaseInfoUpdateDto baseInfoUpdateDto);
+
+    // Delete all roles related to seq_info from base_info_view_role
+    int deleteBaseInfoRoles(@Param("seqInfo") Long seqInfo);
+
+
+    // Insert a new role into base_info_view_role
+    int insertBaseInfoRoleWithSeqInfo(BaseInfoViewRoleInsertDto roleInsertDto);
+
+
 
 }

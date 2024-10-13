@@ -3,6 +3,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toray.ojt.web.mapper.BaseInfoMapper">
 <!--    search querry-->
+
+    <select id="getBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoSearchDto"
+            resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">
+    SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp,SEQ_INFO as seqInfo
+    FROM base_info
+    </select>
+
     <select id="searchBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoSearchDto"
             resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">
         SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp,SEQ_INFO as seqInfo
@@ -14,7 +21,7 @@
         <if test="text != null and text != ''">
             AND Text LIKE '%' || #{text} || '%'
         </if>
-        <if test="importantFlg != null ">
+        <if test="importantFlg != null and importantFlg != ''" >
             AND Important_Flg = 'Y'
         </if>
         <if test="endYmd != null and endYmd != ''">
@@ -89,5 +96,41 @@
         WHERE seq_info = #{seqInfo}
     </delete>
 
+    <!-- Update base_info table by seq_info -->
+    <update id="updateBaseInfo">
+        <if test="importantFlg != null ">
+        UPDATE base_info
+        SET title = #{title},
+        text = #{text},
+        important_flg = 'Y',
+        begin_ymd =  TO_DATE(#{beginYmd}, 'YYYY-MM-DD'),
+        end_ymd =  TO_DATE(#{endYmd}, 'YYYY-MM-DD'),
+        upd_userid = 'user2',
+        upd_timestamp = SYSTIMESTAMP
+        WHERE seq_info = #{seqInfo}
+        </if>
+        <if test="importantFlg == null ">
+        UPDATE base_info
+        SET title = #{title},
+        text = #{text},
+        important_flg = 'N',
+        begin_ymd =  TO_DATE(#{beginYmd}, 'YYYY-MM-DD'),
+        end_ymd =  TO_DATE(#{endYmd}, 'YYYY-MM-DD'),
+        upd_userid = 'user2',
+        upd_timestamp = SYSTIMESTAMP
+        WHERE seq_info = #{seqInfo}
+        </if>
+
+    </update>
+
+    <!-- Delete existing roles for a given seqInfo -->
+    <delete id="deleteBaseInfoRoles">
+        DELETE FROM base_info_view_role WHERE seq_info = #{seqInfo}
+    </delete>
+    <!-- Insert new role with an explicit seq_info passed in -->
+    <insert id="insertBaseInfoRoleWithSeqInfo" parameterType="com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto">
+        INSERT INTO base_info_view_role (SEQ_INFO, ROLE)
+        VALUES (#{seqInfo}, #{role})
+    </insert>
 </mapper>
 

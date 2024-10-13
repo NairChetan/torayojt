@@ -2,6 +2,7 @@ package com.toray.ojt.web.dto;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 
 public class BaseInfoSearchDto {
@@ -10,8 +11,8 @@ public class BaseInfoSearchDto {
     private String importantFlg;
     private String title;
     private String text;
-    private Date beginYmd;
-    private Date endYmd;
+    private LocalDate beginYmd;
+    private LocalDate endYmd;
     private Timestamp updTimestamp;
     private Long seqInfo;
 
@@ -40,19 +41,19 @@ public class BaseInfoSearchDto {
     }
 
 
-    public Date getBeginYmd() {
+    public LocalDate getBeginYmd() {
         return beginYmd;
     }
 
-    public void setBeginYmd(Date beginYmd) {
+    public void setBeginYmd(LocalDate beginYmd) {
         this.beginYmd = beginYmd;
     }
 
-    public Date getEndYmd() {
+    public LocalDate getEndYmd() {
         return endYmd;
     }
 
-    public void setEndYmd(Date endYmd) {
+    public void setEndYmd(LocalDate endYmd) {
         this.endYmd = endYmd;
     }
 

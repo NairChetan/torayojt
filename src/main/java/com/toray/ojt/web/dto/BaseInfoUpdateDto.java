@@ -8,8 +8,8 @@ public class BaseInfoUpdateDto {
     private Timestamp updTimestamp;
     private String updUserId;
     private Long seqInfo;
-    private Date beginYmd;
-    private Date endYmd;
+    private String beginYmd;
+    private String endYmd;
     private String importantFlg;
     private String title;
     private String text;
@@ -39,19 +39,19 @@ public class BaseInfoUpdateDto {
         this.seqInfo = seqInfo;
     }
 
-    public Date getBeginYmd() {
+    public String getBeginYmd() {
         return beginYmd;
     }
 
-    public void setBeginYmd(Date beginYmd) {
+    public void setBeginYmd(String beginYmd) {
         this.beginYmd = beginYmd;
     }
 
-    public Date getEndYmd() {
+    public String getEndYmd() {
         return endYmd;
     }
 
-    public void setEndYmd(Date endYmd) {
+    public void setEndYmd(String endYmd) {
         this.endYmd = endYmd;
     }
 

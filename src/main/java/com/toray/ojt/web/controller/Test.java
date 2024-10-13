@@ -12,7 +12,7 @@ public class Test {
 
     @GetMapping("/noticeUpdate")
     public String getNoticeUpdate() {
-        return "layout/noticeUpdate";
+        return "layout/noticeUpdates";
     }
 
 }

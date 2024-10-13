@@ -16,12 +16,12 @@
 
             // Initialize the date picker for beginYmd and endYmd with Japanese localization
             $("#beginYmd, #endYmd").datepicker({
-            dateFormat: 'dd/mm/yy',
-            changeYear: true,
-            changeMonth: true,
-            showMonthAfterYear: true,
-            yearSuffix: '年',
-            regional: 'ja'      // Enable changing the month
+                dateFormat: 'yy/mm/dd',
+                changeYear: true,
+                changeMonth: true,
+                showMonthAfterYear: true,
+                yearSuffix: '年',
+                regional: 'ja'
             });
 
             // Handle collapse/expand functionality
@@ -37,9 +37,51 @@
                     $(this).text("Search Criteria Close");
                 }
             });
+
+            // AJAX search
+            $(".search-btn").on("click", function(e) {
+                e.preventDefault();
+
+                // Gather form data
+                var formData = {
+                    beginYmd: $("#beginYmd").val(),
+                    endYmd: $("#endYmd").val(),
+                    title: $("#title").val(),
+                    text: $("#text").val(),
+                    importantFlg: $("#importantFlg").is(":checked") ? 'Y' : null // Set to null if unchecked
+                };
+
+                // Perform AJAX request
+                $.ajax({
+                    url: "/list",
+                    type: "GET",
+                    data: formData,
+                    success: function(response) {
+                        // Clear the current table body
+                        $(".results-table tbody").empty();
+
+                        // Check if there are results
+                        if (response.length > 0) {
+                            $.each(response, function(index, baseInfo) {
+                                var row = `<tr>
+                                    <td>${baseInfo.beginYmd} ~ ${baseInfo.endYmd}</td>
+                                    <td>every</td>
+                                    <td><a href="/noticeDetail/${baseInfo.seqInfo}">${baseInfo.title}</a></td>
+                                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}</td>
+                                </tr>`;
+                                $(".results-table tbody").append(row);
+                            });
+                            $(".results-info").html(response.length + " hit 1~" + response.length + " display").show();
+                        } else {
+                            $(".results-info").html("No results found").show();
+                        }
+                    },
+                    error: function() {
+                        $(".results-info").html("An error occurred while fetching data").show();
+                    }
+                });
+            });
         });
-
-
     </script>
 </head>
 <body>
@@ -50,11 +92,11 @@
         <span class="separator">&gt;</span>
         <span>Admin Menu</span>
         <span class="separator">&gt;</span>
-        <span>Notice List</a></span>
+        <span>Notice List</span>
     </div>
     <div class="page-number">S15</div>
 </div>
-<form id="searchForm" th:action="@{/search}" method="get">
+<form id="searchForm">
     <table class="search-criteria">
         <tr>
             <td colspan="3" class="header">Search Criteria</td>
@@ -71,62 +113,51 @@
             </td>
             <td class="label">Severity</td>
             <td>
-                <input type="checkbox" id="importantFlg" name="importantFlg" value='Y'/>
-                <label for="importantFlg" style="margin-top:-100px">Show only important</label>
+                <input type="checkbox" id="importantFlg" name="importantFlg" VALUE="Y"/>
+                <label for="importantFlg">Show only important</label>
             </td>
         </tr>
         <tr class="content-row">
             <td class="label">Subject of publication</td>
-            <td colspan="3" >
+            <td colspan="3">
                 <select name="subject">
                     <option value="every">every</option>
                 </select>
             </td>
         </tr>
         <tr class="content-row1">
-            <td class="label">title</td>
+            <td class="label">Title</td>
             <td>
                 <input type="text" id="title" name="title"/>
             </td>
-            <td class="label">this paper</td>
+            <td class="label">Text</td>
             <td>
                 <input type="text" id="text" name="text"/>
             </td>
         </tr>
         <tr>
             <td colspan="4" class="button-row">
-                <button type="button" class="new-btn" onclick="window.location.href='/register'">new</button>
-                <button type="submit" class="search-btn">search</button>
+                <button type="button" class="new-btn" onclick="window.location.href='/register'">New</button>
+                <button type="submit" class="search-btn">Search</button>
             </td>
         </tr>
     </table>
 </form>
 
 <!-- Only display table if there are results -->
-<div class="results-info" th:if="${#lists.size(baseInfos) > 0}">
-    <p th:text="${#lists.size(baseInfos)} + ' hit 1~'+${#lists.size(baseInfos)}+' display'"></p>
-</div>
+<div class="results-info" style="display:none;"></div>
 
-<table class="results-table" th:if="${#lists.size(baseInfos) > 0}">
+<table class="results-table" >
     <thead>
     <tr>
         <th>Display period</th>
         <th>Subject of publication</th>
-        <th>title</th>
-        <th>update</th>
+        <th>Title</th>
+        <th>Update</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="baseInfo : ${baseInfos}">
-        <td th:text="${#dates.format(baseInfo.beginYmd, 'yyyy-MM-dd')} + ' ~ '+ ${#dates.format(baseInfo.endYmd, 'yyyy-MM-dd')}"></td>
-        <td>every</td>
-        <td>
-            <a th:href="@{/noticeDetail/{seqInfo}(seqInfo=${baseInfo.seqInfo})}">
-                <span th:text="${baseInfo.title}"></span>
-            </a>
-        </td>
-        <td th:text="${#dates.format(baseInfo.updTimestamp, 'yyyy/MM/dd HH:mm:ss')}">2024/09/12 10:04:44<br/>Katsuhiro Sekito</td>
-    </tr>
+    <!-- Table rows will be inserted here by JavaScript -->
     </tbody>
 </table>
 </body>

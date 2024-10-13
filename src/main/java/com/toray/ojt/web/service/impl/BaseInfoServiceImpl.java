@@ -25,12 +25,20 @@ public class BaseInfoServiceImpl implements BaseInfoService {
         this.baseInfoMapper = baseInfoMapper;
     }
 
+
+
     @Override
-    @Transactional(readOnly = true)
-    public List<BaseInfoSearchDto> searchBaseInfo(BaseInfoSearchDto searchDto) {
-        List<BaseInfoSearchDto> resultList = baseInfoMapper.searchBaseInfo(searchDto);
-        return resultList;
+    public List<BaseInfoSearchDto> getAllBaseInfo() {
+        return baseInfoMapper.getBaseInfo();
     }
+
+    @Override
+    public List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg) {
+        return   baseInfoMapper.searchBaseInfo(beginYmd, endYmd, title, text, importantFlg);
+
+
+    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -76,7 +84,41 @@ public class BaseInfoServiceImpl implements BaseInfoService {
         baseInfoMapper.deleteBySeqInfo(seqInfo);
     }
 
+    @Override
+    public int updateBaseInfo(BaseInfoUpdateDto baseInfoUpdateDto) {
+        try {
+            convertDates(baseInfoUpdateDto);
+            return baseInfoMapper.updateBaseInfo(baseInfoUpdateDto);
+        } catch (ParseException e) {
+            logger.error("Failed to parse date", e);
+            throw new RuntimeException("Invalid date format. Please use dd-MM-yyyy", e);
+        }
+
+    }
+
+    @Override
+    public void deleteBaseInfoRoles(Long seqInfo) {
+        baseInfoMapper.deleteBaseInfoRoles(seqInfo);
+    }
+
+    @Override
+    public void insertBaseInfoRoleWithSeqInfo(BaseInfoViewRoleInsertDto roleInsertDto) {
+        baseInfoMapper.insertBaseInfoRoleWithSeqInfo(roleInsertDto);
+    }
+
     private void convertDates(BaseInfoInsertDto dto) throws ParseException {
+        if (dto.getBeginYmd() != null && !dto.getBeginYmd().trim().isEmpty()) {
+            java.util.Date parsedBeginDate = DATE_FORMAT.parse(dto.getBeginYmd());
+            dto.setBeginYmd(new Date(parsedBeginDate.getTime()).toString());
+        }
+
+        if (dto.getEndYmd() != null && !dto.getEndYmd().trim().isEmpty()) {
+            java.util.Date parsedEndDate = DATE_FORMAT.parse(dto.getEndYmd());
+            dto.setEndYmd(new Date(parsedEndDate.getTime()).toString());
+        }
+    }
+
+    private void convertDates(BaseInfoUpdateDto dto) throws ParseException {
         if (dto.getBeginYmd() != null && !dto.getBeginYmd().trim().isEmpty()) {
             java.util.Date parsedBeginDate = DATE_FORMAT.parse(dto.getBeginYmd());
             dto.setBeginYmd(new Date(parsedBeginDate.getTime()).toString());
