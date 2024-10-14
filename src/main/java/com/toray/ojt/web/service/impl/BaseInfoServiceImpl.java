@@ -1,6 +1,7 @@
 package com.toray.ojt.web.service.impl;
 
 import com.toray.ojt.web.dto.*;
+import com.toray.ojt.web.entity.PaginatedResult;
 import com.toray.ojt.web.mapper.BaseInfoMapper;
 import com.toray.ojt.web.service.BaseInfoService;
 import org.slf4j.Logger;
@@ -32,13 +33,30 @@ public class BaseInfoServiceImpl implements BaseInfoService {
         return baseInfoMapper.getBaseInfo();
     }
 
+//    @Override
+//    public List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg) {
+//        return   baseInfoMapper.searchBaseInfo(beginYmd, endYmd, title, text, importantFlg);
+//
+//
+//    }
+
+
     @Override
-    public List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg) {
-        return   baseInfoMapper.searchBaseInfo(beginYmd, endYmd, title, text, importantFlg);
+    public PaginatedResult<BaseInfoSearchDto> searchBaseInfoWithPagination(
+            String beginYmd, String endYmd, String title, String text, String importantFlg, int page, int size) {
 
+        int offset = (page - 1) * size;
 
+        // Fetch paginated result from mapper
+        List<BaseInfoSearchDto> results = baseInfoMapper.searchBaseInfoWithPagination(
+                beginYmd, endYmd, title, text, importantFlg, offset, size);
+
+        // Fetch total count for the query (to calculate total pages)
+        int totalCount = baseInfoMapper.countBaseInfoSearchResults(beginYmd, endYmd, title, text, importantFlg);
+
+        // Return the paginated response
+        return new PaginatedResult<>(results, page, size, totalCount);
     }
-
 
 
 

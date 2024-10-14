@@ -1,6 +1,7 @@
 package com.toray.ojt.web.controller;
 
 import com.toray.ojt.web.dto.*;
+import com.toray.ojt.web.entity.PaginatedResult;
 import com.toray.ojt.web.service.BaseInfoService;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,18 +37,33 @@ public class BaseInfoController {
         return "layout/noticesearch";
     }
     // To fetch filtered guide data
+//    @GetMapping("/list")
+//    @ResponseBody
+//    public List<BaseInfoSearchDto> getSearchBaseInfo(
+//            @RequestParam(required = false) String beginYmd,
+//            @RequestParam(required = false) String endYmd,
+//            @RequestParam(required = false) String title,
+//            @RequestParam(required = false) String text,
+//            @RequestParam(required = false) String importantFlg
+//    ) {
+//
+//
+//        return baseInfoService.searchBaseInfo(beginYmd, endYmd, title, text, importantFlg);
+//    }
+
+
     @GetMapping("/list")
     @ResponseBody
-    public List<BaseInfoSearchDto> getSearchBaseInfo(
+    public PaginatedResult<BaseInfoSearchDto> getSearchBaseInfo(
             @RequestParam(required = false) String beginYmd,
             @RequestParam(required = false) String endYmd,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String text,
-            @RequestParam(required = false) String importantFlg
+            @RequestParam(required = false) String importantFlg,
+            @RequestParam(defaultValue = "1") int page,   // Page number, default 1
+            @RequestParam(defaultValue = "6") int size   // Page size, default 10
     ) {
-
-
-        return baseInfoService.searchBaseInfo(beginYmd, endYmd, title, text, importantFlg);
+        return baseInfoService.searchBaseInfoWithPagination(beginYmd, endYmd, title, text, importantFlg, page, size);
     }
 
 

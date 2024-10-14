@@ -2,6 +2,7 @@ package com.toray.ojt.web.service;
 
 import com.toray.ojt.web.dto.*;
 import com.toray.ojt.web.entity.BaseInfo;
+import com.toray.ojt.web.entity.PaginatedResult;
 
 
 import java.util.List;
@@ -10,7 +11,11 @@ public interface BaseInfoService {
     List<BaseInfoDTO> getBaseInfo();
 
     List<BaseInfoSearchDto> getAllBaseInfo();
-    List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg);
+//    List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg);
+
+
+    public PaginatedResult<BaseInfoSearchDto> searchBaseInfoWithPagination(
+            String beginYmd, String endYmd, String title, String text, String importantFlg, int page, int size);
 
 
 

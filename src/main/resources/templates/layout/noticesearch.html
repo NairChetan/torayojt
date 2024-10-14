@@ -11,47 +11,43 @@
 
     <script>
         $(function() {
-              // Custom Japanese localization for jQuery UI DatePicker
-        $.datepicker.regional['ja'] = {
-            closeText: '閉じる',           // Close button text
-            prevText: '前',               // Previous month button text
-            nextText: '次',               // Next month button text
-            currentText: '今日',           // Today button text
-            monthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],  // Months in Japanese
-            monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],  // Short months
-            dayNames: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],  // Full day names in Japanese
-            dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],                   // Short day names (Sun to Sat)
-            dayNamesMin: ['日', '月', '火', '水', '木', '金', '土'],                    // Minimal day names (appears on the calendar)
-            weekHeader: '週',                        // Week header
-            dateFormat: 'yyyymmdd',                  // Date format for selected value (YYYY/MM/DD)
-            firstDay: 0,                             // Set Sunday as the first day of the week
-            isRTL: false,
-            showMonthAfterYear: true,                // Show month after year in the header
-            yearSuffix: '年'                         // Year suffix
-        };
+            // Custom Japanese localization for jQuery UI DatePicker
+            $.datepicker.regional['ja'] = {
+                closeText: '閉じる',
+                prevText: '前',
+                nextText: '次',
+                currentText: '今日',
+                monthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                dayNames: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+                dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
+                dayNamesMin: ['日', '月', '火', '水', '木', '金', '土'],
+                weekHeader: '週',
+                dateFormat: 'yyyymmdd',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: true,
+                yearSuffix: '年'
+            };
 
-        // Apply the Japanese localization
-        $.datepicker.setDefaults($.datepicker.regional['ja']);
+            $.datepicker.setDefaults($.datepicker.regional['ja']);
 
-        // Initialize DatePicker with the merged settings
-        $("#beginYmd, #endYmd").datepicker({
-            dateFormat: 'yymmdd', // Format displayed when a date is selected (YYYY/MM/DD)
-            changeYear: true,
-            changeMonth: true,
-             showButtonPanel: true,
-            beforeShowDay: function (date) {
-                var day = date.getDay();
-                // Highlight Sundays
-                if (day === 0) {
-                    return [true, "sunday-highlight"];
-                // Highlight Saturdays
-                } else if (day === 6) {
-                    return [true, "saturday-highlight"];
+            // Initialize datepickers
+            $("#beginYmd, #endYmd").datepicker({
+                dateFormat: 'yymmdd',
+                changeYear: true,
+                changeMonth: true,
+                showButtonPanel: true,
+                beforeShowDay: function (date) {
+                    var day = date.getDay();
+                    if (day === 0) {
+                        return [true, "sunday-highlight"];
+                    } else if (day === 6) {
+                        return [true, "saturday-highlight"];
+                    }
+                    return [true, ""];
                 }
-                // Regular days
-                return [true, ""];
-            }
-        });
+            });
 
             // Handle collapse/expand functionality
             $(".search-close").on("click", function(e) {
@@ -67,33 +63,32 @@
                 }
             });
 
-            // AJAX search
-            $(".search-btn").on("click", function(e) {
-                e.preventDefault();
+            // Variables for pagination
+            var currentPage = 1;
+            var pageSize = 6;
 
-                // Gather form data
+            // AJAX search
+            function performSearch() {
                 var formData = {
                     beginYmd: $("#beginYmd").val(),
                     endYmd: $("#endYmd").val(),
                     title: $("#title").val(),
                     text: $("#text").val(),
-                    importantFlg: $("#importantFlg").is(":checked") ? 'Y' : null // Set to null if unchecked
+                    importantFlg: $("#importantFlg").is(":checked") ? 'Y' : null,
+                    page: currentPage,
+                    size: pageSize
                 };
 
-                // Perform AJAX request
                 $.ajax({
                     url: "/list",
                     type: "GET",
                     data: formData,
                     success: function(response) {
-                        // Clear the current table body
                         $(".results-table tbody").empty();
-
-                        // Check if there are results
-                        if (response.length > 0) {
-                            // Show the table (including headers)
+                        console.log(response);
+                        if (response.data.length > 0) {
                             $(".results-table").show();
-                            $.each(response, function(index, baseInfo) {
+                            $.each(response.data, function(index, baseInfo) {
                                 var row = `<tr>
                                     <td>${baseInfo.beginYmd} ~ ${baseInfo.endYmd}</td>
                                     <td>every</td>
@@ -102,7 +97,9 @@
                                 </tr>`;
                                 $(".results-table tbody").append(row);
                             });
-                            $(".results-info").html(response.length + " hit 1~" + response.length + " display").show();
+
+                            $(".results-info").html(response.totalItems + " hits, displaying " + ((currentPage - 1) * pageSize + 1) + " to " + Math.min(currentPage * pageSize, response.totalItems)).show();
+                            updatePagination(response.totalPages);
                         } else {
                             $(".results-info").html("No results found").show();
                         }
@@ -111,6 +108,28 @@
                         $(".results-info").html("An error occurred while fetching data").show();
                     }
                 });
+            }
+
+            // Update pagination controls
+            function updatePagination(totalPages) {
+                var paginationHtml = "";
+                for (var i = 1; i <= totalPages; i++) {
+                    paginationHtml += `<button class="pagination-btn" data-page="${i}">${i}</button>`;
+                }
+                $(".pagination").html(paginationHtml);
+            }
+
+            // Handle page change
+            $(document).on("click", ".pagination-btn", function() {
+                currentPage = $(this).data("page");
+                performSearch();
+            });
+
+            // Search button click handler
+            $(".search-btn").on("click", function(e) {
+                e.preventDefault();
+                currentPage = 1; // Reset to page 1 on new search
+                performSearch();
             });
         });
     </script>
@@ -175,9 +194,8 @@
     </table>
 </form>
 
-<!-- Only display table if there are results -->
+<!-- Results Section -->
 <div class="results-info" style="display:none;"></div>
-
 <table class="results-table" style="display:none;">
     <thead>
     <tr>
@@ -188,9 +206,11 @@
     </tr>
     </thead>
     <tbody>
-    <!-- Table rows will be inserted here by JavaScript -->
     </tbody>
-
 </table>
+
+<!-- Pagination Controls -->
+<div class="pagination" style="margin-top: 20px;"></div>
+
 </body>
 </html>

@@ -12,7 +12,13 @@ public interface BaseInfoMapper {
     // Search based on the BaseInfoSearchDto criteria
     List<BaseInfoSearchDto> getBaseInfo();
 
-    List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg);
+//    List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg);
+
+
+    List<BaseInfoSearchDto> searchBaseInfoWithPagination(
+            String beginYmd, String endYmd, String title, String text, String importantFlg, int offset, int limit);
+
+    int countBaseInfoSearchResults(String beginYmd, String endYmd, String title, String text, String importantFlg);
 
 
     List<BaseinfoViewRoleNameGetDto> fetchRoles();  // Fetch roles from base_info_view_role_name table
