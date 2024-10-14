@@ -4,42 +4,64 @@
     <title>Dashboard</title>
     <link rel="stylesheet" th:href="@{css/top.css}" href="../../static/css/top.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        function switchLanguage(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url;
+        }
+    </script>
 </head>
 <body>
 <div class="container">
     <div th:replace="~{fragments/Navbar :: Navbar}"></div>
-    <p >Top</p>
+    <div class="breadcrumb">
+        <div>
+            <p style="color:blue">Top</p>
+        </div>
+        <div>
+            <p>S02</p>
+        </div>
+    </div>
+
     <section class="content">
         <!-- Main content goes here -->
         <div class="main-content">
-
             <!-- Notice Section -->
-            <div class="notice">
-                <h4>
-                    <span><i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;"></i></span>Notice
-                </h4>
-                <ul>
-                    <!-- Iterate over baseInfoList -->
-                    <li th:each="baseInfo : ${baseInfos}">
-                        <!-- Display the date and title -->
-                        <span th:text="${#dates.format(baseInfo.endYmd, 'MM/dd')}"></span>
+<div class="notice_container">
+    <p th:text="#{notice}">
+        <span><i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;"></i></span>  Notice
+    </p>
 
-                        <!-- Display the image logo if importantFlg is 1 -->
-                        <span th:if="${baseInfo.importantFlg == '1' || baseInfo.importantFlg == 'Y'}" class="important">
+    <!-- Notice Section -->
+    <div class="notice">
+        <!-- Notice Section -->
+        <ul class="list">
+            <!-- Iterate over baseInfoList -->
+            <li th:each="baseInfo : ${baseInfos}">
+                <!-- Display the date and title -->
+                <span th:text="${#dates.format(baseInfo.endYmd, 'MM/dd')}"></span>
+
+                <!-- Display the image logo if importantFlg is 1 -->
+                <span th:if="${baseInfo.importantFlg == '1' || baseInfo.importantFlg == 'Y'}" class="important">
                             <img th:src="@{/images/important.png}" alt="Important" style="width: 20px; height: 20px;">
                         </span>
 
-                        <span th:text="${baseInfo.title}"></span>
-                    </li>
-                </ul>
-            </div>
+                <span th:text="${baseInfo.title}"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+
 
             <!-- ToDo and Answer List Combined Section -->
             <div class="todo-answer-container">
                 <!-- ToDo List Section -->
+                <p th:text="#{todo_list}"><span> <i class="fa-solid fa-circle-check" style="color: #2283ce;"></i></span>  ToDo List
+                </p>
                 <div class="todo-list">
-                    <i class="fa-solid fa-square-check" style="color: #2283ce;"></i>
-                    <span>ToDo List</span>
+
+
 
                     <table>
                         <colgroup>
@@ -53,12 +75,12 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th colspan="2">Request</th>
-                            <th>Deadline Date</th>
-                            <th>Request Total</th>
-                            <th>Receipt Completed</th>
-                            <th>Answer Completed</th>
-                            <th>Answer Waiting</th>
+                            <th colspan="2" th:text="#{request}">Request</th>
+                            <th th:text="#{deadline_date}">Deadline Date</th>
+                            <th th:text="#{request_total}">Request Total</th>
+                            <th th:text="#{receipt_completed}">Receipt Completed</th>
+                            <th th:text="#{answer_completed}">Answer Completed</th>
+                            <th th:text="#{answer_waiting}">Answer Waiting</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -114,10 +136,10 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th colspan="2">Answer</th>
-                            <th>Deadline Date</th>
-                            <th>Next Responder</th>
-                            <th>Answer Status</th>
+                            <th colspan="2" th:text="#{answer}">Answer</th>
+                            <th th:text="#{deadline_date}">Deadline Date</th>
+                            <th th:text="#{next_responder}">Next Responder</th>
+                            <th th:text="#{answer_status}">Answer Status</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -139,7 +161,7 @@
                             <td><a href="#">A0033333-0001</a></td>
                             <td>en</td>
                             <td>2024/07/31</td>
-                            <td>kEzNzutHJ(EW..</td>
+                            <td>kEzNzutHJ</td>
                             <td>Answer waiting</td>
                         </tr>
                         <tr>
@@ -155,24 +177,28 @@
 
             </div>
         </div>
-        <h4><span> <i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;"></i></span>GIPS Guide
-        </h4>
-        <div class="guide">
 
-            <ul>
-                <li th:each="guide : ${tGuides}">
-                    <!-- Display the date and title -->
-                    <span th:text="${#dates.format(guide.endYmd, 'MM/dd')}"></span>
+        <div class="guide_container">
+            <p th:text="#{gips_guide}"><span> <i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;"></i></span>  GIPS Guide
+            </p>
+            <div class="guide">
 
-                    <!-- Display the logo image if importantFlg is set -->
-                    <span th:if="${guide.importantFlg == '1' || guide.importantFlg == 'Y'}" class="important">
+                <ul  class="list">
+                    <li th:each="guide : ${tGuides}">
+                        <!-- Display the date and title -->
+                        <span th:text="${#dates.format(guide.endYmd, 'MM/dd')}"></span>
+
+                        <!-- Display the logo image if importantFlg is set -->
+                        <span th:if="${guide.importantFlg == '1' || guide.importantFlg == 'Y'}" class="important">
                         <img th:src="@{/images/important.png}" alt="Important" style="width: 20px; height: 20px;">
                     </span>
 
-                    <span th:text="${guide.title}"></span>
-                </li>
-            </ul>
+                        <span th:text="${guide.title}"></span>
+                    </li>
+                </ul>
+            </div>
         </div>
+
     </section>
 
     <footer></footer>

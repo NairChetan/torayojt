@@ -43,16 +43,16 @@ public class BaseInfoServiceImpl implements BaseInfoService {
 
     @Override
     public PaginatedResult<BaseInfoSearchDto> searchBaseInfoWithPagination(
-            String beginYmd, String endYmd, String title, String text, String importantFlg, int page, int size) {
+            String beginYmd, String endYmd, String title, String text, String importantFlg,String subject, int page, int size) {
 
         int offset = (page - 1) * size;
 
         // Fetch paginated result from mapper
         List<BaseInfoSearchDto> results = baseInfoMapper.searchBaseInfoWithPagination(
-                beginYmd, endYmd, title, text, importantFlg, offset, size);
+                beginYmd, endYmd, title, text, importantFlg,subject, offset, size);
 
         // Fetch total count for the query (to calculate total pages)
-        int totalCount = baseInfoMapper.countBaseInfoSearchResults(beginYmd, endYmd, title, text, importantFlg);
+        int totalCount = baseInfoMapper.countBaseInfoSearchResults(beginYmd, endYmd, title, text, importantFlg,subject);
 
         // Return the paginated response
         return new PaginatedResult<>(results, page, size, totalCount);

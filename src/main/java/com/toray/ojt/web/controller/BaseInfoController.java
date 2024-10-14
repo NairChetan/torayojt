@@ -60,10 +60,11 @@ public class BaseInfoController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String text,
             @RequestParam(required = false) String importantFlg,
+            @RequestParam(required = false) String subject,
             @RequestParam(defaultValue = "1") int page,   // Page number, default 1
             @RequestParam(defaultValue = "6") int size   // Page size, default 10
     ) {
-        return baseInfoService.searchBaseInfoWithPagination(beginYmd, endYmd, title, text, importantFlg, page, size);
+        return baseInfoService.searchBaseInfoWithPagination(beginYmd, endYmd, title, text, importantFlg,subject, page, size);
     }
 
 

@@ -38,6 +38,7 @@
     <!-- Paginated query -->
     <select id="searchBaseInfoWithPagination" parameterType="map"
             resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">
+        <if test="subject == 'every' ">
         SELECT Title as title, Text as text, Important_Flg as importantFlg, END_YMD as endYmd, BEGIN_YMD as beginYmd, UPD_TIMESTAMP as updTimestamp, SEQ_INFO as seqInfo
         FROM base_info
         WHERE 1=1
@@ -55,10 +56,35 @@
         </if>
         ORDER BY CASE WHEN important_flg = 'Y' THEN 1 ELSE 0 END DESC
         OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+       </if>
+        <if test="subject != 'every' ">
+            SELECT b.Title as title, b.Text as text, b.Important_Flg as importantFlg, b.END_YMD as endYmd, b.BEGIN_YMD as beginYmd, b.UPD_TIMESTAMP as updTimestamp, b.SEQ_INFO as seqInfo
+            FROM base_info b
+            JOIN base_info_view_role v
+            ON b.SEQ_INFO = v.SEQ_INFO
+            WHERE v.ROLE = #{subject}
+            <if test="title != null and title != ''">
+                AND TITLE LIKE '%' || #{title} || '%'
+            </if>
+            <if test="text != null and text != ''">
+                AND Text LIKE '%' || #{text} || '%'
+            </if>
+            <if test="importantFlg != null and importantFlg != ''">
+                AND Important_Flg = 'Y'
+            </if>
+            <if test="endYmd != null and endYmd != ''">
+                AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+            ORDER BY CASE WHEN important_flg = 'Y' THEN 1 ELSE 0 END DESC
+            OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+        </if>
+
+
     </select>
 
     <!-- Count query to fetch total number of rows for pagination -->
     <select id="countBaseInfoSearchResults" parameterType="map" resultType="int">
+        <if test="subject == 'every' ">
         SELECT COUNT(*)
         FROM base_info
         WHERE 1=1
@@ -73,6 +99,27 @@
         </if>
         <if test="endYmd != null and endYmd != ''">
             AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+        </if>
+        </if>
+
+        <if test="subject != 'every' ">
+            SELECT count(*)
+            FROM base_info b
+            JOIN base_info_view_role v
+            ON b.SEQ_INFO = v.SEQ_INFO
+            WHERE v.ROLE = #{subject}
+            <if test="title != null and title != ''">
+                AND TITLE LIKE '%' || #{title} || '%'
+            </if>
+            <if test="text != null and text != ''">
+                AND Text LIKE '%' || #{text} || '%'
+            </if>
+            <if test="importantFlg != null and importantFlg != ''">
+                AND Important_Flg = 'Y'
+            </if>
+            <if test="endYmd != null and endYmd != ''">
+                AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
         </if>
     </select>
 

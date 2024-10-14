@@ -15,7 +15,7 @@ public interface BaseInfoService {
 
 
     public PaginatedResult<BaseInfoSearchDto> searchBaseInfoWithPagination(
-            String beginYmd, String endYmd, String title, String text, String importantFlg, int page, int size);
+            String beginYmd, String endYmd, String title, String text, String importantFlg,String subject ,int page, int size);
 
 
 

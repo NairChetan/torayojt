@@ -16,9 +16,9 @@ public interface BaseInfoMapper {
 
 
     List<BaseInfoSearchDto> searchBaseInfoWithPagination(
-            String beginYmd, String endYmd, String title, String text, String importantFlg, int offset, int limit);
+            String beginYmd, String endYmd, String title, String text, String importantFlg, String subject,int offset, int limit);
 
-    int countBaseInfoSearchResults(String beginYmd, String endYmd, String title, String text, String importantFlg);
+    int countBaseInfoSearchResults(String beginYmd, String endYmd, String title, String text, String importantFlg,String subject);
 
 
     List<BaseinfoViewRoleNameGetDto> fetchRoles();  // Fetch roles from base_info_view_role_name table
