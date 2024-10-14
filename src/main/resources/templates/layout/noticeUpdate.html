@@ -47,6 +47,68 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function () {
+
+             // Custom validation for the form
+        $('.register-btn').click(function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            let errors = [];
+
+            // Check if start date and title are entered
+            let startYmd = $('#beginYmd').val().trim();
+            let title = $('#title').val().trim();
+            let rolesChecked = $('.item-checkbox:checked').length;
+
+            if (startYmd === '') {
+                errors.push("Select Display Period(Start).Set Proper Value.");
+            }
+            if (title === '') {
+                errors.push("Select Title.Set Proper Value.");
+            }
+            if (rolesChecked === 0) {
+                errors.push('At least one role must be selected.');
+            }
+
+            // If there are errors, display them in the error div
+            if (errors.length > 0) {
+                let errorHtml = '<ul>';
+                errors.forEach(function(error) {
+                    errorHtml += '<li>' + error + '</li>';
+                });
+                errorHtml += '</ul>';
+
+                $('#error-messages').html(errorHtml);
+                $('#error-messages').show(); // Show the error div
+                $('html, body').animate({
+                    scrollTop: $("#error-messages").offset().top
+                }, 500); // Scroll to the error div
+
+            } else {
+                // No errors, submit the form
+                $('#contentForm').submit();
+            }
+        });
+     });
+    </script>
+
+    <script type="text/javascript">
+        function confirmLeave() {
+            const confirmMessage = "Input contents are destroyed, all right?";
+
+            if (confirm(confirmMessage)) {
+                // User clicked "OK", allow the default behavior (navigate to /search)
+                return true;
+            } else {
+                // User clicked "Cancel", prevent the navigation
+                return false;
+            }
+        }
+    </script>
+
+
+
 
 
 
@@ -56,20 +118,23 @@
 <div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
     <div class="breadcrumb">
-        <span><a href="/toppage" style="text-decoration:none">TOP</a></span>
+        <span><a href="/toppage" style="text-decoration:none" onclick="return confirmLeave()">TOP</a></span>
         <span class="separator">&gt;</span>
         <span>Admin Menu</span>
         <span class="separator">&gt;</span>
-        <span><a href="/search" style="text-decoration:none">Notice List</a></span>
+        <span><a href="/search" style="text-decoration:none" onclick="return confirmLeave()">Notice List</a></span>
         <span class="separator">&gt;</span>
-        <span>Notice Detail</span>
+        <span>Notice Edit</span>
     </div>
     <div class="page-number">S17</div>
 </div>
 <div class="form-container">
+    <!-- Error Div for displaying validation errors -->
+    <div id="error-messages" class="error-container" style="display: none;"></div>
+
     <div class="header-buttons">
-        <a href="/search" class="back-link">Back</a>
-        <button type="button" class="register-btn">register</button>
+        <a th:href="@{/noticeDetail/{seqInfo}(seqInfo=${baseInfoUpdateDto.seqInfo})}" class="back-link" onclick="return confirmLeave()">Back</a>
+        <button type="submit" form="contentForm" class="register-btn">register</button>
     </div>
 
     <form id="contentForm" th:action="@{/noticeUpdate/{seqInfo}(seqInfo=${baseInfoUpdateDto.seqInfo})}" method="post">
@@ -79,7 +144,7 @@
         <input type="hidden" name="_method" value="PUT" />
         <div class="section">
             <h2>Display Condition</h2>
-            <p th:text="${baseInfoUpdateDto.seqInfo}">as</p>
+<!--            <p th:text="${baseInfoUpdateDto.seqInfo}">as</p>-->
             <table class="condition-table">
                 <tr>
                     <td class="label">Display Period</td>
@@ -90,7 +155,8 @@
                     </td>
                     <td class="label">Importance</td>
                     <td>
-                        <input type="checkbox" id="importantFlg" name="importantFlg" value="Y"/>
+                        <input type="checkbox" id="importantFlg" name="importantFlg" value="Y"
+                               th:checked="${baseInfoUpdateDto.importantFlg == 'Y'}" />
                         <label for="importantFlg">Important</label>
                     </td>
                 </tr>
@@ -142,7 +208,7 @@
     </form>
 
     <div class="footer-buttons">
-        <a href="/search" class="back-link">Back</a>
+        <a th:href="@{/noticeDetail/{seqInfo}(seqInfo=${baseInfoUpdateDto.seqInfo})}" class="back-link" onclick="return confirmLeave()">Back</a>
         <button type="submit" form="contentForm" class="register-btn">register</button>
     </div>
 </div>

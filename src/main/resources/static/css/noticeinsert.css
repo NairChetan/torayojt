@@ -288,4 +288,31 @@ textarea {
     color: #721c24;
 }
 
+/* Calendar */
+.sunday-highlight a {
+        color: red !important;
+    }
 
+    .saturday-highlight a {
+
+        color: blue !important;
+    }
+
+/*Error div*/
+
+.error-container {
+    color: red;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.error-container ul {
+    margin: 0;
+    padding: 0;
+}
+
+.error-container li {
+    list-style-type: none;
+}

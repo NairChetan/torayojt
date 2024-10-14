@@ -2,20 +2,25 @@ package com.toray.ojt.web.controller;
 
 import com.toray.ojt.web.dto.*;
 import com.toray.ojt.web.service.BaseInfoService;
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
 @Controller
+@Validated
 public class BaseInfoController {
     private final BaseInfoService baseInfoService;
 
@@ -45,7 +50,10 @@ public class BaseInfoController {
         return baseInfoService.searchBaseInfo(beginYmd, endYmd, title, text, importantFlg);
     }
 
-// to get the roles in the openlist
+
+
+
+    // to get the roles in the openlist
     @GetMapping("/roles")
     public ResponseEntity<List<BaseinfoViewRoleNameGetDto>> getRoles() {
         List<BaseinfoViewRoleNameGetDto> roles = baseInfoService.getRoles();
@@ -61,7 +69,7 @@ public class BaseInfoController {
     }
 
     @PostMapping("/register")
-    public String registerBaseInfo(@ModelAttribute BaseInfoInsertDto baseInfoInsertDto,
+    public String registerBaseInfo( @Valid @RequestBody @ModelAttribute BaseInfoInsertDto baseInfoInsertDto,
                                    @RequestParam List<String> roles, // Getting checked roles from the form
                                    Model model) {
 
@@ -81,7 +89,7 @@ public class BaseInfoController {
         model.addAttribute("message", "Content registered successfully!");
 
         // Redirect to some view, perhaps the same form page or a confirmation page
-        return "layout/noticeinsert"; // Change to the actual form page or success page
+        return "layout/noticesearch"; // Change to the actual form page or success page
     }
 
 
@@ -128,7 +136,7 @@ public class BaseInfoController {
 
     // New PUT mapping for updating base info and roles
     @PutMapping("/noticeUpdate/{seqInfo}")
-    public ResponseEntity<String> updateBaseInfo(@PathVariable("seqInfo") Long seqInfo,
+    public String updateBaseInfo( @Valid @RequestBody @PathVariable("seqInfo") Long seqInfo,
                                                  @ModelAttribute BaseInfoUpdateDto baseInfoUpdateDto,
                                                  @RequestParam List<String> roles) {
 
@@ -153,10 +161,11 @@ public class BaseInfoController {
             }
 
             // Return success message
-            return ResponseEntity.ok("Base info and roles updated successfully");
+//            return ResponseEntity.ok("Base info and roles updated successfully");
+         return "layout/noticesearch";
         } else {
-            // Handle case where base info could not be found or updated
-            return ResponseEntity.status(404).body("Base info not found");
+
+            return "layout/noticeDetails";
         }
     }
 }

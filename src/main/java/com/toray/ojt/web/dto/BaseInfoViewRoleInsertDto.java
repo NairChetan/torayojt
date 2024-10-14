@@ -1,8 +1,12 @@
 package com.toray.ojt.web.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class BaseInfoViewRoleInsertDto {
 
     private Long seqInfo;
+
+    @NotBlank(message = "Role cannot be null or blank")
     private String role;
 
     public Long getSeqInfo() {

@@ -40,6 +40,8 @@ public class BaseInfoServiceImpl implements BaseInfoService {
     }
 
 
+
+
     @Override
     @Transactional(readOnly = true)
     public List<BaseinfoViewRoleNameGetDto> getRoles() {

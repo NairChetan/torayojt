@@ -14,6 +14,7 @@ public interface BaseInfoMapper {
 
     List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg);
 
+
     List<BaseinfoViewRoleNameGetDto> fetchRoles();  // Fetch roles from base_info_view_role_name table
 
     // Insert into base_info

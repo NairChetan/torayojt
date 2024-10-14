@@ -34,7 +34,9 @@
 
     </select>
 
-<!--    SELECT QUERRY FOR GET ROLE AND ROLE NAME-->
+
+
+    <!--    SELECT QUERRY FOR GET ROLE AND ROLE NAME-->
     <select id="fetchRoles" resultType="com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto">
         SELECT ROLE, ROLE_NAME as roleName
         FROM base_info_view_role_name

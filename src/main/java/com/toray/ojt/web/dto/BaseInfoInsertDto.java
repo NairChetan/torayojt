@@ -1,5 +1,7 @@
 package com.toray.ojt.web.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
@@ -12,10 +14,13 @@ public class BaseInfoInsertDto {
     private Timestamp updTimestamp;
     private String updUserId;
     private Long seqInfo;
+    @NotBlank(message = "Begin date cannot be null or blank")
     private String beginYmd;
     private String endYmd;
     private String importantFlg;
+    @NotBlank(message = "Title cannot be null or blank")
     private String title;
+    @Size(max = 4000, message = "Text content cannot exceed 4000 bytes")
     private String text;
     private Long attachClassNo;
 

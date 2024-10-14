@@ -52,7 +52,7 @@
                     alert('Record deleted successfully.');
                     // Optionally, remove the row from the table or reload the page
                     // $(this).closest('tr').remove(); // Remove the row from the table
-                    location.reload(); // Reload the page (you can also use a more sophisticated approach)
+                    window.location.href = '/search';
                 },
                 error: function() {
                     alert('Failed to delete record. Please try again.');
@@ -71,11 +71,11 @@
 
 <div class="breadcrumb-container">
     <div class="breadcrumb">
-        <span><a href="/toppage">TOP</a></span>
+        <span><a href="/toppage" style="text-decoration:none">TOP</a></span>
         <span class="separator">&gt;</span>
         <span>Admin Menu</span>
         <span class="separator">&gt;</span>
-        <span><a href="/search">Notice List</a></span>
+        <span><a href="/search" style="text-decoration:none">Notice List</a></span>
         <span class="separator">&gt;</span>
         <span>Notice Detail</span>
     </div>
