@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toray.ojt.web.mapper.ToDoMapper">
+    <select id="findToDo" resultType="com.toray.ojt.web.dto.ToDoDTO">
+
+        SELECT
+        T1.GYOMU_CD || '-' || T1.CYCLE_NO AS gyomuCd,
+        T1.SHUSHU_TXT AS shushuTxt,
+        T1.SHIMEKIRI_YMD AS shimekiriYMD,
+        T1.IRAI_STATUS AS iraiStatus,
+        T1.SEQ_IRAI AS seqIrai,
+        COALESCE(T2.KAITO_STATUS, 'N/A') AS kaitoStatus,
+        COALESCE(T3.USER_KBN, 'Unknown') AS userKbn,
+        COALESCE(T3.USERID, 'Unknown') AS userId,
+        COALESCE(T4.PARTY_NAME_EN, 'No Party') AS partyNameEn,
+        COALESCE(T5.CODE_VALUE1, 'No Value') AS codeValue1,
+        (SELECT COUNT(*) FROM T_IRAI) AS requestTotal
+        FROM T_IRAI T1
+        LEFT JOIN T_KAITO T2 ON T1.SEQ_IRAI = T2.SEQ_IRAI
+        LEFT JOIN T_KAITO_USER T3 ON T2.SEQ_KAITO = T3.SEQ_KAITO
+        LEFT JOIN BASE_PARTY T4 ON T3.USERID = T4.PARTY_ID
+        LEFT JOIN BASE_CODE T5 ON T2.KAITO_STATUS = T5.CODE
+        AND T5.CODE_KIND = 'KAITO_STATUS'
+        AND T5.LOCALE = 'en'
+    </select>
+
+
+</mapper>

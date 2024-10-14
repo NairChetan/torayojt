@@ -7,4 +7,5 @@ http://mybatis.org/dtd/mybatis-3-config.dtd">
     <typeAliases>
         <typeAlias type="com.toray.toray.entity.Users" alias="Users"/>
     </typeAliases>
+
 </configuration>
