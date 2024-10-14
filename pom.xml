@@ -82,7 +82,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>5.8.0</version> <!-- Adjust version as needed -->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

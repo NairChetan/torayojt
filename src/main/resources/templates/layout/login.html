@@ -3,7 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Login</title>
-    <link rel="stylesheet" th:href="@{css/login.css}" href="../../static/css/login.css">
+    <link rel="stylesheet" th:href="@{/css/login.css}" href="../../static/css/login.css">
 </head>
 <body>
 <div class = "parent-div">
@@ -21,8 +21,8 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
                     <button type="submit">Login</button>
-            <div th:if="${error}">
-                <p th:text="${error}" style="color:red;"></p>
+            <div th:if="${errorMessage}">
+                <p th:text="${errorMessage}" style="color:red;"></p>
             </div>
         </form>
     </div>
