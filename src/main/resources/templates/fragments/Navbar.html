@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
 <head>
     <title>Navbar</title>
 </head>
@@ -13,7 +13,7 @@
             <img style="width:80px;margin-top: 10px;" th:src="@{/images/Toray.png}">
             <p class="company-slogan">Innovation by Chemistry</p>
             <img th:src="@{/images/gips.jpg}">
-            <p class="login-name" th:text="${session.userNameEn}">Katsuhiro Sekito</p>
+            <p class="login-name" sec:authentication="principal.partyNameEn"></p>
         </div>
         <!-- Logout option aligned to the right -->
         <a class="logout" th:href="@{/logout}">Logout</a>

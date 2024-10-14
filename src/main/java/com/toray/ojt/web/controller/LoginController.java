@@ -8,6 +8,8 @@ import com.toray.ojt.web.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,14 +40,11 @@ public class LoginController {
         {model.addAttribute("errorMessage", "Invalid username or password");}
         return "layout/login";
     }
-//    @GetMapping("/logout")
-//    public String logout(HttpSession session){
-//        session.invalidate();
-//        return "redirect:/";
-//    }
 
     @GetMapping("/loginsuccess")
     public String loginsuccess(Model model, HttpSession session) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Current Auth: " + auth); // Log current authentication
 //        model.addAttribute("userId", session.getAttribute("userId"));
 //        model.addAttribute("role", session.getAttribute("role"));
 //        model.addAttribute("userName", session.getAttribute("userNameEn"));
