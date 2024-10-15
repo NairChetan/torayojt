@@ -306,3 +306,13 @@ textarea {
 .error-container li {
     list-style-type: none;
 }
+
+/* Calendar */
+.sunday-highlight a {
+        color: red !important;
+    }
+
+    .saturday-highlight a {
+
+        color: blue !important;
+    }
