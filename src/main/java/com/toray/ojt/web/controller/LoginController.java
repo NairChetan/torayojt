@@ -41,14 +41,14 @@ public class LoginController {
         return "layout/login";
     }
 
-    @GetMapping("/loginsuccess")
+    @GetMapping("/RegularUser")
     public String loginsuccess(Model model, HttpSession session) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Current Auth: " + auth); // Log current authentication
 //        model.addAttribute("userId", session.getAttribute("userId"));
 //        model.addAttribute("role", session.getAttribute("role"));
 //        model.addAttribute("userName", session.getAttribute("userNameEn"));
-        return "layout/loginsuccess";
+        return "layout/RegularUser";
     }
 
 //    @PostMapping("/login")

@@ -59,7 +59,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if (baseAdmin) {
             return "/toppage"; // URL for base admin
         } else if (regularUser) {
-            return "/loginsuccess"; // URL for regular user
+            return "/RegularUser"; // URL for regular user
         } else {
             System.err.println("No valid role found for user: " + authentication.getName());
             return "/?error=true";

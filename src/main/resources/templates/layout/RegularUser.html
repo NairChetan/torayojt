@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
+<head>
+    <meta charset="UTF-8">
+    <title>Unauthorized Access</title>
+    <link rel="stylesheet" th:href="@{/css/unauthorized.css}" href="../../static/css/unauthorized.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<header class="header">
+    <div style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 20px;">
+        <div class="logo-text"><h1 class="company-name">´TORAY´</h1>
+            <p class="company-slogan">Innovation by Chemistry</p></div>
+        <img class="company-logo" th:src="@{/images/gips.jpg}">
+        <p style="margin-top: -1px; font-size: 15px; margin-right:20%;" th:text="${#authentication.principal.partyNameEn}"}></p>
+        <a th:href="@{/logout}" class="btn-back">Logout</a>
+    </div>
+    <hr class="blue-underline">
+    <p class="s99-text">S99</p></header>
+<div class="container">    <!-- Information Display --> <p class="notasks">Currently you have no tasks</p>
+    <!-- GIPS Guide Section -->
+    <div style="display: flex; justify-content: center; margin-bottom: 1%">
+        <div style="margin-top: -20px;"><h4><span>                       <i
+                class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6; font-size: 14px;"></i>                   </span>GIPS
+            Guide</h4></div>
+        <div class="guide">
+            <ul class="guide-scroll">
+                <li th:each="guide : ${guides}">                    <!-- Display the date and title --> <span
+                        th:text="${#dates.format(guide.beginYmd, 'MM/dd')}"></span> <span th:if="${guide.importantFlg}">                        <span
+                        class="important">重要</span>                    </span>
+                    <!-- Display important flag if applicable --> <span th:text="${guide.title}"></span></li>
+            </ul>
+        </div>
+    </div>    <!-- Contact System Administrator -->
+    <div style="margin-left: 25%; margin-bottom: -15px;"><span
+            style="font-size: 24px; display: inline-block; vertical-align: -2px;">&lt;</span> Contact <span
+            style="font-size: 24px; display: inline-block; vertical-align: -2px;">&gt;</span></div>
+    <br/>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div class="contact-box1">
+            <div style="margin-left: 2px;"> Inquiries (about GIPS)<br/></div>
+            <div style="margin-left: 35%;"> TSC TS-2Grp)GIPS Administrator<br/> (Email:
+                gips-inquiry.toray.gi@mail.toray)<br/></div>
+        </div>
+        <div class="contact-box2"><span style="margin-left: 2px;">Inquiries (about Toray Group ID/password)<br/></span>
+            <div style="margin-left: 35%;"> TSC Security Service Group. TG-ID Administrator<br/> (E-mail:
+                tg-id-contact.toray.mb@mail.toray)<br/><br/></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
