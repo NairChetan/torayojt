@@ -17,6 +17,12 @@ public class ToDoServiceImpl implements ToDoService {
         this.toDoMapper = toDoMapper;
     }
 
+    /**
+     * Retrieves a list of ToDoDTO objects
+     * This method calls the mapper to fetch data from the database.
+     * @param locale used to pass the switched language value.
+     * @return A list of ToDoDTO containing the Request and answer information.
+     */
     @Override
     public List<ToDoDTO> getToDoByLocale(String locale) {
         List<ToDoDTO> toDos = toDoMapper.findToDoByLocale(locale);

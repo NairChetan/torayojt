@@ -10,9 +10,6 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
 
-import java.util.Locale;
-
-
 @Configuration
 public class MyBatisConfig {
 
