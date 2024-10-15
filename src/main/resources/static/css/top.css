@@ -10,31 +10,47 @@ body {
     margin-right: 22px;
     margin-left: 22px;
     padding: 0;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto';
+    color: #333333;
 }
 
 .content {
     margin-top: 10px;
 }
-
+.breadcrumb{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .main-content {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
     margin-top: 30px;
 }
-
+.notice_container,.guide_container{
+    width: 33%;
+    margin-top: -30px;
+}
+.title{
+display :flex;
+flex-direction:row;
+}
 .notice, .guide {
     background-color: #f3f0f9;
-    border: 1px solid #000000;
+    border: 1px solid #333333;
     border-radius: 0px;
     padding: 15px;
-    width: 30%;
     height: 250px;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 35px;
     margin-left: 0px;
-    margin-top: 15px;
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column; /* Ensures content is stacked vertically */
+    justify-content: flex-start; /* Aligns content at the top */
+    align-items: flex-start; /* Aligns content to the left */
+
 }
 
 .notice h4, .guide h4 {
@@ -47,18 +63,25 @@ body {
 
 .notice ul li, .guide ul li {
     list-style-type: none;
+    margin-left: -40px;
+
+}
+.list{
+margin-top:-14px;
 }
 
 /* Combined container for ToDo List and Answer List */
 .todo-answer-container {
     width: 65%;
-    margin-top: 0px;
+    margin-top: -30px;
 }
 
 /* ToDo List Section */
 .todo-list {
     margin-right: 0px;
     margin-bottom: 25px;
+    max-height: 200px;
+
 }
 
 #todo-checkbox {
@@ -76,7 +99,8 @@ table {
 }
 
 table, th, td {
-    border: 1px solid #000000;
+    border: 1px solid #333333;
+    font-weight:normal;
 }
 
 td {
@@ -93,6 +117,7 @@ th {
     padding: 3px;
     background-color: #f0f0f0;
     text-align: center;
+    font-weight:normal;
 }
 /* top.css */
 /* Header Styling */
@@ -100,7 +125,7 @@ th {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 0px;
     border-bottom: 2px solid #E0E0E0;
     background-color: #ffffff;
     padding-top:0px;
@@ -109,7 +134,7 @@ th {
 .logo-text {
     display: flex;
     justify-content:space-between;
-    gap:13px;
+    gap:7px;
     align-items: flex-start;
 }
 
@@ -155,7 +180,7 @@ th {
     gap:1px;
     border-top: 4px solid #51718b;
     background-color:#d8d8d8;
-    padding-top:3px ;
+    padding-top:4px ;
     padding-bottom:0px;
 }
 .header-menu nav ul {
