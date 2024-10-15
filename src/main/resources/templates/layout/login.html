@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
+    <title th:text="#{login_title}">Login</title>
     <link rel="stylesheet" th:href="@{/css/login.css}" href="../../static/css/login.css">
 </head>
 <body>
@@ -13,52 +13,34 @@
     </div>
     <hr>
     <h4 id = "screen-number">S01</h4>
-    <div class = "logo-login-form">
-        <img th:src="@{images/GIPS_logo.jpg}" alt = "GIPS logo" src = "../../static/images/GIPS_logo.jpg">
-        <form th:action="@{/login}" method="post" class = "login-form">
-                <label id = "userId" for="username">User ID</label>
-                <input type="text" id="username" name="username" required>
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-                    <button type="submit">Login</button>
+    <div class="logo-login-form">
+        <img th:src="@{images/GIPS_logo.jpg}" alt="GIPS logo">
+        <form th:action="@{/login}" method="post" class="login-form">
+            <label id="userId" th:for="username" th:text="#{user_id}">User ID</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password" th:text="#{password}">Password</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" th:text="#{login_button}">Login</button>
             <div th:if="${errorMessage}">
-                <p th:text="${errorMessage}" style="color:red;"></p>
+                <p th:text="${errorMessage} != null ? ${errorMessage} : #{login.error_message}" style="color:red;"></p>
             </div>
         </form>
     </div>
-    <div class = "message">
-        System administrator does not manage your password
-        <br>
-        For a user of Toray. contact Security Manager (or the person granted a reissue permission <br>
-        from Administrator.<br>
-        For a user of Group company. contact System person in charge of your company (or the <br> person granted Toray group system ID. <br>
-        Please ask each person in charge for password reset (initialization).
-        <p>
-            password reset.<br> https//cw639.tgni.toray.co.jp/a69/login.jsp<br>
-              (or httpsL//10.251.10.78/a69/login.jsp )<br><br>
-        </p>
+    <div class="message">
+        <p th:text="#{password_management_info}"></p>
+        <p th:text="#{toray_contact_info}"></p>
+        <p th:text="#{password_reset_link}"></p>
         <hr class="dotted-hr">
-        &lt;contact&gt; <br><br>
-        Inquiries (about GIPS)<br>
-        <p class = "contact">
-            TSC TS2-Grp) GIPS Administrator<br>
-            (E-mail: gips-inquiry.toray.gi@mail.toray )
-        </p>
-        Inquiries (about Toray Group ID/password )
-        <p class = "contact">
-            TSC Security Service Group.) TG-ID Administrator<br>
-            (E-mail:  tg-id-contact.toray.mb@mail.toray )
-        </p>
-        *If you enter your password incorrectly more than five times,<br>
-        your account will be locked.<br>
-        To unlock your account, please contact a GIPS Administrator.
+        <p th:text="#{contact_info_title}"></p>
+        <p th:text="#{inquiries_gips}"></p>
+        <p th:text="#{contact_gips}"></p>
+        <p th:text="#{inquiries_tg_id}"></p>
+        <p th:text="#{contact_tg_id}"></p>
+        <p th:text="#{account_lock_warning}"></p>
     </div>
-    <div class = "footer">
-        This site is best viewed with Chrome or IE Mode on Edge.<br>
-        It is likely not to operate correctly in other browsers.<br>
-        &gt;&gt; All the pages displayed after login are books of Toray Industries Inc.
+    <div class="footer">
+        <p th:text="#{footer_info}"></p>
     </div>
 </div>
-
 </body>
 </html>

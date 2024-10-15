@@ -27,7 +27,7 @@ public class CustomAuthenticationFailiureHandler implements AuthenticationFailur
         String username = request.getParameter("username");
         String errorMessage = exception.getMessage();
         if(errorMessage.contains("Bad credentials")){
-            errorMessage = "Invalid username or password";
+            errorMessage = "ユーザー名またはパスワードが正しくありません";
         }
         User user = userMapper.findByAccountId(username);
 

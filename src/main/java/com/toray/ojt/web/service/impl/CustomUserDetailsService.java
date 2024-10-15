@@ -44,7 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         log.debug("User Object: {}", user);
 
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with Account ID: " + username);
+            throw new UsernameNotFoundException("アカウントがロックされています。DBAに連絡してください。" + username);
         }
             int isExpired = user.getExpDate().compareTo(new Date());
             log.debug("isExpired: {}", isExpired);
@@ -54,10 +54,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 userUpdateDto.setState("L");
                 userUpdateDto.setFailedLoginAttempts(user.getFailedLoginAttempts());
                 userMapper.updateFailedLoginAttempt(userUpdateDto);
-                throw new DisabledException("Account is Locked, please contact DBA");
+                throw new DisabledException("アカウントがロックされています。DBAに連絡してください。");
             }
         if (!user.getState().equals("A")) {
-            throw new DisabledException("Account is Locked, please contact DBA");
+            throw new DisabledException("アカウントがロックされています。DBAに連絡してください。");
         }
         if (user.getFailedLoginAttempts() == 5) {
             UserUpdateDto userUpdateDto = new UserUpdateDto();
@@ -65,7 +65,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             userUpdateDto.setState("L");
             userUpdateDto.setFailedLoginAttempts(user.getFailedLoginAttempts());
             userMapper.updateFailedLoginAttempt(userUpdateDto);
-            throw new DisabledException("Account Locked, Please Contact DBA");
+            throw new DisabledException("アカウントがロックされています。DBAに連絡してください。");
         }
         // Load user role based on partyId
         String role = baseAttributeMapper.findAtrributeNameByPartyId(user.getPartyId());
@@ -74,7 +74,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Load user details (such as names)
         com.toray.ojt.web.entity.UserDetails userDetails = userDetailsMapper.findUserNameByPartyId(user.getPartyId());
         if (userDetails == null) {
-            throw new UsernameNotFoundException("User details not found for user ID: " + user.getPartyId());
+            throw new UsernameNotFoundException("指定されたパーティIDのユーザー詳細が見つかりません: " + user.getPartyId());
         }
 
         // Return the CustomUserDetails object

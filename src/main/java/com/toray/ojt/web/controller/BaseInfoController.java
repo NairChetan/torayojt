@@ -227,7 +227,7 @@ public class BaseInfoController {
      * @param roles the list of roles to be associated with the notice
      * @return the name of the Thymeleaf template to redirect to after the update
      */    @PutMapping("/noticeUpdate/{seqInfo}")
-    public String updateBaseInfo( @Valid @RequestBody @PathVariable("seqInfo") Long seqInfo,
+    public String updateBaseInfo(@Valid @RequestBody @PathVariable("seqInfo") Long seqInfo,
                                                  @ModelAttribute BaseInfoUpdateDto baseInfoUpdateDto,
                                                  @RequestParam List<String> roles) {
 

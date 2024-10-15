@@ -15,7 +15,7 @@
             <img style="width:80px;margin-top: 10px;" th:src="@{/images/Toray.png}">
             <p class="company-slogan">Innovation by Chemistry</p>
             <img th:src="@{/images/gips.jpg}">
-            <p class="login-name" sec:authentication="principal.partyNameEn"></p>
+            <p class="login-name" th:text="${#locale.language == 'ja' ? #authentication.principal.partyNameKj : #authentication.principal.partyNameEn}"></p>
         </div>
         <!-- Logout option aligned to the right -->
         <a class="logout" th:href="@{/logout}">Logout</a>
@@ -25,7 +25,7 @@
     <div class="header-menu">
         <nav>
             <ul>
-                <li class="active"><a href="#" th:text="#{top}">TOPs</a></li>
+                <li class="active"><a th:href="@{/toppage}" th:text="#{top}">TOPs</a></li>
                 <li><a href="#" th:text="#{request_menu}">Request Menu</a></li>
                 <li><a href="#" th:text="#{answer_menu}">Answer Menu</a></li>
                 <li><a href="#" th:text="#{search}">Search</a></li>
