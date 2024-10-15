@@ -56,10 +56,10 @@
 
                 if ($contentRows.is(":visible")) {
                     $contentRows.hide();
-                    $(this).text("Search Criteria Open");
+                    $(this).text("[[#{search_criteria_open}]]");
                 } else {
                     $contentRows.show();
-                    $(this).text("Search Criteria Close");
+                    $(this).text("[[#{search_criteria_close}]]");
                 }
             });
 
@@ -186,42 +186,49 @@
 
         });
     </script>
+    <script>
+        function switchLanguage(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url;
+        }
+    </script>
 </head>
 <body>
 <div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
     <div class="breadcrumb">
-        <span><a href="/toppage" style="text-decoration:none">TOP</a></span>
+        <span ><a href="/toppage" style="text-decoration:none"  th:text="#{top}">TOP</a></span>
         <span class="separator">&gt;</span>
-        <span>Admin Menu</span>
+        <span th:text="#{admin_menu}">Admin Menu</span>
         <span class="separator">&gt;</span>
-        <span>Notice List</span>
+        <span th:text="#{notice_list}">Notice List</span>
     </div>
     <div class="page-number">S15</div>
 </div>
 <form id="searchForm">
     <table class="search-criteria">
         <tr>
-            <td colspan="3" class="header">Search Criteria</td>
+            <td colspan="3" class="header" th:text="#{search_criteria}">Search Criteria</td>
             <td colspan="1" class="header">
-                <a href="#" class="search-close">Search Criteria Close</a>
+                <a href="#" class="search-close" th:text="#{search_criteria_close}">Search Criteria Close</a>
             </td>
         </tr>
         <tr class="content-row">
-            <td class="label">Display period</td>
+            <td class="label" th:text="#{display_period}">Display period</td>
             <td>
                 <input type="text" id="beginYmd" name="beginYmd" placeholder="YYYYMMDD"/>
                 ~
                 <input type="text" id="endYmd" name="endYmd" placeholder="YYYYMMDD"/>
             </td>
-            <td class="label">Severity</td>
+            <td class="label" th:text="#{severity}">Severity</td>
             <td>
                 <input type="checkbox" id="importantFlg" name="importantFlg" VALUE="Y"/>
-                <label for="importantFlg">Show only important</label>
+                <label for="importantFlg" th:text="#{show_only_important}">Show only important</label>
             </td>
         </tr>
         <tr class="content-row">
-            <td class="label">Subject of publication</td>
+            <td class="label" th:text="#{subject_of_publication}">Subject of publication</td>
             <td colspan="3">
                 <select id="subject" name="subject">
                     <option value="every">every</option> <!-- Default option -->
@@ -229,19 +236,19 @@
             </td>
         </tr>
         <tr class="content-row1">
-            <td class="label">Title</td>
+            <td class="label" th:text="#{title}">Title</td>
             <td>
                 <input type="text" id="title" name="title"/>
             </td>
-            <td class="label">Text</td>
+            <td class="label" th:text="#{text}">Text</td>
             <td>
                 <input type="text" id="text" name="text"/>
             </td>
         </tr>
         <tr>
             <td colspan="4" class="button-row">
-                <button type="button" class="new-btn" onclick="window.location.href='/register'">New</button>
-                <button type="submit" class="search-btn">Search</button>
+                <button type="button" class="new-btn" onclick="window.location.href='/register'" th:text="#{new}">New</button>
+                <button type="submit" class="search-btn" th:text="#{search}">Search</button>
             </td>
         </tr>
     </table>
@@ -252,10 +259,10 @@
 <table class="results-table" style="display:none;">
     <thead>
     <tr>
-        <th>Display period</th>
-        <th>Subject of publication</th>
-        <th>Title</th>
-        <th>Update</th>
+        <th th:text="#{display_period}">Display period</th>
+        <th th:text="#{subject_of_publication}">Subject of publication</th>
+        <th th:text="#{title}">Title</th>
+        <th th:text="#{update}">Update</th>
     </tr>
     </thead>
     <tbody>

@@ -106,6 +106,13 @@
             }
         }
     </script>
+    <script>
+        function switchLanguage(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url;
+        }
+    </script>
 
 
 
@@ -118,13 +125,13 @@
 <div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
     <div class="breadcrumb">
-        <span><a href="/toppage" style="text-decoration:none" onclick="return confirmLeave()">TOP</a></span>
+        <span><a href="/toppage" style="text-decoration:none" onclick="return confirmLeave()" th:text="#{top}">TOP</a></span>
         <span class="separator">&gt;</span>
-        <span>Admin Menu</span>
+        <span th:text="#{admin_menu}">Admin Menu</span>
         <span class="separator">&gt;</span>
-        <span><a href="/search" style="text-decoration:none" onclick="return confirmLeave()">Notice List</a></span>
+        <span><a href="/search" style="text-decoration:none" onclick="return confirmLeave()" th:text="#{notice_list}">Notice List</a></span>
         <span class="separator">&gt;</span>
-        <span>Notice Edit</span>
+        <span th:text="#{notice_edit}">Notice Edit</span>
     </div>
     <div class="page-number">S17</div>
 </div>
@@ -133,8 +140,8 @@
     <div id="error-messages" class="error-container" style="display: none;"></div>
 
     <div class="header-buttons">
-        <a th:href="@{/noticeDetail/{seqInfo}(seqInfo=${baseInfoUpdateDto.seqInfo})}" class="back-link" onclick="return confirmLeave()">Back</a>
-        <button type="submit" form="contentForm" class="register-btn">register</button>
+        <a th:href="@{/noticeDetail/{seqInfo}(seqInfo=${baseInfoUpdateDto.seqInfo})}" class="back-link" onclick="return confirmLeave()" th:text="#{back}">Back</a>
+        <button type="submit" form="contentForm" class="register-btn" th:text="#{register}">register</button>
     </div>
 
     <form id="contentForm" th:action="@{/noticeUpdate/{seqInfo}(seqInfo=${baseInfoUpdateDto.seqInfo})}" method="post">
@@ -143,17 +150,17 @@
         <!-- Spring hidden method field to support PUT -->
         <input type="hidden" name="_method" value="PUT" />
         <div class="section">
-            <h2>Display Condition</h2>
+            <h2 th:text="#{display_condition}">Display Condition</h2>
 <!--            <p th:text="${baseInfoUpdateDto.seqInfo}">as</p>-->
             <table class="condition-table">
                 <tr>
-                    <td class="label">Display Period</td>
+                    <td class="label" th:text="#{display_period}">Display Period</td>
                     <td>
                         <input type="text" id="beginYmd" name="beginYmd" th:value="${#dates.format(baseInfoUpdateDto.beginYmd, 'dd-MM-yyyy')}" />
                         ~
                         <input type="text" id="endYmd" name="endYmd" th:value="${#dates.format(baseInfoUpdateDto.endYmd, 'dd-MM-yyyy')}" />
                     </td>
-                    <td class="label">Importance</td>
+                    <td class="label" th:text="#{importance}">Importance</td>
                     <td>
                         <input type="checkbox" id="importantFlg" name="importantFlg" value="Y"
                                th:checked="${baseInfoUpdateDto.importantFlg == 'Y'}" />
@@ -161,8 +168,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Open List   <button type="button" class="all-btn">all</button></td>
-                    <td colspan="3">
+                    <td class="label">
+                        <span th:text="#{open_list}">Open List</span>
+                        <button type="button" class="all-btn" th:text="#{all}">all</button>
+                    </td>                    <td colspan="3">
 
                         <div class="checkbox-list">
 
@@ -183,22 +192,22 @@
         </div>
 
         <div class="section">
-            <h2>Display Content</h2>
+            <h2 th:text="#{display_content}">Display Content</h2>
             <table class="content-table">
                 <tr>
-                    <td class="label">Title</td>
+                    <td class="label" th:text="#{title}">Title</td>
                     <td>
                         <input type="text" id="title" name="title" class="full-width" th:value="${baseInfoUpdateDto.title}"/>
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Content</td>
+                    <td class="label" th:text="#{content}">Content</td>
                     <td>
                         <textarea id="text" name="text" class="full-width" th:text="${baseInfoUpdateDto.text}" rows="10" ></textarea>
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Attachment File</td>
+                    <td class="label" th:text="#{attachment_file}">Attachment File</td>
                     <td>
                         <input type="file" id="attachment" />
                     </td>
@@ -208,8 +217,8 @@
     </form>
 
     <div class="footer-buttons">
-        <a th:href="@{/noticeDetail/{seqInfo}(seqInfo=${baseInfoUpdateDto.seqInfo})}" class="back-link" onclick="return confirmLeave()">Back</a>
-        <button type="submit" form="contentForm" class="register-btn">register</button>
+        <a th:href="@{/noticeDetail/{seqInfo}(seqInfo=${baseInfoUpdateDto.seqInfo})}" class="back-link" onclick="return confirmLeave()" th:text="#{back}">Back</a>
+        <button type="submit" form="contentForm" class="register-btn" th:text="#{register}">register</button>
     </div>
 </div>
 </body>

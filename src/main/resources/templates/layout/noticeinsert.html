@@ -102,6 +102,7 @@
 
             // Check if start date and title are entered
             let startYmd = $('#beginYmd').val().trim();
+            let endedYmd = $('#endYmd').val().trim();
             let title = $('#title').val().trim();
             let rolesChecked = $('.item-checkbox:checked').length;
 
@@ -114,6 +115,29 @@
             if (rolesChecked === 0) {
                 errors.push('At least one role must be selected.');
             }
+           if (startYmd && endedYmd) {
+    // Function to convert dd-mm-yyyy to yyyy-mm-dd
+    function convertDateFormat(dateString) {
+        const [day, month, year] = dateString.split("-");
+        return `${year}-${month}-${day}`; // Converts to 'yyyy-mm-dd'
+    }
+
+    // Convert both date strings
+    let formattedStartYmd = convertDateFormat(startYmd);
+    let formattedEndedYmd = convertDateFormat(endedYmd);
+
+    // Parse the converted dates
+    let startDate = Date.parse(formattedStartYmd);
+    let endDate = Date.parse(formattedEndedYmd);
+
+    // Check if the dates are valid
+    if (isNaN(startDate) || isNaN(endDate)) {
+        errors.push('Invalid date format. Please use dd-mm-yyyy.');
+    } else if (startDate > endDate) {
+        errors.push('End Date must be greater than Start Date.');
+    }
+}
+
 
             // If there are errors, display them in the error div
             if (errors.length > 0) {
@@ -150,7 +174,13 @@
             }
         }
     </script>
-
+    <script>
+        function switchLanguage(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url;
+        }
+    </script>
 
 
 
@@ -159,13 +189,13 @@
 <div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
     <div class="breadcrumb">
-        <span><a href="/toppage" style="text-decoration:none" onclick="return confirmLeave()">TOP</a></span>
+        <span><a href="/toppage" style="text-decoration:none" onclick="return confirmLeave()" th:text="#{top}">TOP</a></span>
         <span class="separator">&gt;</span>
-        <span>Admin Menu</span>
+        <span th:text="#{admin_menu}">Admin Menu</span>
         <span class="separator">&gt;</span>
-        <span><a href="/search" style="text-decoration:none" onclick="return confirmLeave()">Notice List</a></span>
+        <span><a href="/search" style="text-decoration:none" onclick="return confirmLeave()" th:text="#{notice_list}">Notice List</a></span>
         <span class="separator">&gt;</span>
-        <span>Notice Detail</span>
+        <span th:text="#{notice_edit}" >Notice Edit</span>
     </div>
     <div class="page-number">S17</div>
 </div>
@@ -174,29 +204,32 @@
     <div id="error-messages" class="error-container" style="display: none;"></div>
 
     <div class="header-buttons">
-        <a href="/search" class="back-link" onclick="return confirmLeave()">Back</a>
-        <button type="submit" form="contentForm" class="register-btn">register</button>
+        <a href="/search" class="back-link" onclick="return confirmLeave()" th:text="#{back}">Back</a>
+        <button type="submit" form="contentForm" class="register-btn" th:text="#{register}">register</button>
     </div>
 
     <form id="contentForm" th:action="@{/register}" method="post">
         <div class="section">
-            <h2>Display Condition</h2>
+            <h2 th:text="#{display_condition}">Display Condition</h2>
             <table class="condition-table">
                 <tr>
-                    <td class="label">Display Period</td>
+                    <td class="label" th:text="#{display_period}">Display Period</td>
                     <td>
                         <input type="text" id="beginYmd" name="beginYmd" />
                         ~
                         <input type="text" id="endYmd" name="endYmd" />
                     </td>
-                    <td class="label">Importance</td>
+                    <td class="label" th:text="#{importance}">Importance</td>
                     <td>
                         <input type="checkbox" id="importantFlg" name="importantFlg" value="Y"/>
                         <label for="importantFlg">Important</label>
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Open List   <button type="button" class="all-btn">all</button></td>
+                    <td class="label">
+                        <span th:text="#{open_list}">Open List</span>
+                        <button type="button" class="all-btn" th:text="#{all}">all</button>
+                    </td>
                     <td colspan="3">
 
                         <div class="checkbox-list">
@@ -209,9 +242,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Create</td>
+                    <td class="label" th:text="#{create}">Create</td>
                     <td></td>
-                    <td class="label">Update</td>
+                    <td class="label" th:text="#{update}">Update</td>
                     <td></td>
                 </tr>
             </table>
@@ -221,19 +254,19 @@
             <h2>Display Content</h2>
             <table class="content-table">
                 <tr>
-                    <td class="label">Title</td>
+                    <td class="label" th:text="#{title}">Title</td>
                     <td>
                         <input type="text" id="title" name="title" class="full-width" />
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Content</td>
+                    <td class="label" th:text="#{content}">Content</td>
                     <td>
                         <textarea id="text" name="text" class="full-width" rows="10"></textarea>
                     </td>
                 </tr>
                 <tr>
-                    <td class="label">Attachment File</td>
+                    <td class="label" th:text="#{attachment_file}">Attachment File</td>
                     <td>
                         <input type="file" id="attachment" />
                     </td>
@@ -243,8 +276,8 @@
     </form>
 
     <div class="footer-buttons">
-        <a href="/search" class="back-link" onclick="return confirmLeave()">Back</a>
-        <button type="submit" form="contentForm" class="register-btn">register</button>
+        <a href="/search" class="back-link" onclick="return confirmLeave()" th:text="#{back}">Back</a>
+        <button type="submit" form="contentForm" class="register-btn" th:text="#{register}">register</button>
     </div>
 </div>
 </body>

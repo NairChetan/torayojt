@@ -42,11 +42,11 @@
         SELECT Title as title, Text as text, Important_Flg as importantFlg, END_YMD as endYmd, BEGIN_YMD as beginYmd, UPD_TIMESTAMP as updTimestamp, SEQ_INFO as seqInfo
         FROM base_info
         WHERE 1=1
-        <if test="title != null and title != ''">
-            AND TITLE LIKE '%' || #{title} || '%'
-        </if>
-        <if test="text != null and text != ''">
-            AND Text LIKE '%' || #{text} || '%'
+            <if test="title != null and title != ''">
+                AND LOWER(TITLE) LIKE '%' || LOWER(#{title}) || '%'
+            </if>
+            <if test="text != null and text != ''">
+            AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
         </if>
         <if test="importantFlg != null and importantFlg != ''">
             AND Important_Flg = 'Y'
@@ -122,10 +122,6 @@
             </if>
         </if>
     </select>
-
-
-
-
 
 
     <!--    SELECT QUERRY FOR GET ROLE AND ROLE NAME-->
