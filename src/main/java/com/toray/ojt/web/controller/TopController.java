@@ -29,6 +29,12 @@ public class TopController {
         this.toDoService = toDoService;
     }
 
+    /**
+     * Handles the request for displaying notice , guide , to-do list data.
+     * @param lang used to pass the switched language value.
+     * @param locale The locale of the user  for rendering
+     * @param model : Used to pass the List of data to the html page
+     */
 
     @GetMapping("/toppage")
     public String getTopPage(@RequestParam(name = "lang", required = false) String lang, Locale locale, Model model) {

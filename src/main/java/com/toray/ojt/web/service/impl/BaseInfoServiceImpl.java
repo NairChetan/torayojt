@@ -41,6 +41,11 @@ public class BaseInfoServiceImpl implements BaseInfoService {
 //    }
 
 
+    /**
+     * Retrieves a list of BaseInfoDTO objects
+     * This method calls the mapper to fetch data from the Base_info table.
+     * @return A list of BaseInfoDTO containing the notice information.
+     */
     @Override
     public PaginatedResult<BaseInfoSearchDto> searchBaseInfoWithPagination(
             String beginYmd, String endYmd, String title, String text, String importantFlg,String subject, int page, int size) {

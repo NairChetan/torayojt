@@ -42,7 +42,7 @@
                         <!-- Iterate over baseInfoList -->
                         <li th:each="baseInfo : ${baseInfos}">
                             <!-- Display the date and title -->
-                            <span th:text="${#dates.format(baseInfo.endYmd, 'MM/dd')}"></span>
+                            <span th:text="${#dates.format(baseInfo.beginYmd, 'MM/dd')}"></span>
 
                             <!-- Display the image logo if importantFlg is 1 -->
                             <span th:if="${baseInfo.importantFlg == '1' || baseInfo.importantFlg == 'Y'}"
@@ -146,7 +146,7 @@
                 <ul class="list">
                     <li th:each="guide : ${tGuides}">
                         <!-- Display the date and title -->
-                        <span th:text="${#dates.format(guide.endYmd, 'MM/dd')}"></span>
+                        <span th:text="${#dates.format(guide.beginYmd, 'MM/dd')}"></span>
 
                         <!-- Display the logo image if importantFlg is set -->
                         <span th:if="${guide.importantFlg == '1' || guide.importantFlg == 'Y'}" class="important">
