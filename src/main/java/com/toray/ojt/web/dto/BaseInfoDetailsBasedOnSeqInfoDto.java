@@ -1,28 +1,24 @@
 package com.toray.ojt.web.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.toray.ojt.web.entity.BaseInfoViewRole;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
-
-public class BaseInfoInsertDto {
+public class BaseInfoDetailsBasedOnSeqInfoDto {
     private Timestamp crtTimestamp;
     private String crtUserId;
     private Timestamp updTimestamp;
     private String updUserId;
     private Long seqInfo;
-    @NotBlank(message = "Begin date cannot be null or blank")
-    private String beginYmd;
-    private String endYmd;
+    private Date beginYmd;
+    private Date endYmd;
     private String importantFlg;
-    @NotBlank(message = "Title cannot be null or blank")
     private String title;
-    @Size(max = 4000, message = "Text content cannot exceed 4000 bytes")
     private String text;
     private Long attachClassNo;
+    private List<BaseInfoViewRole> roles;
 
     public Timestamp getCrtTimestamp() {
         return crtTimestamp;
@@ -64,19 +60,19 @@ public class BaseInfoInsertDto {
         this.seqInfo = seqInfo;
     }
 
-    public String getBeginYmd() {
+    public Date getBeginYmd() {
         return beginYmd;
     }
 
-    public void setBeginYmd(String beginYmd) {
+    public void setBeginYmd(Date beginYmd) {
         this.beginYmd = beginYmd;
     }
 
-    public String getEndYmd() {
+    public Date getEndYmd() {
         return endYmd;
     }
 
-    public void setEndYmd(String endYmd) {
+    public void setEndYmd(Date endYmd) {
         this.endYmd = endYmd;
     }
 
@@ -96,6 +92,14 @@ public class BaseInfoInsertDto {
         this.title = title;
     }
 
+    public Long getAttachClassNo() {
+        return attachClassNo;
+    }
+
+    public void setAttachClassNo(Long attachClassNo) {
+        this.attachClassNo = attachClassNo;
+    }
+
     public String getText() {
         return text;
     }
@@ -104,11 +108,11 @@ public class BaseInfoInsertDto {
         this.text = text;
     }
 
-    public Long getAttachClassNo() {
-        return attachClassNo;
+    public List<BaseInfoViewRole> getRoles() {
+        return roles;
     }
 
-    public void setAttachClassNo(Long attachClassNo) {
-        this.attachClassNo = attachClassNo;
+    public void setRoles(List<BaseInfoViewRole> roles) {
+        this.roles = roles;
     }
 }

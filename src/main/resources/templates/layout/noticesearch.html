@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Search Page</title>
-    <link rel="stylesheet" th:href="@{css/noticeSearch.css}" href="../../static/css/noticeSearch.css">
+    <link rel="stylesheet" th:href="@{/css/noticeSearch.css}" href="../../static/css/noticeSearch.css">
     <!-- jQuery and jQuery UI -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -11,17 +11,42 @@
 
     <script>
         $(function() {
-            // Set locale to Japanese for the datepicker
+            // Custom Japanese localization for jQuery UI DatePicker
+            $.datepicker.regional['ja'] = {
+                closeText: '閉じる',
+                prevText: '前',
+                nextText: '次',
+                currentText: '今日',
+                monthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                dayNames: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+                dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
+                dayNamesMin: ['日', '月', '火', '水', '木', '金', '土'],
+                weekHeader: '週',
+                dateFormat: 'yyyymmdd',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: true,
+                yearSuffix: '年'
+            };
+
             $.datepicker.setDefaults($.datepicker.regional['ja']);
 
-            // Initialize the date picker for beginYmd and endYmd with Japanese localization
+            // Initialize datepickers
             $("#beginYmd, #endYmd").datepicker({
-            dateFormat: 'dd/mm/yy',
-            changeYear: true,
-            changeMonth: true,
-            showMonthAfterYear: true,
-            yearSuffix: '年',
-            regional: 'ja'      // Enable changing the month
+                dateFormat: 'yymmdd',
+                changeYear: true,
+                changeMonth: true,
+                showButtonPanel: true,
+                beforeShowDay: function (date) {
+                    var day = date.getDay();
+                    if (day === 0) {
+                        return [true, "sunday-highlight"];
+                    } else if (day === 6) {
+                        return [true, "saturday-highlight"];
+                    }
+                    return [true, ""];
+                }
             });
 
             // Handle collapse/expand functionality
@@ -31,101 +56,221 @@
 
                 if ($contentRows.is(":visible")) {
                     $contentRows.hide();
-                    $(this).text("Search Criteria Open");
+                    $(this).text("[[#{search_criteria_open}]]");
                 } else {
                     $contentRows.show();
-                    $(this).text("Search Criteria Close");
+                    $(this).text("[[#{search_criteria_close}]]");
                 }
             });
+
+            // Variables for pagination
+            var currentPage = 1;
+            var pageSize = 6;
+
+            // AJAX search
+            function performSearch() {
+                var formData = {
+                    beginYmd: $("#beginYmd").val(),
+                    endYmd: $("#endYmd").val(),
+                    title: $("#title").val(),
+                    text: $("#text").val(),
+                    importantFlg: $("#importantFlg").is(":checked") ? 'Y' : null,
+                    page: currentPage,
+                    size: pageSize,
+                    subject: $("#subject").val()
+                };
+                console.log("sfd",formData.subject);
+
+                $.ajax({
+    url: "/list",
+    type: "GET",
+    data: formData,
+    success: function(response) {
+        $(".results-table tbody").empty();
+        console.log(response);
+        if (response.data.length > 0) {
+            $(".results-table").show();
+
+            $.each(response.data, function(index, baseInfo) {
+                var seqInfo = baseInfo.seqInfo; // Store the seqInfo for the current baseInfo
+
+                // Create a row with a placeholder for the roles
+                var row = `<tr>
+                    <td>${baseInfo.beginYmd} ~ ${baseInfo.endYmd}</td>
+                    <td class="roles-cell" data-seqinfo="${seqInfo}"></td>
+                    <td><a href="/noticeDetail/${seqInfo}">${baseInfo.title}</a></td>
+                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}</td>
+                </tr>`;
+                $(".results-table tbody").append(row);
+
+                // AJAX call to fetch roles based on seqInfo
+                $.ajax({
+                    url: 'noticeDetail/roles/' + seqInfo,
+                    method: 'GET',
+                    success: function(roles) {
+                        // Assuming `roles` is a list of role strings
+                        var rolesCell = $(".roles-cell[data-seqinfo='" + seqInfo + "']");
+                        rolesCell.empty();  // Clear any existing content
+
+                         var expectedLength = 9; // Set this to the expected length you want to compare against
+                 if (roles.length === expectedLength) {
+                    rolesCell.html('every'); // Update the cell with "every" if lengths match
+                  } else{
+                        // Generate role list as a string
+                        var roleList = roles.map(role => `<div>[${role}]</div>`).join('');
+                        rolesCell.html(roleList); // Update the cell with the roles
+                        }
+                    },
+                    error: function() {
+                        console.error('Failed to fetch roles for seqInfo: ' + seqInfo);
+                        $(".roles-cell[data-seqinfo='" + seqInfo + "']").html("Error loading roles");
+                    }
+                });
+            });
+
+            $(".results-info").html(response.totalItems + " hits, displaying " + ((currentPage - 1) * pageSize + 1) + " to " + Math.min(currentPage * pageSize, response.totalItems)).show();
+            updatePagination(response.totalPages);
+        } else {
+            $(".results-info").html("No results found").show();
+        }
+    },
+    error: function() {
+        $(".results-info").html("An error occurred while fetching data").show();
+    }
+});
+
+            }
+
+            // Update pagination controls
+            function updatePagination(totalPages) {
+                var paginationHtml = "";
+                for (var i = 1; i <= totalPages; i++) {
+                    paginationHtml += `<button class="pagination-btn" data-page="${i}">${i}</button>`;
+                }
+                $(".pagination").html(paginationHtml);
+            }
+
+            // Handle page change
+            $(document).on("click", ".pagination-btn", function() {
+                currentPage = $(this).data("page");
+                performSearch();
+            });
+
+            // Search button click handler
+            $(".search-btn").on("click", function(e) {
+                e.preventDefault();
+                currentPage = 1; // Reset to page 1 on new search
+                performSearch();
+            });
+
+            //Role in dropdown
+            $(document).ready(function() {
+    // Fetch roles via AJAX
+    $.get('/roles', function(roles) {
+        // Clear the existing options (if needed)
+        $('#subject').empty();
+
+        // Add a default option
+        $('#subject').append('<option value="every">every</option>');
+
+        // Populate the select with roles as options
+        roles.forEach(function(role) {
+            // Assuming role.role is the value and role.roleName is the text
+            $('#subject').append(`<option value="${role.role}">${role.role} ${role.roleName}</option>`);
         });
+    }).fail(function() {
+        console.error("Failed to fetch roles.");
+        // Optionally handle error (e.g., display a message)
+    });
+});
+
+        });
+    </script>
+    <script>
+        function switchLanguage(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url;
+        }
     </script>
 </head>
 <body>
 <div th:replace="~{fragments/Navbar :: Navbar}"></div>
 <div class="breadcrumb-container">
-    <div class="breadcrumb-container">
-        <div class="breadcrumb"><span><a href="/toppage" style="text-decoration:none">TOP</a></span> <span
-                class="separator">&gt;</span> <span>Admin Menu</span> <span class="separator">&gt;</span> <span>Notice List</a></span>
-        </div>
+    <div class="breadcrumb">
+        <span ><a href="/toppage" style="text-decoration:none"  th:text="#{top}">TOP</a></span>
+        <span class="separator">&gt;</span>
+        <span th:text="#{admin_menu}">Admin Menu</span>
+        <span class="separator">&gt;</span>
+        <span th:text="#{notice_list}">Notice List</span>
     </div>
     <div class="page-number">S15</div>
 </div>
-<form id="searchForm" th:action="@{/search}" method="get">
+<form id="searchForm">
     <table class="search-criteria">
         <tr>
-            <td colspan="3" class="header">Search Criteria</td>
+            <td colspan="3" class="header" th:text="#{search_criteria}">Search Criteria</td>
             <td colspan="1" class="header">
-                <a href="#" class="search-close">Search Criteria Close</a>
+                <a href="#" class="search-close" th:text="#{search_criteria_close}">Search Criteria Close</a>
             </td>
         </tr>
         <tr class="content-row">
-            <td class="label">Display period</td>
+            <td class="label" th:text="#{display_period}">Display period</td>
             <td>
                 <input type="text" id="beginYmd" name="beginYmd" placeholder="YYYYMMDD"/>
                 ~
                 <input type="text" id="endYmd" name="endYmd" placeholder="YYYYMMDD"/>
             </td>
-            <td class="label">Severity</td>
+            <td class="label" th:text="#{severity}">Severity</td>
             <td>
-                <input type="checkbox" id="importantFlg" name="importantFlg" value='Y'/>
-                <label for="importantFlg" style="margin-top:-100px">Show only important</label>
+                <input type="checkbox" id="importantFlg" name="importantFlg" VALUE="Y"/>
+                <label for="importantFlg" th:text="#{show_only_important}">Show only important</label>
             </td>
         </tr>
         <tr class="content-row">
-            <td class="label">Subject of publication</td>
+            <td class="label" th:text="#{subject_of_publication}">Subject of publication</td>
             <td colspan="3">
-                <select name="subject">
-                    <option value="every">every</option>
+                <select id="subject" name="subject">
+                    <option value="every">every</option> <!-- Default option -->
                 </select>
             </td>
         </tr>
         <tr class="content-row1">
-            <td class="label">title</td>
+            <td class="label" th:text="#{title}">Title</td>
             <td>
                 <input type="text" id="title" name="title"/>
             </td>
-            <td class="label">this paper</td>
+            <td class="label" th:text="#{text}">Text</td>
             <td>
                 <input type="text" id="text" name="text"/>
             </td>
         </tr>
         <tr>
             <td colspan="4" class="button-row">
-                <button type="button" class="new-btn" onclick="window.location.href='/register'">new</button>
-                <button type="submit" class="search-btn">search</button>
+                <button type="button" class="new-btn" onclick="window.location.href='/register'" th:text="#{new}">New</button>
+                <button type="submit" class="search-btn" th:text="#{search}">Search</button>
             </td>
         </tr>
     </table>
 </form>
 
-<!-- Only display table if there are results -->
-<div class="results-info" th:if="${#lists.size(baseInfos) > 0}">
-    <p th:text="${#lists.size(baseInfos)} + ' hit 1~'+${#lists.size(baseInfos)}+' display'"></p>
-</div>
-
-<table class="results-table" th:if="${#lists.size(baseInfos) > 0}">
+<!-- Results Section -->
+<div class="results-info" style="display:none;"></div>
+<table class="results-table" style="display:none;">
     <thead>
     <tr>
-        <th>Display period</th>
-        <th>Subject of publication</th>
-        <th>title</th>
-        <th>update</th>
+        <th th:text="#{display_period}">Display period</th>
+        <th th:text="#{subject_of_publication}">Subject of publication</th>
+        <th th:text="#{title}">Title</th>
+        <th th:text="#{update}">Update</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="baseInfo : ${baseInfos}">
-        <td th:text="${#dates.format(baseInfo.beginYmd, 'yyyy-MM-dd')} + ' ~ '+ ${#dates.format(baseInfo.endYmd, 'yyyy-MM-dd')}"></td>
-        <td>every</td>
-        <td>
-            <a href="#">
-                <span th:text="${baseInfo.title}"></span>
-            </a>
-        </td>
-        <td th:text="${#dates.format(baseInfo.updTimestamp, 'yyyy/MM/dd HH:mm:ss')}">2024/09/12 10:04:44<br/>Katsuhiro
-            Sekito
-        </td>
-    </tr>
     </tbody>
 </table>
+
+<!-- Pagination Controls -->
+<div class="pagination" style="margin-top: 20px;"></div>
+
 </body>
 </html>

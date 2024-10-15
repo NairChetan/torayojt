@@ -7,6 +7,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
+
 import javax.sql.DataSource;
 
 import java.util.Locale;
@@ -29,4 +31,8 @@ public class MyBatisConfig {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
+    @Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        return new HiddenHttpMethodFilter();
+    }
 }

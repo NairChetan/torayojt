@@ -5,9 +5,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class Test {
-    @GetMapping("/noticepage")
+    @GetMapping("/noticeDetails")
     public String getNoticePage() {
-        return "layout/noticeinsert";
+        return "layout/noticeDetails";
+    }
+
+    @GetMapping("/noticeUpdate")
+    public String getNoticeUpdate() {
+        return "layout/noticeUpdates";
     }
 
 }

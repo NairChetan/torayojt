@@ -288,16 +288,6 @@ textarea {
     color: #721c24;
 }
 
-/* Calendar */
-.sunday-highlight a {
-        color: red !important;
-    }
-
-    .saturday-highlight a {
-
-        color: blue !important;
-    }
-
 /*Error div*/
 
 .error-container {
@@ -316,5 +306,3 @@ textarea {
 .error-container li {
     list-style-type: none;
 }
-
-

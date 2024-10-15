@@ -1,10 +1,7 @@
 package com.toray.ojt.web.service.impl;
 
-import com.toray.ojt.web.dto.BaseInfoInsertDto;
-import com.toray.ojt.web.dto.BaseInfoSearchDto;
-import com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto;
-import com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto;
-import com.toray.ojt.web.dto.BaseInfoDTO;
+import com.toray.ojt.web.dto.*;
+import com.toray.ojt.web.entity.PaginatedResult;
 import com.toray.ojt.web.mapper.BaseInfoMapper;
 import com.toray.ojt.web.service.BaseInfoService;
 import org.slf4j.Logger;
@@ -29,12 +26,39 @@ public class BaseInfoServiceImpl implements BaseInfoService {
         this.baseInfoMapper = baseInfoMapper;
     }
 
+
+
     @Override
-    @Transactional(readOnly = true)
-    public List<BaseInfoSearchDto> searchBaseInfo(BaseInfoSearchDto searchDto) {
-        List<BaseInfoSearchDto> resultList = baseInfoMapper.searchBaseInfo(searchDto);
-        return resultList;
+    public List<BaseInfoSearchDto> getAllBaseInfo() {
+        return baseInfoMapper.getBaseInfo();
     }
+
+//    @Override
+//    public List<BaseInfoSearchDto> searchBaseInfo(String beginYmd, String endYmd, String title, String text, String importantFlg) {
+//        return   baseInfoMapper.searchBaseInfo(beginYmd, endYmd, title, text, importantFlg);
+//
+//
+//    }
+
+
+    @Override
+    public PaginatedResult<BaseInfoSearchDto> searchBaseInfoWithPagination(
+            String beginYmd, String endYmd, String title, String text, String importantFlg,String subject, int page, int size) {
+
+        int offset = (page - 1) * size;
+
+        // Fetch paginated result from mapper
+        List<BaseInfoSearchDto> results = baseInfoMapper.searchBaseInfoWithPagination(
+                beginYmd, endYmd, title, text, importantFlg,subject, offset, size);
+
+        // Fetch total count for the query (to calculate total pages)
+        int totalCount = baseInfoMapper.countBaseInfoSearchResults(beginYmd, endYmd, title, text, importantFlg,subject);
+
+        // Return the paginated response
+        return new PaginatedResult<>(results, page, size, totalCount);
+    }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -65,7 +89,56 @@ public class BaseInfoServiceImpl implements BaseInfoService {
         baseInfoMapper.insertBaseInfoRole(roleInsertDto);
     }
 
+    @Override
+    public BaseInfoDetailsBasedOnSeqInfoDto getBaseInfoBySeqInfo(Long seqInfo) {
+        return baseInfoMapper.getBaseInfoBySeqInfo(seqInfo);
+    }
+
+    @Override
+    public List<BaseInfoRoleBasedOnSeqInfoDto> getRolesBySeqInfo(Long seqInfo) {
+        return baseInfoMapper.getRolesBySeqInfo(seqInfo);
+    }
+
+    @Override
+    public void deleteBaseInfoBySeqInfo(Long seqInfo) {
+        baseInfoMapper.deleteBySeqInfo(seqInfo);
+    }
+
+    @Override
+    public int updateBaseInfo(BaseInfoUpdateDto baseInfoUpdateDto) {
+        try {
+            convertDates(baseInfoUpdateDto);
+            return baseInfoMapper.updateBaseInfo(baseInfoUpdateDto);
+        } catch (ParseException e) {
+            logger.error("Failed to parse date", e);
+            throw new RuntimeException("Invalid date format. Please use dd-MM-yyyy", e);
+        }
+
+    }
+
+    @Override
+    public void deleteBaseInfoRoles(Long seqInfo) {
+        baseInfoMapper.deleteBaseInfoRoles(seqInfo);
+    }
+
+    @Override
+    public void insertBaseInfoRoleWithSeqInfo(BaseInfoViewRoleInsertDto roleInsertDto) {
+        baseInfoMapper.insertBaseInfoRoleWithSeqInfo(roleInsertDto);
+    }
+
     private void convertDates(BaseInfoInsertDto dto) throws ParseException {
+        if (dto.getBeginYmd() != null && !dto.getBeginYmd().trim().isEmpty()) {
+            java.util.Date parsedBeginDate = DATE_FORMAT.parse(dto.getBeginYmd());
+            dto.setBeginYmd(new Date(parsedBeginDate.getTime()).toString());
+        }
+
+        if (dto.getEndYmd() != null && !dto.getEndYmd().trim().isEmpty()) {
+            java.util.Date parsedEndDate = DATE_FORMAT.parse(dto.getEndYmd());
+            dto.setEndYmd(new Date(parsedEndDate.getTime()).toString());
+        }
+    }
+
+    private void convertDates(BaseInfoUpdateDto dto) throws ParseException {
         if (dto.getBeginYmd() != null && !dto.getBeginYmd().trim().isEmpty()) {
             java.util.Date parsedBeginDate = DATE_FORMAT.parse(dto.getBeginYmd());
             dto.setBeginYmd(new Date(parsedBeginDate.getTime()).toString());

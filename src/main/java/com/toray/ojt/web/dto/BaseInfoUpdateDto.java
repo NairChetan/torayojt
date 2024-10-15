@@ -2,15 +2,12 @@ package com.toray.ojt.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 
+public class BaseInfoUpdateDto {
 
-public class BaseInfoInsertDto {
-    private Timestamp crtTimestamp;
-    private String crtUserId;
     private Timestamp updTimestamp;
     private String updUserId;
     private Long seqInfo;
@@ -23,22 +20,6 @@ public class BaseInfoInsertDto {
     @Size(max = 4000, message = "Text content cannot exceed 4000 bytes")
     private String text;
     private Long attachClassNo;
-
-    public Timestamp getCrtTimestamp() {
-        return crtTimestamp;
-    }
-
-    public void setCrtTimestamp(Timestamp crtTimestamp) {
-        this.crtTimestamp = crtTimestamp;
-    }
-
-    public String getCrtUserId() {
-        return crtUserId;
-    }
-
-    public void setCrtUserId(String crtUserId) {
-        this.crtUserId = crtUserId;
-    }
 
     public Timestamp getUpdTimestamp() {
         return updTimestamp;
