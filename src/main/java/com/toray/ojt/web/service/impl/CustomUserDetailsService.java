@@ -1,5 +1,6 @@
 package com.toray.ojt.web.service.impl;
-import com.toray.ojt.web.entity.BasePartyAttribute;
+
+import com.toray.ojt.web.dto.UserUpdateDto;
 import com.toray.ojt.web.entity.CustomUserDetails;
 import com.toray.ojt.web.entity.User;
 import com.toray.ojt.web.mapper.BaseAttributeMapper;
@@ -7,6 +8,7 @@ import com.toray.ojt.web.mapper.UserDetailsMapper;
 import com.toray.ojt.web.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -44,7 +46,27 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with Account ID: " + username);
         }
-
+            int isExpired = user.getExpDate().compareTo(new Date());
+            log.debug("isExpired: {}", isExpired);
+            if (isExpired < 0) {
+                UserUpdateDto userUpdateDto = new UserUpdateDto();
+                userUpdateDto.setAccountId(username);
+                userUpdateDto.setState("L");
+                userUpdateDto.setFailedLoginAttempts(user.getFailedLoginAttempts());
+                userMapper.updateFailedLoginAttempt(userUpdateDto);
+                throw new DisabledException("Account is Locked, please contact DBA");
+            }
+        if (!user.getState().equals("A")) {
+            throw new DisabledException("Account is Locked, please contact DBA");
+        }
+        if (user.getFailedLoginAttempts() == 5) {
+            UserUpdateDto userUpdateDto = new UserUpdateDto();
+            userUpdateDto.setAccountId(username);
+            userUpdateDto.setState("L");
+            userUpdateDto.setFailedLoginAttempts(user.getFailedLoginAttempts());
+            userMapper.updateFailedLoginAttempt(userUpdateDto);
+            throw new DisabledException("Account Locked, Please Contact DBA");
+        }
         // Load user role based on partyId
         String role = baseAttributeMapper.findAtrributeNameByPartyId(user.getPartyId());
         log.debug("User role: {}", role);
@@ -63,7 +85,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 userDetails.getPartyId(),
                 userDetails.getPartyNameEn(), // English name
                 userDetails.getPartyNameKj(), // Kanji name
-                userDetails.getPartyNameKn()  // Kana name
+                userDetails.getPartyNameKn(),// Kana name
+                user.getExpDate().compareTo(new Date()) > 0,
+                !user.getState().equals("L"),  // accountNonLocked based on state
+                user.getState().equals("A"),  // enabled based on state
+                true,  // Assume credentials are always valid
+                user.getExpDate()  // Pass the expDate for comparison
         );
     }
 

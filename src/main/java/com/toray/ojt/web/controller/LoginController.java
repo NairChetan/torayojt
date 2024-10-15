@@ -37,7 +37,7 @@ public class LoginController {
     @GetMapping("/")
     public String loginpage(@RequestParam(value="error",required = false) String error,@RequestParam(value="logout",required = false) String logout, Model model) {
         if(error!=null)
-        {model.addAttribute("errorMessage", "Invalid username or password");}
+        {model.addAttribute("errorMessage",error);}
         return "layout/login";
     }
 

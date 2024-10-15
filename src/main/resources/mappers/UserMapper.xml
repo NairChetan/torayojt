@@ -27,5 +27,14 @@
     <select id="findByAccountId" parameterType="String" resultMap="UserResultMap">
         SELECT * FROM BASE_PARTY_ACCOUNT WHERE ACCOUNT_ID = #{accountId}
     </select>
+    
+    <!-- SQL to update failed login attempts of user -->
+        <update id="updateFailedLoginAttempt" parameterType="com.toray.ojt.web.dto.UserUpdateDto">
+            UPDATE BASE_PARTY_ACCOUNT
+            SET
+            STATE = CASE WHEN #{state} IS NOT NULL THEN #{state} ELSE STATE END,
+            FAILED_LOGIN_ATTEMPTS = CASE WHEN #{failedLoginAttempts} IS NOT NULL THEN #{failedLoginAttempts} ELSE FAILED_LOGIN_ATTEMPTS END,
+            UPD_TIMESTAMP = CURRENT_TIMESTAMP -- Update timestamp for when the user was updated
+            WHERE ACCOUNT_ID = #{accountId}
+        </update>
 </mapper>
-

@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 
 public class CustomUserDetails implements UserDetails {
     private final String username;
@@ -13,9 +14,14 @@ public class CustomUserDetails implements UserDetails {
     private final String partyNameEn;
     private final String partyNameKj;
     private final String partyNameKn;
+    private final boolean accountNonExpired;
+    private final boolean accountNonLocked;
+    private final boolean enabled;
+    private final boolean isCredentialsNonExpired;
+    private final Date expDate;
 
     public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities,
-                             String partyId, String partyNameEn, String partyNameKj, String partyNameKn) {
+                             String partyId, String partyNameEn, String partyNameKj, String partyNameKn, Boolean accountNonExpired, Boolean accountNonLocked, Boolean isCredentialsNonExpired, Boolean enabled, Date expDate) {
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -23,6 +29,16 @@ public class CustomUserDetails implements UserDetails {
         this.partyNameEn = partyNameEn;
         this.partyNameKj = partyNameKj;
         this.partyNameKn = partyNameKn;
+        this.accountNonExpired = accountNonExpired;
+        this.accountNonLocked = accountNonLocked;
+        this.enabled = enabled;
+        this.isCredentialsNonExpired = isCredentialsNonExpired;
+        this.expDate = expDate;
+
+    }
+
+    public Date getExpDate() {
+        return expDate;
     }
 
     public String getPartyId() {
