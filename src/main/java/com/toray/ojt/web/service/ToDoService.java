@@ -5,5 +5,5 @@ import com.toray.ojt.web.dto.ToDoDTO;
 import java.util.List;
 
 public interface ToDoService {
-    List<ToDoDTO> getToDo();
+    List<ToDoDTO> getToDoByLocale(String locale);
 }

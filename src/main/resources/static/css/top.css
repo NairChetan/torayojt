@@ -32,7 +32,10 @@ body {
     width: 33%;
     margin-top: -30px;
 }
-
+.title{
+display :flex;
+flex-direction:row;
+}
 .notice, .guide {
     background-color: #f3f0f9;
     border: 1px solid #333333;
@@ -42,7 +45,7 @@ body {
     position: relative;
     margin-bottom: 35px;
     margin-left: 0px;
-    margin-top: 8px;
+    margin-top: 0px;
     display: flex;
     flex-direction: column; /* Ensures content is stacked vertically */
     justify-content: flex-start; /* Aligns content at the top */
@@ -78,12 +81,9 @@ margin-top:-14px;
     margin-right: 0px;
     margin-bottom: 25px;
     max-height: 200px;
-    overflow-y: auto;
+
 }
-.todo-list table {
-    table-layout: fixed; /* Ensure the table remains within the container */
-    width: 100%;
-}
+
 #todo-checkbox {
     color: blue;
 }

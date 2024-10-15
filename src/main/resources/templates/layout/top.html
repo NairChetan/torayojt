@@ -3,7 +3,7 @@
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" th:href="@{css/top.css}" href="../../static/css/top.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
         function switchLanguage(lang) {
             const url = new URL(window.location.href);
@@ -29,9 +29,9 @@
         <div class="main-content">
             <!-- Notice Section -->
             <div class="notice_container">
-                <p th:text="#{notice}">
-                    <span><i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;"></i></span>  Notice
-                </p>
+                <div class="title">
+                    <span><i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span><p th:text="#{notice}">  Notice</p>
+                </div>
 
                 <!-- Notice Section -->
                 <div class="notice">
@@ -58,7 +58,9 @@
             <div class="todo-answer-container">
                 <!-- ToDo List Section -->
                 <!-- ToDo List Section -->
-                <p th:text="#{todo_list}"><span> <i class="fa-solid fa-circle-check" style="color: #2283ce;"></i></span>  ToDo List</p>
+                <div class="title">
+                    <span><i class="fa-solid fa-circle-check" style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span><p th:text="#{todo_list}">  ToDo List</p>
+                </div>
                 <div class="todo-list">
                     <table>
                         <colgroup>
@@ -129,8 +131,9 @@
         </div>
 
         <div class="guide_container">
-            <p th:text="#{gips_guide}"><span> <i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;"></i></span>  GIPS Guide
-            </p>
+            <div class="title">
+                <span><i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span><p th:text="#{gips_guide}">  GIPS Guide</p>
+            </div>
             <div class="guide">
 
                 <ul  class="list">

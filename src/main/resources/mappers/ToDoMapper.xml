@@ -3,8 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toray.ojt.web.mapper.ToDoMapper">
-    <select id="findToDo" resultType="com.toray.ojt.web.dto.ToDoDTO">
-
+    <select id="findToDoByLocale" resultType="com.toray.ojt.web.dto.ToDoDTO">
         SELECT
         T1.GYOMU_CD || '-' || T1.CYCLE_NO AS gyomuCd,
         T1.SHUSHU_TXT AS shushuTxt,
@@ -23,7 +22,7 @@
         LEFT JOIN BASE_PARTY T4 ON T3.USERID = T4.PARTY_ID
         LEFT JOIN BASE_CODE T5 ON T2.KAITO_STATUS = T5.CODE
         AND T5.CODE_KIND = 'KAITO_STATUS'
-        AND T5.LOCALE = 'en'
+        AND T5.LOCALE = #{locale}  <!-- Filter by locale -->
     </select>
 
 

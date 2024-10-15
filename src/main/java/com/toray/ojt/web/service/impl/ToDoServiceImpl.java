@@ -18,13 +18,13 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public List<ToDoDTO> getToDo() {
-        List<ToDoDTO> toDos = toDoMapper.findToDo();
+    public List<ToDoDTO> getToDoByLocale(String locale) {
+        List<ToDoDTO> toDos = toDoMapper.findToDoByLocale(locale);
         System.out.println("ToDos fetched: " + toDos.size());
         for (ToDoDTO toDo : toDos) {
             System.out.println(toDo.toString());  // Print each ToDoDTO for debugging
         }
-        return toDoMapper.findToDo();
+        return toDoMapper.findToDoByLocale(locale);
     }
 
 }
