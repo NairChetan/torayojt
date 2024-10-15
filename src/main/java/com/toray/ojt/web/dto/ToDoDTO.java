@@ -17,7 +17,7 @@ public class ToDoDTO {
     public ToDoDTO() {
     }
 
-    public ToDoDTO(String gyomuCd, String shushuTxt, String shimekiriYmd, String iraiStatus, Long seqIrai, String kaitoStatus, String userKbn, String userId, String partyNameEn, String locale, String codeValue1 , Long requestTotal) {
+    public ToDoDTO(String gyomuCd, String shushuTxt, String shimekiriYmd, String iraiStatus, Long seqIrai, String kaitoStatus, String userKbn, String userId, String partyNameEn, String locale, String codeValue1, Long requestTotal) {
         this.gyomuCd = gyomuCd;
         this.shushuTxt = shushuTxt;
         this.shimekiriYmd = shimekiriYmd;

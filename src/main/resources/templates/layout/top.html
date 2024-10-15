@@ -30,7 +30,9 @@
             <!-- Notice Section -->
             <div class="notice_container">
                 <div class="title">
-                    <span><i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span><p th:text="#{notice}">  Notice</p>
+                    <span><i class="fa-solid fa-circle-exclamation fa-rotate-180"
+                             style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span>
+                    <p th:text="#{notice}"> Notice</p>
                 </div>
 
                 <!-- Notice Section -->
@@ -43,7 +45,8 @@
                             <span th:text="${#dates.format(baseInfo.endYmd, 'MM/dd')}"></span>
 
                             <!-- Display the image logo if importantFlg is 1 -->
-                            <span th:if="${baseInfo.importantFlg == '1' || baseInfo.importantFlg == 'Y'}" class="important">
+                            <span th:if="${baseInfo.importantFlg == '1' || baseInfo.importantFlg == 'Y'}"
+                                  class="important">
                             <img th:src="@{/images/important.png}" alt="Important" style="width: 20px; height: 20px;">
                         </span>
 
@@ -59,7 +62,9 @@
                 <!-- ToDo List Section -->
                 <!-- ToDo List Section -->
                 <div class="title">
-                    <span><i class="fa-solid fa-circle-check" style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span><p th:text="#{todo_list}">  ToDo List</p>
+                    <span><i class="fa-solid fa-circle-check"
+                             style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span>
+                    <p th:text="#{todo_list}"> ToDo List</p>
                 </div>
                 <div class="todo-list">
                     <table>
@@ -132,11 +137,13 @@
 
         <div class="guide_container">
             <div class="title">
-                <span><i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span><p th:text="#{gips_guide}">  GIPS Guide</p>
+                <span><i class="fa-solid fa-circle-exclamation fa-rotate-180"
+                         style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span>
+                <p th:text="#{gips_guide}"> GIPS Guide</p>
             </div>
             <div class="guide">
 
-                <ul  class="list">
+                <ul class="list">
                     <li th:each="guide : ${tGuides}">
                         <!-- Display the date and title -->
                         <span th:text="${#dates.format(guide.endYmd, 'MM/dd')}"></span>
