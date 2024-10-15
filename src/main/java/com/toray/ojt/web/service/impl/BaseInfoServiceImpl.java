@@ -6,6 +6,7 @@ import com.toray.ojt.web.service.BaseInfoService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class BaseInfoServiceImpl implements BaseInfoService {
 

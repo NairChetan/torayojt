@@ -7,6 +7,7 @@ import com.toray.ojt.web.service.ToDoService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class ToDoServiceImpl implements ToDoService {
 
@@ -14,16 +15,11 @@ public class ToDoServiceImpl implements ToDoService {
 
     public ToDoServiceImpl(ToDoMapper toDoMapper) {
         this.toDoMapper = toDoMapper;
-        System.out.println("ToDoMapper injected: " + (this.toDoMapper != null));
     }
 
     @Override
     public List<ToDoDTO> getToDoByLocale(String locale) {
         List<ToDoDTO> toDos = toDoMapper.findToDoByLocale(locale);
-        System.out.println("ToDos fetched: " + toDos.size());
-        for (ToDoDTO toDo : toDos) {
-            System.out.println(toDo.toString());  // Print each ToDoDTO for debugging
-        }
         return toDoMapper.findToDoByLocale(locale);
     }
 

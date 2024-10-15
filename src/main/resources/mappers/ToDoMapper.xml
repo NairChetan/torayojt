@@ -7,7 +7,7 @@
         SELECT
         T1.GYOMU_CD || '-' || T1.CYCLE_NO AS gyomuCd,
         T1.SHUSHU_TXT AS shushuTxt,
-        T1.SHIMEKIRI_YMD AS shimekiriYMD,
+        TO_CHAR(TO_DATE(T1.SHIMEKIRI_YMD, 'YYYY-MM-DD'), 'yyyy/mm/dd') AS shimekiriYMD,
         T1.IRAI_STATUS AS iraiStatus,
         T1.SEQ_IRAI AS seqIrai,
         COALESCE(T2.KAITO_STATUS, 'N/A') AS kaitoStatus,
@@ -23,7 +23,6 @@
         LEFT JOIN BASE_CODE T5 ON T2.KAITO_STATUS = T5.CODE
         AND T5.CODE_KIND = 'KAITO_STATUS'
         AND T5.LOCALE = #{locale}  <!-- Filter by locale -->
+        ORDER BY shimekiriYMD
     </select>
-
-
 </mapper>

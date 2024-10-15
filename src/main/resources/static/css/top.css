@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'Roboto';
+    font-family: "MS Gothic", "Roboto" !important;
     font-style: normal;
     font-weight: 100;
     src: url(https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2) format('woff2');
@@ -10,7 +10,7 @@ body {
     margin-right: 22px;
     margin-left: 22px;
     padding: 0;
-    font-family: 'Roboto';
+    font-family: "MS Gothic", "Roboto" !important;
     color: #333333;
 }
 
@@ -104,8 +104,8 @@ table, th, td {
 }
 
 td {
-    padding: 0px;
     text-align: left;
+    padding-left: 3px;
 }
 
 td a {

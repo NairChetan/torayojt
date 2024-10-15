@@ -44,8 +44,12 @@
                         <!-- Added form to handle locale change -->
                         <form action="#" method="get" id="languageForm">
                             <select name="lang" onchange="document.getElementById('languageForm').submit()">
-                                <option value="en" th:value="'en'" th:selected="${#language_english == 'en'}">English</option>
-                                <option value="ja" th:value="'ja'" th:selected="${#language_japanese == 'ja'}">Japanese</option>
+                                <option value="en" th:value="'en'" th:selected="${#language_english}"
+                                        th:text="#{language_english}">English
+                                </option>
+                                <option value="ja" th:value="'ja'" th:selected="${#language_japanese}"
+                                        th:text="#{language_japanese}">Japanese
+                                </option>
                             </select>
                         </form>
                     </li>

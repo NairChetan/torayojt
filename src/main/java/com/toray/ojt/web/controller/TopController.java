@@ -33,13 +33,13 @@ public class TopController {
     public String getTopPage(@RequestParam(name = "lang", required = false) String lang, Locale locale, Model model) {
         String language = (lang != null) ? lang : locale.getLanguage();  // Default to the locale if no lang param
 
-        List<BaseInfoDTO> baseInfos= baseInfoService.getBaseInfo();
-        List< TGuideDTO> tGuides=tGuideService.getTGuide();
+        List<BaseInfoDTO> baseInfos = baseInfoService.getBaseInfo();
+        List<TGuideDTO> tGuides = tGuideService.getTGuide();
         List<ToDoDTO> toDo = toDoService.getToDoByLocale(language);
 
         model.addAttribute("baseInfos", baseInfos);
-        model.addAttribute("tGuides",tGuides);
-        model.addAttribute("toDo",toDo);
+        model.addAttribute("tGuides", tGuides);
+        model.addAttribute("toDo", toDo);
 
         return "/layout/top";
     }
