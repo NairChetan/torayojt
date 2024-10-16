@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toray.ojt.web.mapper.BaseInfoMapper">
+<!--    search querry-->
+
+    <select id="getBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoSearchDto"
+            resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">
+    SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp,SEQ_INFO as seqInfo,UPD_USERID as updUserId
+    FROM base_info
+    </select>
+
+<!--    <select id="searchBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoSearchDto"-->
+<!--            resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">-->
+<!--        SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp,SEQ_INFO as seqInfo-->
+<!--        FROM base_info-->
+<!--        WHERE 1=1-->
+<!--        <if test="title != null and title != ''">-->
+<!--            AND TITLE LIKE '%' || #{title} || '%'-->
+<!--        </if>-->
+<!--        <if test="text != null and text != ''">-->
+<!--            AND Text LIKE '%' || #{text} || '%'-->
+<!--        </if>-->
+<!--        <if test="importantFlg != null and importantFlg != ''" >-->
+<!--            AND Important_Flg = 'Y'-->
+<!--        </if>-->
+<!--        <if test="endYmd != null and endYmd != ''">-->
+<!--            AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')-->
+<!--        </if>-->
+
+<!--        ORDER BY CASE WHEN important_flg = 'Y' THEN 1 ELSE 0-->
+<!--        END DESC-->
+
+
+<!--    </select>-->
+
+
+    <!-- Paginated query -->
+    <select id="searchBaseInfoWithPagination" parameterType="map"
+            resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">
+        <if test="subject == 'every' ">
+        SELECT Title as title, Text as text, Important_Flg as importantFlg, END_YMD as endYmd, BEGIN_YMD as beginYmd, UPD_TIMESTAMP as updTimestamp, SEQ_INFO as seqInfo
+        FROM base_info
+        WHERE 1=1
+            <if test="title != null and title != ''">
+                AND LOWER(TITLE) LIKE '%' || LOWER(#{title}) || '%'
+            </if>
+            <if test="text != null and text != ''">
+            AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
+           </if>
+        <if test="importantFlg != null and importantFlg != ''">
+            AND Important_Flg = 'Y'
+        </if>
+        <if test="endYmd != null and endYmd != '' and (beginYmd == null or beginYmd == '') ">
+            AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+        </if>
+        <if test="beginYmd != null and beginYmd != '' and (endYmd == null or endYmd == '') ">
+            AND (End_Ymd &gt; TO_DATE(#{beginYmd}, 'YYYY-MM-DD') OR End_Ymd IS NULL)
+        </if>
+        <if test="beginYmd != null and beginYmd != '' and endYmd != null and endYmd != ''">
+                AND End_Ymd BETWEEN TO_DATE(#{beginYmd}, 'YYYY-MM-DD') AND TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+        </if>
+
+        ORDER BY CASE WHEN important_flg = 'Y' THEN 1 ELSE 0 END DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+       </if>
+        <if test="subject != 'every' ">
+            SELECT b.Title as title, b.Text as text, b.Important_Flg as importantFlg, b.END_YMD as endYmd, b.BEGIN_YMD as beginYmd, b.UPD_TIMESTAMP as updTimestamp, b.SEQ_INFO as seqInfo
+            FROM base_info b
+            JOIN base_info_view_role v
+            ON b.SEQ_INFO = v.SEQ_INFO
+            WHERE v.ROLE = #{subject}
+            <if test="title != null and title != ''">
+                AND LOWER(TITLE) LIKE '%' || LOWER(#{title}) || '%'
+            </if>
+            <if test="text != null and text != ''">
+                AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
+            </if>
+            <if test="importantFlg != null and importantFlg != ''">
+                AND Important_Flg = 'Y'
+            </if>
+            <if test="endYmd != null and endYmd != '' and (beginYmd == null or beginYmd == '') ">
+                AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and (endYmd == null or endYmd == '') ">
+                AND (End_Ymd &gt; TO_DATE(#{beginYmd}, 'YYYY-MM-DD') OR End_Ymd IS NULL)
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and endYmd != null and endYmd != ''">
+                AND End_Ymd BETWEEN TO_DATE(#{beginYmd}, 'YYYY-MM-DD') AND TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+            ORDER BY CASE WHEN important_flg = 'Y' THEN 1 ELSE 0 END DESC
+            OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+        </if>
+
+
+    </select>
+
+    <!-- Count query to fetch total number of rows for pagination -->
+    <select id="countBaseInfoSearchResults" parameterType="map" resultType="int">
+        <if test="subject == 'every' ">
+        SELECT COUNT(*)
+        FROM base_info
+        WHERE 1=1
+            <if test="title != null and title != ''">
+                AND LOWER(TITLE) LIKE '%' || LOWER(#{title}) || '%'
+            </if>
+            <if test="text != null and text != ''">
+                AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
+            </if>
+        <if test="importantFlg != null and importantFlg != ''">
+            AND Important_Flg = 'Y'
+        </if>
+            <if test="endYmd != null and endYmd != '' and (beginYmd == null or beginYmd == '') ">
+                AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and (endYmd == null or endYmd == '') ">
+                AND (End_Ymd &gt; TO_DATE(#{beginYmd}, 'YYYY-MM-DD') OR End_Ymd IS NULL)
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and endYmd != null and endYmd != ''">
+                AND End_Ymd BETWEEN TO_DATE(#{beginYmd}, 'YYYY-MM-DD') AND TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+        </if>
+
+        <if test="subject != 'every' ">
+            SELECT count(*)
+            FROM base_info b
+            JOIN base_info_view_role v
+            ON b.SEQ_INFO = v.SEQ_INFO
+            WHERE v.ROLE = #{subject}
+            <if test="title != null and title != ''">
+                AND LOWER(TITLE) LIKE '%' || LOWER(#{title}) || '%'
+            </if>
+            <if test="text != null and text != ''">
+                AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
+            </if>
+            <if test="importantFlg != null and importantFlg != ''">
+                AND Important_Flg = 'Y'
+            </if>
+            <if test="endYmd != null and endYmd != '' and (beginYmd == null or beginYmd == '') ">
+                AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and (endYmd == null or endYmd == '') ">
+                AND (End_Ymd &gt; TO_DATE(#{beginYmd}, 'YYYY-MM-DD') OR End_Ymd IS NULL)
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and endYmd != null and endYmd != ''">
+                AND End_Ymd BETWEEN TO_DATE(#{beginYmd}, 'YYYY-MM-DD') AND TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+        </if>
+    </select>
+
+
+    <!--    SELECT QUERRY FOR GET ROLE AND ROLE NAME-->
+    <select id="fetchRoles" resultType="com.toray.ojt.web.dto.BaseinfoViewRoleNameGetDto">
+        SELECT ROLE, ROLE_NAME as roleName
+        FROM base_info_view_role_name
+    </select>
+
+<!--    insert querry-->
+
+    <insert id="insertBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoInsertDto">
+        <if test="importantFlg != null ">
+          INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
+          BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
+          VALUES (base_info_seq.nextval, SYSTIMESTAMP, #{crtUserId}, SYSTIMESTAMP, #{updUserId},
+          TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , #{importantFlg}, #{title}, #{text})
+        </if>
+        <if test="importantFlg == null ">
+        INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
+        BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
+        VALUES (base_info_seq.nextval, SYSTIMESTAMP, #{crtUserId}, SYSTIMESTAMP, #{updUserId},
+        TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , 'N', #{title}, #{text})
+        </if>
+        <!-- Ensure you set the SEQ_INFO value back to the DTO -->
+        <selectKey keyProperty="seqInfo" resultType="long" order="AFTER">
+            SELECT base_info_seq.currval FROM dual
+        </selectKey>
+    </insert>
+
+    <insert id="insertBaseInfoRole" parameterType="com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto">
+        INSERT INTO base_info_view_role (SEQ_INFO, ROLE)
+        VALUES (base_info_seq.currval, #{role})
+    </insert>
+
+
+    <select id="getBaseInfoBySeqInfo" resultType="com.toray.ojt.web.dto.BaseInfoDetailsBasedOnSeqInfoDto">
+        SELECT
+        CRT_TIMESTAMP as crtTimestamp,
+        CRT_USERID as crtUserId,
+        UPD_TIMESTAMP as updTimestamp,
+        UPD_USERID as updUserId,
+        SEQ_INFO as seqInfo,
+        BEGIN_YMD as beginYmd,
+        END_YMD as endYmd,
+        IMPORTANT_FLG as importantFlg,
+        TITLE as title,
+        TEXT as text,
+        ATTACH_CLASS_NO as attachClassNo
+        FROM
+        BASE_INFO
+        WHERE
+        SEQ_INFO = #{seqInfo}
+    </select>
+    <select id="getRolesBySeqInfo" parameterType="long" resultType="com.toray.ojt.web.dto.BaseInfoRoleBasedOnSeqInfoDto">
+        SELECT ROLE AS role
+        FROM BASE_INFO_VIEW_ROLE
+        WHERE SEQ_INFO = #{seqInfo}
+    </select>
+
+    <delete id="deleteBySeqInfo">
+        DELETE FROM base_info
+        WHERE seq_info = #{seqInfo}
+    </delete>
+
+    <!-- Update base_info table by seq_info -->
+    <update id="updateBaseInfo">
+        <if test="importantFlg != null ">
+        UPDATE base_info
+        SET title = #{title},
+        text = #{text},
+        important_flg = 'Y',
+        begin_ymd =  TO_DATE(#{beginYmd}, 'YYYY-MM-DD'),
+        end_ymd =  TO_DATE(#{endYmd}, 'YYYY-MM-DD'),
+        upd_userid = #{updUserId},
+        upd_timestamp = SYSTIMESTAMP
+        WHERE seq_info = #{seqInfo}
+        </if>
+        <if test="importantFlg == null ">
+        UPDATE base_info
+        SET title = #{title},
+        text = #{text},
+        important_flg = 'N',
+        begin_ymd =  TO_DATE(#{beginYmd}, 'YYYY-MM-DD'),
+        end_ymd =  TO_DATE(#{endYmd}, 'YYYY-MM-DD'),
+        upd_userid = 'user2',
+        upd_timestamp = SYSTIMESTAMP
+        WHERE seq_info = #{seqInfo}
+        </if>
+
+    </update>
+
+    <!-- Delete existing roles for a given seqInfo -->
+    <delete id="deleteBaseInfoRoles">
+        DELETE FROM base_info_view_role WHERE seq_info = #{seqInfo}
+    </delete>
+    <!-- Insert new role with an explicit seq_info passed in -->
+    <insert id="insertBaseInfoRoleWithSeqInfo" parameterType="com.toray.ojt.web.dto.BaseInfoViewRoleInsertDto">
+        INSERT INTO base_info_view_role (SEQ_INFO, ROLE)
+        VALUES (#{seqInfo}, #{role})
+    </insert>
+</mapper>
+
