@@ -1,6 +1,5 @@
 package com.toray.ojt.web.service.impl;
 
-import com.toray.ojt.web.dto.TGuideDTO;
 import com.toray.ojt.web.dto.ToDoDTO;
 import com.toray.ojt.web.mapper.ToDoMapper;
 import com.toray.ojt.web.service.ToDoService;
