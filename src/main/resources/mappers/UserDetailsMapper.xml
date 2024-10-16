@@ -35,5 +35,9 @@
         FROM BASE_PARTY
         WHERE PARTY_ID = #{partyId}
     </select>
+    <select id = "findUserNameOnlyByPartyId" parameterType="String" resultType="com.toray.ojt.web.dto.UserDetailsForUserNameOnlyDto">
+        SELECT PARTY_ID as partyId,PARTY_NAME_KJ as partyNameKj,PARTY_NAME_KN as partyNameKn,PARTY_NAME_EN as partyNameEn FROM BASE_PARTY
+        WHERE PARTY_ID = #{partyId}
+    </select>
 
 </mapper>

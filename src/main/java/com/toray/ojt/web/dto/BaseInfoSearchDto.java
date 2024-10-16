@@ -15,6 +15,42 @@ public class BaseInfoSearchDto {
     private LocalDate endYmd;
     private Timestamp updTimestamp;
     private Long seqInfo;
+    private String updUserId;
+    private String partyNameEn = "Test User";
+    private String partyNameKj = "テストユーザー";
+    private String partyNameKn = "テストユーザー";
+
+    public String getPartyNameEn() {
+        return partyNameEn;
+    }
+
+    public void setPartyNameEn(String partyNameEn) {
+        this.partyNameEn = partyNameEn;
+    }
+
+    public String getPartyNameKj() {
+        return partyNameKj;
+    }
+
+    public void setPartyNameKj(String partyNameKj) {
+        this.partyNameKj = partyNameKj;
+    }
+
+    public String getPartyNameKn() {
+        return partyNameKn;
+    }
+
+    public void setPartyNameKn(String partyNameKn) {
+        this.partyNameKn = partyNameKn;
+    }
+
+    public String getUpdUserId() {
+        return updUserId;
+    }
+
+    public void setUpdUserId(String updUserId) {
+        this.updUserId = updUserId;
+    }
 
     public String getImportantFlg() {
         return importantFlg;

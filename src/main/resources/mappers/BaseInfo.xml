@@ -6,7 +6,7 @@
 
     <select id="getBaseInfo" parameterType="com.toray.ojt.web.dto.BaseInfoSearchDto"
             resultType="com.toray.ojt.web.dto.BaseInfoSearchDto">
-    SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp,SEQ_INFO as seqInfo
+    SELECT Title as title, Text as text, Important_Flg as importantFlg,END_YMD as endYmd,BEGIN_YMD as beginYmd,UPD_TIMESTAMP as updTimestamp,SEQ_INFO as seqInfo,UPD_USERID as updUserId
     FROM base_info
     </select>
 
@@ -136,13 +136,13 @@
         <if test="importantFlg != null ">
           INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
           BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
-          VALUES (base_info_seq.nextval, SYSTIMESTAMP, 'user2', SYSTIMESTAMP, 'user2',
+          VALUES (base_info_seq.nextval, SYSTIMESTAMP, #{crtUserId}, SYSTIMESTAMP, #{updUserId},
           TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , #{importantFlg}, #{title}, #{text})
         </if>
         <if test="importantFlg == null ">
         INSERT INTO base_info (SEQ_INFO, CRT_TIMESTAMP, CRT_USERID, UPD_TIMESTAMP, UPD_USERID,
         BEGIN_YMD, END_YMD, IMPORTANT_FLG, TITLE, TEXT)
-        VALUES (base_info_seq.nextval, SYSTIMESTAMP, 'user2', SYSTIMESTAMP, 'user2',
+        VALUES (base_info_seq.nextval, SYSTIMESTAMP, #{crtUserId}, SYSTIMESTAMP, #{updUserId},
         TO_DATE(#{beginYmd}, 'YYYY-MM-DD'), TO_DATE(#{endYmd}, 'YYYY-MM-DD') , 'N', #{title}, #{text})
         </if>
         <!-- Ensure you set the SEQ_INFO value back to the DTO -->
@@ -195,7 +195,7 @@
         important_flg = 'Y',
         begin_ymd =  TO_DATE(#{beginYmd}, 'YYYY-MM-DD'),
         end_ymd =  TO_DATE(#{endYmd}, 'YYYY-MM-DD'),
-        upd_userid = 'user2',
+        upd_userid = #{updUserId},
         upd_timestamp = SYSTIMESTAMP
         WHERE seq_info = #{seqInfo}
         </if>

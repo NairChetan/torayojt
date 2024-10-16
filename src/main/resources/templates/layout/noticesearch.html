@@ -8,7 +8,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
-
     <script>
         $(function() {
             // Custom Japanese localization for jQuery UI DatePicker
@@ -93,13 +92,17 @@
 
             $.each(response.data, function(index, baseInfo) {
                 var seqInfo = baseInfo.seqInfo; // Store the seqInfo for the current baseInfo
+                let localeLanguage = /*[[${#locale.language}]]*/ 'en';
+                console.log("Locale Language:", /*[[${#locale.language}]]*/ 'en');
+                let partyName = (localeLanguage === 'ja') ? baseInfo.partyNameKj : baseInfo.partyNameEn;
 
                 // Create a row with a placeholder for the roles
                 var row = `<tr>
                     <td>${baseInfo.beginYmd} ~ ${baseInfo.endYmd}</td>
                     <td class="roles-cell" data-seqinfo="${seqInfo}"></td>
                     <td><a href="/noticeDetail/${seqInfo}">${baseInfo.title}</a></td>
-                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}</td>
+                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}<br>
+                    ${partyName}</td>
                 </tr>`;
                 $(".results-table tbody").append(row);
 

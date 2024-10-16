@@ -1,11 +1,19 @@
 package com.toray.ojt.web.controller;
 
 import com.toray.ojt.web.dto.*;
+import com.toray.ojt.web.entity.CustomUserDetails;
 import com.toray.ojt.web.entity.PaginatedResult;
+import com.toray.ojt.web.entity.User;
+import com.toray.ojt.web.mapper.UserMapper;
 import com.toray.ojt.web.service.BaseInfoService;
+import com.toray.ojt.web.service.UserDetailsService;
+import com.toray.ojt.web.service.UserService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -13,21 +21,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Controller
 @Validated
 public class BaseInfoController {
+    private static final Logger logger = LoggerFactory.getLogger(BaseInfoController.class);
     private final BaseInfoService baseInfoService;
+    private final UserDetailsService userDetailsService;
 
-    public BaseInfoController(BaseInfoService baseInfoService) {
+    public BaseInfoController(BaseInfoService baseInfoService,UserDetailsService userDetailsService) {
 
         this.baseInfoService = baseInfoService;
+        this.userDetailsService = userDetailsService;
     }
 
     /**
@@ -38,8 +46,31 @@ public class BaseInfoController {
      */
     @GetMapping("/search")
     public String getGuideList(Model model) {
+        logger.info("Fetching notices ...");
         List<BaseInfoSearchDto> resultList = baseInfoService.getAllBaseInfo();
-        model.addAttribute("baseInfos", resultList);
+        logger.debug("Fetched {} base info records", resultList.size());
+        List<NoticeSearchResultDto> modelList = new ArrayList<>();
+        logger.info("Fetching user who updated notices...");
+//        List<UserDetailsForUserNameOnlyDto> nameList = new ArrayList<>();
+        for(BaseInfoSearchDto baseInfoSearchDto:resultList) {
+            logger.debug("Fetching user name for updUserId: {}", baseInfoSearchDto.getUpdUserId());
+            UserDetailsForUserNameOnlyDto userDetails = userDetailsService.findUserNameOnly(baseInfoSearchDto.getUpdUserId());
+            NoticeSearchResultDto noticeSearchResultDto = new NoticeSearchResultDto();
+            noticeSearchResultDto.setImportantFlg(baseInfoSearchDto.getImportantFlg());
+            noticeSearchResultDto.setTitle(baseInfoSearchDto.getTitle());
+            noticeSearchResultDto.setText(baseInfoSearchDto.getText());
+            noticeSearchResultDto.setBeginYmd(baseInfoSearchDto.getBeginYmd());
+            noticeSearchResultDto.setEndYmd(baseInfoSearchDto.getEndYmd());
+            noticeSearchResultDto.setUpdTimestamp(baseInfoSearchDto.getUpdTimestamp());
+            noticeSearchResultDto.setSeqInfo(baseInfoSearchDto.getSeqInfo());
+            noticeSearchResultDto.setUpdUserId(baseInfoSearchDto.getUpdUserId());
+            noticeSearchResultDto.setPartyId(userDetails.getPartyId());
+            noticeSearchResultDto.setPartyNameKj(userDetails.getPartyNameKj());
+            noticeSearchResultDto.setPartyNameEn(userDetails.getPartyNameEn());
+            noticeSearchResultDto.setPartyNameKn(userDetails.getPartyNameKn());
+            modelList.add(noticeSearchResultDto);
+        }
+        model.addAttribute("baseInfos", modelList);
         return "layout/noticesearch";
     }
     // To fetch filtered guide data
@@ -127,10 +158,13 @@ public class BaseInfoController {
      * @return the view name (Thymeleaf template) to render after successful registration
      */
     @PostMapping("/register")
-    public String registerBaseInfo( @Valid @RequestBody @ModelAttribute BaseInfoInsertDto baseInfoInsertDto,
+    public String registerBaseInfo(@Valid @RequestBody @ModelAttribute BaseInfoInsertDto baseInfoInsertDto,
                                    @RequestParam List<String> roles, // Getting checked roles from the form
-                                   Model model) {
-
+                                   Model model, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String partyId = userDetails.getPartyId();
+        baseInfoInsertDto.setCrtUserId(partyId);
+        baseInfoInsertDto.setUpdUserId(partyId);
         // Step 1: Insert base info into `base_info` table
         Long seqInfo = baseInfoService.insertBaseInfo(baseInfoInsertDto);
          System.out.println(seqInfo);
@@ -229,10 +263,14 @@ public class BaseInfoController {
      */    @PutMapping("/noticeUpdate/{seqInfo}")
     public String updateBaseInfo(@Valid @RequestBody @PathVariable("seqInfo") Long seqInfo,
                                                  @ModelAttribute BaseInfoUpdateDto baseInfoUpdateDto,
-                                                 @RequestParam List<String> roles) {
+                                                 @RequestParam List<String> roles,Authentication authentication) {
 
         // Step 1: Set the seqInfo in the DTO
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String partyId=userDetails.getPartyId();
+        baseInfoUpdateDto.setUpdUserId(partyId);
         baseInfoUpdateDto.setSeqInfo(seqInfo);
+
         System.out.println("ee:");
         System.out.println(baseInfoUpdateDto.getSeqInfo());
 
