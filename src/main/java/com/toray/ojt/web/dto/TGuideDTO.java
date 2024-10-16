@@ -4,15 +4,15 @@ import java.util.Date;
 
 public class TGuideDTO {
     private String title;
-    private Date endYmd;
+    private Date beginYmd;
     private String importantFlg;
 
     public TGuideDTO() {
     }
 
-    public TGuideDTO(String title, Date endYmd, String importantFlg) {
+    public TGuideDTO(String title, Date beginYmd, String importantFlg) {
         this.title = title;
-        this.endYmd = endYmd;
+        this.beginYmd = beginYmd;
         this.importantFlg = importantFlg;
     }
 
@@ -24,12 +24,12 @@ public class TGuideDTO {
         this.title = title;
     }
 
-    public Date getEndYmd() {
-        return endYmd;
+    public Date getBeginYmd() {
+        return beginYmd;
     }
 
-    public void setEndYmd(Date endYmd) {
-        this.endYmd = endYmd;
+    public void setBeginYmd(Date beginYmd) {
+        this.beginYmd = beginYmd;
     }
 
     public String getImportantFlg() {

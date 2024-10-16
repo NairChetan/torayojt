@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'Roboto';
+    font-family: "MS Gothic", "Roboto" !important;
     font-style: normal;
     font-weight: 100;
     src: url(https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2) format('woff2');
@@ -10,7 +10,7 @@ body {
     margin-right: 22px;
     margin-left: 22px;
     padding: 0;
-    font-family: 'Roboto';
+    font-family: "MS Gothic", "Roboto" !important;
     color: #333333;
 }
 
@@ -32,7 +32,10 @@ body {
     width: 33%;
     margin-top: -30px;
 }
-
+.title{
+display :flex;
+flex-direction:row;
+}
 .notice, .guide {
     background-color: #f3f0f9;
     border: 1px solid #333333;
@@ -42,7 +45,7 @@ body {
     position: relative;
     margin-bottom: 35px;
     margin-left: 0px;
-    margin-top: 8px;
+    margin-top: 0px;
     display: flex;
     flex-direction: column; /* Ensures content is stacked vertically */
     justify-content: flex-start; /* Aligns content at the top */
@@ -77,6 +80,8 @@ margin-top:-14px;
 .todo-list {
     margin-right: 0px;
     margin-bottom: 25px;
+    max-height: 200px;
+
 }
 
 #todo-checkbox {
@@ -99,8 +104,8 @@ table, th, td {
 }
 
 td {
-    padding: 0px;
     text-align: left;
+    padding-left: 3px;
 }
 
 td a {

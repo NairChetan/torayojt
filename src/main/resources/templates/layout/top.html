@@ -28,41 +28,45 @@
         <!-- Main content goes here -->
         <div class="main-content">
             <!-- Notice Section -->
-<div class="notice_container">
-    <p th:text="#{notice}">
-        <span><i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;"></i></span>  Notice
-    </p>
+            <div class="notice_container">
+                <div class="title">
+                    <span><i class="fa-solid fa-circle-exclamation fa-rotate-180"
+                             style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span>
+                    <p th:text="#{notice}"> Notice</p>
+                </div>
 
-    <!-- Notice Section -->
-    <div class="notice">
-        <!-- Notice Section -->
-        <ul class="list">
-            <!-- Iterate over baseInfoList -->
-            <li th:each="baseInfo : ${baseInfos}">
-                <!-- Display the date and title -->
-                <span th:text="${#dates.format(baseInfo.endYmd, 'MM/dd')}"></span>
+                <!-- Notice Section -->
+                <div class="notice">
+                    <!-- Notice Section -->
+                    <ul class="list">
+                        <!-- Iterate over baseInfoList -->
+                        <li th:each="baseInfo : ${baseInfos}">
+                            <!-- Display the date and title -->
+                            <span th:text="${#dates.format(baseInfo.beginYmd, 'MM/dd')}"></span>
 
-                <!-- Display the image logo if importantFlg is 1 -->
-                <span th:if="${baseInfo.importantFlg == '1' || baseInfo.importantFlg == 'Y'}" class="important">
+                            <!-- Display the image logo if importantFlg is 1 -->
+                            <span th:if="${baseInfo.importantFlg == '1' || baseInfo.importantFlg == 'Y'}"
+                                  class="important">
                             <img th:src="@{/images/important.png}" alt="Important" style="width: 20px; height: 20px;">
                         </span>
 
-                <span th:text="${baseInfo.title}"></span>
-            </li>
-        </ul>
-    </div>
-</div>
+                            <span th:text="${baseInfo.title}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
 
             <!-- ToDo and Answer List Combined Section -->
             <div class="todo-answer-container">
                 <!-- ToDo List Section -->
-                <p th:text="#{todo_list}"><span> <i class="fa-solid fa-circle-check" style="color: #2283ce;"></i></span>  ToDo List
-                </p>
+                <!-- ToDo List Section -->
+                <div class="title">
+                    <span><i class="fa-solid fa-circle-check"
+                             style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span>
+                    <p th:text="#{todo_list}"> ToDo List</p>
+                </div>
                 <div class="todo-list">
-
-
-
                     <table>
                         <colgroup>
                             <col style="width: 20%;"> <!-- Request 1 -->
@@ -84,41 +88,14 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><a href="#">1-1</a></td>
-                            <td>Test</td>
-                            <td>2020/10/24</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">A0012123-0001</a></td>
-                            <td>Domestic affiliate company</td>
-                            <td>2024/06/30</td>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">A0022222-0001</a></td>
-                            <td>en</td>
-                            <td>2024/07/31</td>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">A0033333-0001</a></td>
-                            <td>en</td>
-                            <td>2024/07/31</td>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>1</td>
+                        <tr th:each="todo : ${toDo}">
+                            <td><a th:href="'#' + ${todo.gyomuCd}" th:text="${todo.gyomuCd}">Request</a></td>
+                            <td th:text="${todo.shushuTxt}">Request</td>
+                            <td th:text="${todo.shimekiriYmd}">Deadline Date</td>
+                            <td th:text="${todo.requestTotal}">Request Total</td>
+                            <td th:text="${todo.iraiStatus}">Receipt Completed</td>
+                            <td th:text="${todo.iraiStatus}">Answer Completed</td>
+                            <td th:text="${todo.kaitoStatus}">Answer Waiting</td>
                         </tr>
                         </tbody>
                     </table>
@@ -143,50 +120,33 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><a href="#">A0012123-0001</a></td>
-                            <td>Domestic affiliate company</td>
-                            <td>2024/06/30</td>
-                            <td>Nithin Malia</td>
-                            <td>Answer waiting</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">A0022222-0001</a></td>
-                            <td>en</td>
-                            <td>2024/07/31</td>
-                            <td>Vinny John</td>
-                            <td>Answer waiting</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">A0033333-0001</a></td>
-                            <td>en</td>
-                            <td>2024/07/31</td>
-                            <td>kEzNzutHJ</td>
-                            <td>Answer waiting</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#">ABC10012-0001</a></td>
-                            <td>Domestic Affiliate Destination</td>
-                            <td>2024/07/31</td>
-                            <td>Nithin Malia</td>
-                            <td>Answer waiting</td>
+                        <tr th:each="todo : ${toDo}">
+                            <td><a th:href="'#' + ${todo.gyomuCd}" th:text="${todo.gyomuCd}">Answer</a></td>
+                            <td th:text="${todo.shushuTxt}">Answer</td>
+                            <td th:text="${todo.shimekiriYmd}">Deadline Date</td>
+                            <td th:text="${todo.partyNameEn}">Next Responder</td>
+                            <td th:text="${todo.codeValue1}">Answer Status</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
+
             </div>
         </div>
 
         <div class="guide_container">
-            <p th:text="#{gips_guide}"><span> <i class="fa-solid fa-circle-exclamation fa-rotate-180" style="color: #3d75d6;"></i></span>  GIPS Guide
-            </p>
+            <div class="title">
+                <span><i class="fa-solid fa-circle-exclamation fa-rotate-180"
+                         style="color: #3d75d6;margin-top:18px;margin-right:3px;"></i></span>
+                <p th:text="#{gips_guide}"> GIPS Guide</p>
+            </div>
             <div class="guide">
 
-                <ul  class="list">
+                <ul class="list">
                     <li th:each="guide : ${tGuides}">
                         <!-- Display the date and title -->
-                        <span th:text="${#dates.format(guide.endYmd, 'MM/dd')}"></span>
+                        <span th:text="${#dates.format(guide.beginYmd, 'MM/dd')}"></span>
 
                         <!-- Display the logo image if importantFlg is set -->
                         <span th:if="${guide.importantFlg == '1' || guide.importantFlg == 'Y'}" class="important">

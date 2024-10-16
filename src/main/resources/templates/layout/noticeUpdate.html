@@ -269,9 +269,9 @@ function getByteLength(str) {
                 </tr>
                 <tr>
                     <td class="label">Create</td>
-                    <td th:text="${#dates.format(baseInfoUpdateDto.crtTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${baseInfoUpdateDto.crtUserId}">
+                    <td th:text="${#dates.format(baseInfoUpdateDto.crtTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${baseInfoUpdateDto.partyName}">
                     <td class="label">Update</td>
-                    <td th:text="${#dates.format(baseInfoUpdateDto.updTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${baseInfoUpdateDto.updUserId}"></td>
+                    <td th:text="${#dates.format(baseInfoUpdateDto.updTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${baseInfoUpdateDto.partyName}"></td>
                 </tr>
             </table>
         </div>

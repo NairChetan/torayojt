@@ -38,7 +38,7 @@
                 changeYear: true,
                 changeMonth: true,
                 showButtonPanel: true,
-                beforeShowDay: function(date) {
+                beforeShowDay: function (date) {
                     var day = date.getDay();
                     if (day === 0) {
                         return [true, "sunday-highlight"];
@@ -96,7 +96,7 @@
                                      <td>${baseInfo.beginYmd}${endYmdDisplay}</td>
                                     <td class="roles-cell" data-seqinfo="${seqInfo}"></td>
                                     <td><a href="/noticeDetail/${seqInfo}">${baseInfo.title}</a></td>
-                                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}</td>
+                                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}<br>${baseInfo.partyNameEn}</td>
                                 </tr>`;
                                 $(".results-table tbody").append(row);
 
@@ -232,9 +232,6 @@
             });
         });
     </script>
-
-
-
     <script>
         function switchLanguage(lang) {
             const url = new URL(window.location.href);

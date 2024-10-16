@@ -21,6 +21,7 @@ public class BaseInfoUpdateDto {
     private String text;
     private Long attachClassNo;
 
+
     public Timestamp getUpdTimestamp() {
         return updTimestamp;
     }

@@ -6,7 +6,7 @@
     <select id="findBaseInfo" resultType="com.toray.ojt.web.dto.BaseInfoDTO">
         SELECT
         TITLE AS title,
-        END_YMD AS endYmd,
+        BEGIN_YMD AS beginYmd,
         IMPORTANT_FLG AS importantFlg
         FROM BASE_INFO
         WHERE CURRENT_DATE BETWEEN BEGIN_YMD AND END_YMD

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
 <head>
     <title>Navbar</title>
     <script src="top.js"></script>
@@ -15,17 +15,17 @@
             <img style="width:80px;margin-top: 10px;" th:src="@{/images/Toray.png}">
             <p class="company-slogan">Innovation by Chemistry</p>
             <img th:src="@{/images/gips.jpg}">
-            <p class="login-name" >Katsuhiro Sekito</p>
+            <p class="login-name" th:text="${#locale.language == 'ja' ? #authentication.principal.partyNameKj : #authentication.principal.partyNameEn}"></p>
         </div>
         <!-- Logout option aligned to the right -->
-        <a href="#" class="logout">Logout</a>
+        <a class="logout" th:href="@{/logout}">Logout</a>
     </div>
 
     <!-- Main navigation bar starts here -->
     <div class="header-menu">
         <nav>
             <ul>
-                <li class="active"><a href="#" th:text="#{top}">TOPs</a></li>
+                <li class="active"><a th:href="@{/toppage}" th:text="#{top}">TOPs</a></li>
                 <li><a href="#" th:text="#{request_menu}">Request Menu</a></li>
                 <li><a href="#" th:text="#{answer_menu}">Answer Menu</a></li>
                 <li><a href="#" th:text="#{search}">Search</a></li>
@@ -47,11 +47,17 @@
                         </ul>
                     </li>
                     <li>
-                        <select onchange="switchLanguage(this.value)">
-                            <option value="en" th:text="#{language_english}">English</option>
-                            <option value="ja" th:text="#{language_japanese}">Japanese</option>
-                            <option value="en" th:text="#{language_english}">English</option>
-                        </select>
+                        <!-- Added form to handle locale change -->
+                        <form action="#" method="get" id="languageForm">
+                            <select name="lang" onchange="document.getElementById('languageForm').submit()">
+                                <option value="en" th:value="'en'" th:selected="${#language_english}"
+                                        th:text="#{language_english}">English
+                                </option>
+                                <option value="ja" th:value="'ja'" th:selected="${#language_japanese}"
+                                        th:text="#{language_japanese}">Japanese
+                                </option>
+                            </select>
+                        </form>
                     </li>
                 </div>
             </ul>

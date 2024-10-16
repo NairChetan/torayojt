@@ -1,0 +1,46 @@
+<!-- src/main/resources/templates/layout/login.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="#{login_title}">Login</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}" href="../../static/css/login.css">
+</head>
+<body>
+<div class = "parent-div">
+    <div class="header-grid">
+        <h2 id="toray">'TORAY'</h2>
+        <h5 id="innovation">Innovation in Chemistry</h5>
+    </div>
+    <hr>
+    <h4 id = "screen-number">S01</h4>
+    <div class="logo-login-form">
+        <img th:src="@{images/GIPS_logo.jpg}" alt="GIPS logo">
+        <form th:action="@{/login}" method="post" class="login-form">
+            <label id="userId" th:for="username" th:text="#{user_id}">User ID</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password" th:text="#{password}">Password</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" th:text="#{login_button}">Login</button>
+            <div th:if="${errorMessage}">
+                <p th:text="${errorMessage} != null ? ${errorMessage} : #{login.error_message}" style="color:red;"></p>
+            </div>
+        </form>
+    </div>
+    <div class="message">
+        <p th:text="#{password_management_info}"></p>
+        <p th:text="#{toray_contact_info}"></p>
+        <p th:text="#{password_reset_link}"></p>
+        <hr class="dotted-hr">
+        <p th:text="#{contact_info_title}"></p>
+        <p th:text="#{inquiries_gips}"></p>
+        <p th:text="#{contact_gips}"></p>
+        <p th:text="#{inquiries_tg_id}"></p>
+        <p th:text="#{contact_tg_id}"></p>
+        <p th:text="#{account_lock_warning}"></p>
+    </div>
+    <div class="footer">
+        <p th:text="#{footer_info}"></p>
+    </div>
+</div>
+</body>
+</html>
