@@ -103,7 +103,7 @@
     <table class="condition-table">
         <tr>
             <td class="label" th:text="#{display_period}">Display Period</td>
-            <td th:text="${#dates.format(notice.beginYmd, 'yyyy/MM/dd')} + ' ~ ' + ${#dates.format(notice.endYmd, 'yyyy/MM/dd')}"></td>
+            <td th:text="${notice.endYmd != null ? #dates.format(notice.beginYmd, 'yyyy/MM/dd') + ' ~ ' + #dates.format(notice.endYmd, 'yyyy/MM/dd') : #dates.format(notice.beginYmd, 'yyyy/MM/dd')+ ' ~ '} "></td>
             <td class="label" th:text="#{importance}">Importance</td>
             <td th:text="${notice.importantFlg == 'Y' ? 'Important' : 'Normal'}"></td>
         </tr>
@@ -119,9 +119,9 @@
         </tr>
         <tr>
             <td class="label" th:text="#{create}">Create</td>
-            <td th:text="${#dates.format(notice.crtTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${notice.crtUserId}"></td>
+            <td th:text="${#dates.format(notice.crtTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${notice.partyName}"></td>
             <td class="label" th:text="#{update}">Update</td>
-            <td th:text="${#dates.format(notice.updTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${notice.updUserId}"></td>
+            <td th:text="${#dates.format(notice.updTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${notice.partyName}"></td>
         </tr>
     </table>
 </div>

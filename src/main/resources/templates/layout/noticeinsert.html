@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Content Registration</title>
-    <link rel="stylesheet" th:href="@{css/noticeinsert.css}">
+    <link rel="stylesheet" th:href="@{/css/noticeinsert.css}">
 
     <!-- jQuery and jQuery UI -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -100,21 +100,53 @@
 
             let errors = [];
 
+             // Clear previous error styles
+           $('#beginYmd, #endYmd, #title,#text').removeClass('error-border');
+           $('.checkbox-list').removeClass('error-border');
+
             // Check if start date and title are entered
             let startYmd = $('#beginYmd').val().trim();
             let endedYmd = $('#endYmd').val().trim();
             let title = $('#title').val().trim();
             let rolesChecked = $('.item-checkbox:checked').length;
+            let text = $('#text').val().trim();
 
             if (startYmd === '') {
-                errors.push("Select Display Period(Start).Set Proper Value.");
+                errors.push("[[#{startYmd_error}]]");
+                $('#beginYmd').addClass('error-border');
             }
             if (title === '') {
-                errors.push("Select Title.Set Proper Value.");
+                errors.push("[[#{title_error}]]");
+                 $('#title').addClass('error-border');
             }
             if (rolesChecked === 0) {
-                errors.push('At least one role must be selected.');
+                errors.push("[[#{role_error}]]");
+                $('.checkbox-list').addClass('error-border');
             }
+
+            // Function to calculate the byte length of a string
+function getByteLength(str) {
+    let byteLength = 0;
+    for (let i = 0; i < str.length; i++) {
+        let charCode = str.charCodeAt(i);
+        if (charCode <= 0x007F) {
+            byteLength += 1;  // ASCII character takes 1 byte
+        } else if (charCode <= 0x07FF) {
+            byteLength += 2;  // Non-ASCII characters take 2 bytes
+        } else if (charCode <= 0xFFFF) {
+            byteLength += 3;  // More complex characters take 3 bytes
+        } else {
+            byteLength += 4;  // Any others take 4 bytes
+        }
+    }
+    return byteLength;
+}
+
+    // Check if the byte length exceeds 4000
+    if (getByteLength(text) > 4000) {
+        errors.push("[[#{content_error}]]");
+        $('#text').addClass('error-border');
+    }
            if (startYmd && endedYmd) {
     // Function to convert dd-mm-yyyy to yyyy-mm-dd
     function convertDateFormat(dateString) {
@@ -134,7 +166,8 @@
     if (isNaN(startDate) || isNaN(endDate)) {
         errors.push('Invalid date format. Please use dd-mm-yyyy.');
     } else if (startDate > endDate) {
-        errors.push('End Date must be greater than Start Date.');
+        errors.push("[[#{date_error}]]");
+        $('#beginYmd, #endYmd').addClass('error-border');
     }
 }
 

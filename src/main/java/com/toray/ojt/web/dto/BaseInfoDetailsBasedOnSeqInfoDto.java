@@ -19,6 +19,15 @@ public class BaseInfoDetailsBasedOnSeqInfoDto {
     private String text;
     private Long attachClassNo;
     private List<BaseInfoViewRole> roles;
+    private String partyName;
+
+    public String getPartyName() {
+        return partyName;
+    }
+
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
+    }
 
     public Timestamp getCrtTimestamp() {
         return crtTimestamp;

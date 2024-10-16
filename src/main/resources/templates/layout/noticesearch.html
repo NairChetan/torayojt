@@ -8,8 +8,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
+
     <script>
-        $(function() {
+        $(document).ready(function() {
             // Custom Japanese localization for jQuery UI DatePicker
             $.datepicker.regional['ja'] = {
                 closeText: '閉じる',
@@ -78,70 +79,60 @@
                     size: pageSize,
                     subject: $("#subject").val()
                 };
-                console.log("sfd",formData.subject);
 
                 $.ajax({
-    url: "/list",
-    type: "GET",
-    data: formData,
-    success: function(response) {
-        $(".results-table tbody").empty();
-        console.log(response);
-        if (response.data.length > 0) {
-            $(".results-table").show();
+                    url: "/list",
+                    type: "GET",
+                    data: formData,
+                    success: function(response) {
+                        $(".results-table tbody").empty();
+                        if (response.data.length > 0) {
+                            $(".results-table").show();
 
-            $.each(response.data, function(index, baseInfo) {
-                var seqInfo = baseInfo.seqInfo; // Store the seqInfo for the current baseInfo
-                let localeLanguage = /*[[${#locale.language}]]*/ 'en';
-                console.log("Locale Language:", /*[[${#locale.language}]]*/ 'en');
-                let partyName = (localeLanguage === 'ja') ? baseInfo.partyNameKj : baseInfo.partyNameEn;
+                            $.each(response.data, function(index, baseInfo) {
+                                var seqInfo = baseInfo.seqInfo;
+                                 let endYmdDisplay = baseInfo.endYmd ? ` ~ ${baseInfo.endYmd}` : " ~";
+                                var row = `<tr>
+                                     <td>${baseInfo.beginYmd}${endYmdDisplay}</td>
+                                    <td class="roles-cell" data-seqinfo="${seqInfo}"></td>
+                                    <td><a href="/noticeDetail/${seqInfo}">${baseInfo.title}</a></td>
+                                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}<br>${baseInfo.partyNameEn}</td>
+                                </tr>`;
+                                $(".results-table tbody").append(row);
 
-                // Create a row with a placeholder for the roles
-                var row = `<tr>
-                    <td>${baseInfo.beginYmd} ~ ${baseInfo.endYmd}</td>
-                    <td class="roles-cell" data-seqinfo="${seqInfo}"></td>
-                    <td><a href="/noticeDetail/${seqInfo}">${baseInfo.title}</a></td>
-                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}<br>
-                    ${partyName}</td>
-                </tr>`;
-                $(".results-table tbody").append(row);
+                                // Fetch roles based on seqInfo
+                                $.ajax({
+                                    url: 'noticeDetail/roles/' + seqInfo,
+                                    method: 'GET',
+                                    success: function(roles) {
+                                        var rolesCell = $(".roles-cell[data-seqinfo='" + seqInfo + "']");
+                                        rolesCell.empty();
 
-                // AJAX call to fetch roles based on seqInfo
-                $.ajax({
-                    url: 'noticeDetail/roles/' + seqInfo,
-                    method: 'GET',
-                    success: function(roles) {
-                        // Assuming `roles` is a list of role strings
-                        var rolesCell = $(".roles-cell[data-seqinfo='" + seqInfo + "']");
-                        rolesCell.empty();  // Clear any existing content
+                                        var expectedLength = 9;
+                                        if (roles.length === expectedLength) {
+                                            rolesCell.html('every');
+                                        } else {
+                                            var roleList = roles.map(role => `<div>[${role}]</div>`).join('');
+                                            rolesCell.html(roleList);
+                                        }
+                                    },
+                                    error: function() {
+                                        $(".roles-cell[data-seqinfo='" + seqInfo + "']").html("Error loading roles");
+                                    }
+                                });
+                            });
 
-                         var expectedLength = 9; // Set this to the expected length you want to compare against
-                 if (roles.length === expectedLength) {
-                    rolesCell.html('every'); // Update the cell with "every" if lengths match
-                  } else{
-                        // Generate role list as a string
-                        var roleList = roles.map(role => `<div>[${role}]</div>`).join('');
-                        rolesCell.html(roleList); // Update the cell with the roles
+                            $(".results-info").html(response.totalItems + " hits, displaying " +
+                                ((currentPage - 1) * pageSize + 1) + " to " + Math.min(currentPage * pageSize, response.totalItems)).show();
+                            updatePagination(response.totalPages);
+                        } else {
+                            $(".results-info").html("No results found").show();
                         }
                     },
                     error: function() {
-                        console.error('Failed to fetch roles for seqInfo: ' + seqInfo);
-                        $(".roles-cell[data-seqinfo='" + seqInfo + "']").html("Error loading roles");
+                        $(".results-info").html("An error occurred while fetching data").show();
                     }
                 });
-            });
-
-            $(".results-info").html(response.totalItems + " hits, displaying " + ((currentPage - 1) * pageSize + 1) + " to " + Math.min(currentPage * pageSize, response.totalItems)).show();
-            updatePagination(response.totalPages);
-        } else {
-            $(".results-info").html("No results found").show();
-        }
-    },
-    error: function() {
-        $(".results-info").html("An error occurred while fetching data").show();
-    }
-});
-
             }
 
             // Update pagination controls
@@ -160,33 +151,85 @@
             });
 
             // Search button click handler
-            $(".search-btn").on("click", function(e) {
-                e.preventDefault();
+            $(".search-btn").on("click", function(event) {
+                event.preventDefault();
                 currentPage = 1; // Reset to page 1 on new search
+
+                // Validation
+                let errors = [];
+                $('#beginYmd, #endYmd').removeClass('error-border');
+                $('#error-messages').hide(); // Hide error messages initially
+
+                let startYmd = $('#beginYmd').val().trim();
+                let endedYmd = $('#endYmd').val().trim();
+
+                if (startYmd && endedYmd) {
+                    function detectDateFormat(dateString) {
+                        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+                            return dateString;
+                        } else if (/^\d{8}$/.test(dateString)) {
+                            return dateString.slice(0, 4) + '-' + dateString.slice(4, 6) + '-' + dateString.slice(6);
+                        } else if (/^\d{2}-\d{2}-\d{4}$/.test(dateString)) {
+                            const [day, month, year] = dateString.split("-");
+                            return `${year}-${month}-${day}`;
+                        } else {
+                            return null;
+                        }
+                    }
+
+                    let formattedStartYmd = detectDateFormat(startYmd);
+                    let formattedEndedYmd = detectDateFormat(endedYmd);
+
+                    if (formattedStartYmd === null || formattedEndedYmd === null) {
+                        errors.push('Invalid date format. Please use either yyyyMMdd or dd-mm-yyyy.');
+                    } else {
+                        let startDate = Date.parse(formattedStartYmd);
+                        let endDate = Date.parse(formattedEndedYmd);
+
+                        if (isNaN(startDate) || isNaN(endDate)) {
+                            errors.push('Invalid date. Please enter valid dates.');
+                        } else if (startDate > endDate) {
+                            errors.push("[[#{date_error}]]");
+                            $('#beginYmd, #endYmd').addClass('error-border');
+                        }
+                    }
+                }
+
+                // If there are errors, show them and prevent search
+                if (errors.length > 0) {
+                    let errorHtml = '<ul>';
+                    errors.forEach(function(error) {
+                        errorHtml += '<li>' + error + '</li>';
+                    });
+                    errorHtml += '</ul>';
+                    $('#error-messages').html(errorHtml).show();
+
+                    $('html, body').animate({
+                        scrollTop: $("#error-messages").offset().top
+                    }, 500);
+                    return; // Exit the function to prevent the search
+                }
+
+                // Only perform search if there are no errors
                 performSearch();
             });
 
-            //Role in dropdown
-            $(document).ready(function() {
-    // Fetch roles via AJAX
-    $.get('/roles', function(roles) {
-        // Clear the existing options (if needed)
-        $('#subject').empty();
+            // Dynamically clear error when user modifies input fields
+            $('#beginYmd, #endYmd').on('input', function() {
+                $('#error-messages').hide(); // Hide error messages
+                $(this).removeClass('error-border'); // Remove error border
+            });
 
-        // Add a default option
-        $('#subject').append('<option value="every">every</option>');
-
-        // Populate the select with roles as options
-        roles.forEach(function(role) {
-            // Assuming role.role is the value and role.roleName is the text
-            $('#subject').append(`<option value="${role.role}">${role.role} ${role.roleName}</option>`);
-        });
-    }).fail(function() {
-        console.error("Failed to fetch roles.");
-        // Optionally handle error (e.g., display a message)
-    });
-});
-
+            // Role in dropdown
+            $.get('/roles', function(roles) {
+                $('#subject').empty();
+                $('#subject').append('<option value="every">every</option>');
+                roles.forEach(function(role) {
+                    $('#subject').append(`<option value="${role.role}">${role.role} ${role.roleName}</option>`);
+                });
+            }).fail(function() {
+                console.error("Failed to fetch roles.");
+            });
         });
     </script>
     <script>
@@ -210,6 +253,9 @@
     <div class="page-number">S15</div>
 </div>
 <form id="searchForm">
+    <!-- Error Div for displaying validation errors -->
+    <div id="error-messages" class="error-container" style="display: none;"></div>
+
     <table class="search-criteria">
         <tr>
             <td colspan="3" class="header" th:text="#{search_criteria}">Search Criteria</td>

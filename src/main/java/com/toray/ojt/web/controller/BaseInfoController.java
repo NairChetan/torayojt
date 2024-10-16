@@ -9,6 +9,8 @@ import com.toray.ojt.web.service.BaseInfoService;
 import com.toray.ojt.web.service.UserDetailsService;
 import com.toray.ojt.web.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+import java.net.URI;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -158,7 +162,7 @@ public class BaseInfoController {
      * @return the view name (Thymeleaf template) to render after successful registration
      */
     @PostMapping("/register")
-    public String registerBaseInfo(@Valid @RequestBody @ModelAttribute BaseInfoInsertDto baseInfoInsertDto,
+    public ResponseEntity<String> registerBaseInfo( @Valid @RequestBody @ModelAttribute BaseInfoInsertDto baseInfoInsertDto,
                                    @RequestParam List<String> roles, // Getting checked roles from the form
                                    Model model, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -180,8 +184,11 @@ public class BaseInfoController {
         // Optionally, you can add success messages or handle any validation issues here
         model.addAttribute("message", "Content registered successfully!");
 
-        // Redirect to some view, perhaps the same form page or a confirmation page
-        return "layout/noticesearch"; // Change to the actual form page or success page
+        // Redirect to noticeDetail page for the updated seqInfo
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("/noticeDetail/" + seqInfo));
+
+        return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
     }
 
     /**
@@ -196,6 +203,8 @@ public class BaseInfoController {
     public String getNoticeDetail(@PathVariable Long seqInfo, Model model) {
         BaseInfoDetailsBasedOnSeqInfoDto notice = baseInfoService.getBaseInfoBySeqInfo(seqInfo);
         System.out.println(notice.getSeqInfo());
+        UserDetailsForUserNameOnlyDto userDetailsForUserNameOnlyDto = userDetailsService.findUserNameOnly(notice.getCrtUserId());
+        notice.setPartyName(userDetailsForUserNameOnlyDto.getPartyNameEn());
         model.addAttribute("notice", notice);
         return "layout/noticeDetails";  // The Thymeleaf view name
     }
@@ -245,7 +254,9 @@ public class BaseInfoController {
      */
     @GetMapping("/noticeUpdate/{seqInfo}")
     public String showUpdateForm(@PathVariable("seqInfo") Long seqInfo, Model model) {
-        BaseInfoDetailsBasedOnSeqInfoDto notice= baseInfoService.getBaseInfoBySeqInfo(seqInfo);// Assuming service gets the data
+        BaseInfoDetailsBasedOnSeqInfoDto notice= baseInfoService.getBaseInfoBySeqInfo(seqInfo);
+        UserDetailsForUserNameOnlyDto userDetailsForUserNameOnlyDto = userDetailsService.findUserNameOnly(notice.getCrtUserId());
+        notice.setPartyName(userDetailsForUserNameOnlyDto.getPartyNameEn());
         model.addAttribute("baseInfoUpdateDto", notice);
         System.out.println("ee:");
         System.out.println(notice.getSeqInfo());
@@ -256,12 +267,13 @@ public class BaseInfoController {
     /**
      * Handles PUT requests to update the base information and roles for a specific notice identified by its sequence info.
      *
-     * @param seqInfo the unique identifier for the notice, extracted from the URL path
+     * @param seqInfo           the unique identifier for the notice, extracted from the URL path
      * @param baseInfoUpdateDto the DTO containing updated base information
-     * @param roles the list of roles to be associated with the notice
+     * @param roles             the list of roles to be associated with the notice
      * @return the name of the Thymeleaf template to redirect to after the update
-     */    @PutMapping("/noticeUpdate/{seqInfo}")
-    public String updateBaseInfo(@Valid @RequestBody @PathVariable("seqInfo") Long seqInfo,
+     */
+    @PutMapping("/noticeUpdate/{seqInfo}")
+    public ResponseEntity<String> updateBaseInfo(@Valid @RequestBody @PathVariable("seqInfo") Long seqInfo,
                                                  @ModelAttribute BaseInfoUpdateDto baseInfoUpdateDto,
                                                  @RequestParam List<String> roles,Authentication authentication) {
 
@@ -289,12 +301,16 @@ public class BaseInfoController {
                 baseInfoService.insertBaseInfoRoleWithSeqInfo(roleInsertDto);
             }
 
-            // Return success message
-//            return ResponseEntity.ok("Base info and roles updated successfully");
-         return "layout/noticesearch";
+            // Redirect to noticeDetail page for the updated seqInfo
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create("/noticeDetail/" + seqInfo));
+
+            return ResponseEntity.status(HttpStatus.FOUND).headers(headers).build();
+//         return "layout/noticeDetails";
         } else {
 
-            return "layout/noticeDetails";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error occurred while updating base info and roles.");
         }
     }
 }

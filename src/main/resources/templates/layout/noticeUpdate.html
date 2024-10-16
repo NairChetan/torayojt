@@ -78,27 +78,82 @@
     <script>
         $(document).ready(function () {
 
-             // Custom validation for the form
+                 // Custom validation for the form
         $('.register-btn').click(function(event) {
             event.preventDefault(); // Prevent form submission
 
             let errors = [];
 
+             // Clear previous error styles
+           $('#beginYmd, #endYmd, #title,#text').removeClass('error-border');
+           $('.checkbox-list').removeClass('error-border');
+
             // Check if start date and title are entered
             let startYmd = $('#beginYmd').val().trim();
+            let endedYmd = $('#endYmd').val().trim();
             let title = $('#title').val().trim();
             let rolesChecked = $('.item-checkbox:checked').length;
+            let text = $('#text').val().trim();
 
             if (startYmd === '') {
-                errors.push("Select Display Period(Start).Set Proper Value.");
+                errors.push("[[#{startYmd_error}]]");
+                $('#beginYmd').addClass('error-border');
             }
             if (title === '') {
-                errors.push("Select Title.Set Proper Value.");
+                errors.push("[[#{title_error}]]");
+                 $('#title').addClass('error-border');
             }
             if (rolesChecked === 0) {
-                errors.push('At least one role must be selected.');
+                errors.push("[[#{role_error}]]");
+                $('.checkbox-list').addClass('error-border');
             }
 
+            // Function to calculate the byte length of a string
+function getByteLength(str) {
+    let byteLength = 0;
+    for (let i = 0; i < str.length; i++) {
+        let charCode = str.charCodeAt(i);
+        if (charCode <= 0x007F) {
+            byteLength += 1;  // ASCII character takes 1 byte
+        } else if (charCode <= 0x07FF) {
+            byteLength += 2;  // Non-ASCII characters take 2 bytes
+        } else if (charCode <= 0xFFFF) {
+            byteLength += 3;  // More complex characters take 3 bytes
+        } else {
+            byteLength += 4;  // Any others take 4 bytes
+        }
+    }
+    return byteLength;
+}
+
+    // Check if the byte length exceeds 4000
+    if (getByteLength(text) > 4000) {
+        errors.push("[[#{content_error}]]");
+        $('#text').addClass('error-border');
+    }
+           if (startYmd && endedYmd) {
+    // Function to convert dd-mm-yyyy to yyyy-mm-dd
+    function convertDateFormat(dateString) {
+        const [day, month, year] = dateString.split("-");
+        return `${year}-${month}-${day}`; // Converts to 'yyyy-mm-dd'
+    }
+
+    // Convert both date strings
+    let formattedStartYmd = convertDateFormat(startYmd);
+    let formattedEndedYmd = convertDateFormat(endedYmd);
+
+    // Parse the converted dates
+    let startDate = Date.parse(formattedStartYmd);
+    let endDate = Date.parse(formattedEndedYmd);
+
+    // Check if the dates are valid
+    if (isNaN(startDate) || isNaN(endDate)) {
+        errors.push('Invalid date format. Please use dd-mm-yyyy.');
+    } else if (startDate > endDate) {
+        errors.push("[[#{date_error}]]");
+        $('#beginYmd, #endYmd').addClass('error-border');
+    }
+}
             // If there are errors, display them in the error div
             if (errors.length > 0) {
                 let errorHtml = '<ul>';
@@ -116,6 +171,8 @@
             } else {
                 // No errors, submit the form
                 $('#contentForm').submit();
+
+
             }
         });
      });
@@ -212,9 +269,9 @@
                 </tr>
                 <tr>
                     <td class="label">Create</td>
-                    <td th:text="${#dates.format(baseInfoUpdateDto.crtTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${baseInfoUpdateDto.crtUserId}">
+                    <td th:text="${#dates.format(baseInfoUpdateDto.crtTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${baseInfoUpdateDto.partyName}">
                     <td class="label">Update</td>
-                    <td th:text="${#dates.format(baseInfoUpdateDto.updTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${baseInfoUpdateDto.updUserId}"></td>
+                    <td th:text="${#dates.format(baseInfoUpdateDto.updTimestamp, 'yyyy/MM/dd HH:mm:ss')} + ' ' + ${baseInfoUpdateDto.partyName}"></td>
                 </tr>
             </table>
         </div>

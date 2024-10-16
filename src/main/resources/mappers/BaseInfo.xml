@@ -47,13 +47,20 @@
             </if>
             <if test="text != null and text != ''">
             AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
-        </if>
+           </if>
         <if test="importantFlg != null and importantFlg != ''">
             AND Important_Flg = 'Y'
         </if>
-        <if test="endYmd != null and endYmd != ''">
+        <if test="endYmd != null and endYmd != '' and (beginYmd == null or beginYmd == '') ">
             AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
         </if>
+        <if test="beginYmd != null and beginYmd != '' and (endYmd == null or endYmd == '') ">
+            AND (End_Ymd &gt; TO_DATE(#{beginYmd}, 'YYYY-MM-DD') OR End_Ymd IS NULL)
+        </if>
+        <if test="beginYmd != null and beginYmd != '' and endYmd != null and endYmd != ''">
+                AND End_Ymd BETWEEN TO_DATE(#{beginYmd}, 'YYYY-MM-DD') AND TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+        </if>
+
         ORDER BY CASE WHEN important_flg = 'Y' THEN 1 ELSE 0 END DESC
         OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
        </if>
@@ -64,16 +71,22 @@
             ON b.SEQ_INFO = v.SEQ_INFO
             WHERE v.ROLE = #{subject}
             <if test="title != null and title != ''">
-                AND TITLE LIKE '%' || #{title} || '%'
+                AND LOWER(TITLE) LIKE '%' || LOWER(#{title}) || '%'
             </if>
             <if test="text != null and text != ''">
-                AND Text LIKE '%' || #{text} || '%'
+                AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
             </if>
             <if test="importantFlg != null and importantFlg != ''">
                 AND Important_Flg = 'Y'
             </if>
-            <if test="endYmd != null and endYmd != ''">
+            <if test="endYmd != null and endYmd != '' and (beginYmd == null or beginYmd == '') ">
                 AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and (endYmd == null or endYmd == '') ">
+                AND (End_Ymd &gt; TO_DATE(#{beginYmd}, 'YYYY-MM-DD') OR End_Ymd IS NULL)
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and endYmd != null and endYmd != ''">
+                AND End_Ymd BETWEEN TO_DATE(#{beginYmd}, 'YYYY-MM-DD') AND TO_DATE(#{endYmd}, 'YYYY-MM-DD')
             </if>
             ORDER BY CASE WHEN important_flg = 'Y' THEN 1 ELSE 0 END DESC
             OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
@@ -88,18 +101,24 @@
         SELECT COUNT(*)
         FROM base_info
         WHERE 1=1
-        <if test="title != null and title != ''">
-            AND TITLE LIKE '%' || #{title} || '%'
-        </if>
-        <if test="text != null and text != ''">
-            AND Text LIKE '%' || #{text} || '%'
-        </if>
+            <if test="title != null and title != ''">
+                AND LOWER(TITLE) LIKE '%' || LOWER(#{title}) || '%'
+            </if>
+            <if test="text != null and text != ''">
+                AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
+            </if>
         <if test="importantFlg != null and importantFlg != ''">
             AND Important_Flg = 'Y'
         </if>
-        <if test="endYmd != null and endYmd != ''">
-            AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
-        </if>
+            <if test="endYmd != null and endYmd != '' and (beginYmd == null or beginYmd == '') ">
+                AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and (endYmd == null or endYmd == '') ">
+                AND (End_Ymd &gt; TO_DATE(#{beginYmd}, 'YYYY-MM-DD') OR End_Ymd IS NULL)
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and endYmd != null and endYmd != ''">
+                AND End_Ymd BETWEEN TO_DATE(#{beginYmd}, 'YYYY-MM-DD') AND TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
         </if>
 
         <if test="subject != 'every' ">
@@ -109,16 +128,22 @@
             ON b.SEQ_INFO = v.SEQ_INFO
             WHERE v.ROLE = #{subject}
             <if test="title != null and title != ''">
-                AND TITLE LIKE '%' || #{title} || '%'
+                AND LOWER(TITLE) LIKE '%' || LOWER(#{title}) || '%'
             </if>
             <if test="text != null and text != ''">
-                AND Text LIKE '%' || #{text} || '%'
+                AND LOWER(Text) LIKE '%' || LOWER(#{text}) || '%'
             </if>
             <if test="importantFlg != null and importantFlg != ''">
                 AND Important_Flg = 'Y'
             </if>
-            <if test="endYmd != null and endYmd != ''">
+            <if test="endYmd != null and endYmd != '' and (beginYmd == null or beginYmd == '') ">
                 AND End_Ymd &lt; TO_DATE(#{endYmd}, 'YYYY-MM-DD')
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and (endYmd == null or endYmd == '') ">
+                AND (End_Ymd &gt; TO_DATE(#{beginYmd}, 'YYYY-MM-DD') OR End_Ymd IS NULL)
+            </if>
+            <if test="beginYmd != null and beginYmd != '' and endYmd != null and endYmd != ''">
+                AND End_Ymd BETWEEN TO_DATE(#{beginYmd}, 'YYYY-MM-DD') AND TO_DATE(#{endYmd}, 'YYYY-MM-DD')
             </if>
         </if>
     </select>
