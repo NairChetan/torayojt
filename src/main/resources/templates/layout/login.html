@@ -16,10 +16,11 @@
     <div class="logo-login-form">
         <img th:src="@{images/GIPS_logo.jpg}" alt="GIPS logo">
         <form th:action="@{/login}" method="post" class="login-form">
+            <input type="hidden" name="lang" th:value="${#locale.language}">
             <label id="userId" th:for="username" th:text="#{user_id}">User ID</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username">
             <label for="password" th:text="#{password}">Password</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password">
             <button type="submit" th:text="#{login_button}">Login</button>
             <div th:if="${errorMessage}">
                 <p th:text="${errorMessage} != null ? ${errorMessage} : #{login.error_message}" style="color:red;"></p>

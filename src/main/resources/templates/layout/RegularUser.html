@@ -26,7 +26,7 @@
         <div class="guide">
             <ul class="guide-scroll">
                 <li th:each="guide : ${guides}">                    <!-- Display the date and title --> <span
-                        th:text="${#dates.format(guide.endYmd, 'MM/dd')}"></span> <span th:if="${guide.importantFlg}">                        <span
+                        th:text="${#dates.format(guide.beginYmd, 'MM/dd')}"></span> <span th:if="${guide.importantFlg}">                        <span
                         class="important">重要</span>                    </span>
                     <!-- Display important flag if applicable --> <span th:text="${guide.title}"></span></li>
             </ul>

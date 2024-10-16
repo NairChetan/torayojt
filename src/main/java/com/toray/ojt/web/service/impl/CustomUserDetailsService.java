@@ -8,6 +8,8 @@ import com.toray.ojt.web.mapper.UserDetailsMapper;
 import com.toray.ojt.web.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,10 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -27,45 +26,51 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserMapper userMapper;
     private final BaseAttributeMapper baseAttributeMapper;
     private final UserDetailsMapper userDetailsMapper;
+    private final MessageSource messageSource; // Inject MessageSource
     private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
 
-    public CustomUserDetailsService(UserMapper userMapper, BaseAttributeMapper baseAttributeMapper, UserDetailsMapper userDetailsMapper) {
+    public CustomUserDetailsService(UserMapper userMapper, BaseAttributeMapper baseAttributeMapper, UserDetailsMapper userDetailsMapper, MessageSource messageSource) {
         this.userMapper = userMapper;
         this.baseAttributeMapper = baseAttributeMapper;
         this.userDetailsMapper = userDetailsMapper;
+        this.messageSource = messageSource;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Locale locale = LocaleContextHolder.getLocale();
         // Load user by accountId
         log.debug("Parameter username: {}", username);
         User user = userMapper.findByAccountId(username);
         log.debug("User Object: {}", user);
 
         if (user == null) {
-            throw new UsernameNotFoundException("アカウントがロックされています。DBAに連絡してください。" + username);
+            String message = messageSource.getMessage("error.user_not_found", new Object[]{username}, locale);
+            throw new UsernameNotFoundException(message);
         }
-            int isExpired = user.getExpDate().compareTo(new Date());
-            log.debug("isExpired: {}", isExpired);
-            if (isExpired < 0) {
-                UserUpdateDto userUpdateDto = new UserUpdateDto();
-                userUpdateDto.setAccountId(username);
-                userUpdateDto.setState("L");
-                userUpdateDto.setFailedLoginAttempts(user.getFailedLoginAttempts());
-                userMapper.updateFailedLoginAttempt(userUpdateDto);
-                throw new DisabledException("アカウントがロックされています。DBAに連絡してください。");
-            }
+        int isExpired = user.getExpDate().compareTo(new Date());
+        log.debug("isExpired: {}", isExpired);
+        if (isExpired < 0) {
+            UserUpdateDto userUpdateDto = new UserUpdateDto();
+            userUpdateDto.setAccountId(username);
+            userUpdateDto.setState("L");
+            userUpdateDto.setFailedLoginAttempts(user.getFailedLoginAttempts());
+            userMapper.updateFailedLoginAttempt(userUpdateDto);
+            String message = messageSource.getMessage("error.account_locked", null, locale);
+            throw new DisabledException(message);
+        }
         if (!user.getState().equals("A")) {
-            throw new DisabledException("アカウントがロックされています。DBAに連絡してください。");
+            String message = messageSource.getMessage("error.account_locked", null, locale);
+            throw new DisabledException(message);
         }
         if (user.getFailedLoginAttempts() == 5) {
             UserUpdateDto userUpdateDto = new UserUpdateDto();
             userUpdateDto.setAccountId(username);
             userUpdateDto.setState("L");
             userUpdateDto.setFailedLoginAttempts(user.getFailedLoginAttempts());
-            userMapper.updateFailedLoginAttempt(userUpdateDto);
-            throw new DisabledException("アカウントがロックされています。DBAに連絡してください。");
+            String message = messageSource.getMessage("error.account_locked", null, locale);
+            throw new DisabledException(message);
         }
         // Load user role based on partyId
         String role = baseAttributeMapper.findAtrributeNameByPartyId(user.getPartyId());
@@ -74,7 +79,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Load user details (such as names)
         com.toray.ojt.web.entity.UserDetails userDetails = userDetailsMapper.findUserNameByPartyId(user.getPartyId());
         if (userDetails == null) {
-            throw new UsernameNotFoundException("指定されたパーティIDのユーザー詳細が見つかりません: " + user.getPartyId());
+            String message = messageSource.getMessage("error.user_not_found", new Object[]{user.getPartyId()}, locale);
+            throw new UsernameNotFoundException(message);
         }
 
         // Return the CustomUserDetails object
