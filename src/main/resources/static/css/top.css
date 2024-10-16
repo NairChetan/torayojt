@@ -11,6 +11,7 @@ body {
     margin-left: 22px;
     padding: 0;
     font-family: "MS Gothic", "Roboto" !important;
+    font-weight: 100;
     color: #333333;
 }
 
@@ -149,7 +150,7 @@ th {
     font-size: 12px;
     color: #000000;
     font-weight: bold;
-    margin-top: 19px;
+    margin-top: 24px;
 }
 .logo-text img{
     margin-top: 15px;
