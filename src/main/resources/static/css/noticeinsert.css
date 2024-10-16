@@ -92,7 +92,7 @@ textarea {
 .checkbox-list {
     height: 100px;
     overflow-y: auto;
-    border: 1px solid #ccc;
+
     padding: 5px;
 }
 
@@ -263,7 +263,7 @@ input[type="radio"],
 textarea {
     background-color: #EBF3F9;
     border-radius: 5px;
-    border: 1px solid #ccc;
+
 }
 
 
@@ -317,4 +317,6 @@ textarea {
     list-style-type: none;
 }
 
-
+.error-border {
+    border: 2px solid red;
+}
