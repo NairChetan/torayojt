@@ -1,0 +1,91 @@
+.parent-div{
+    display: flex;
+    flex-direction:column;
+}
+.header-grid {
+    display: flex;
+    gap:0.5%;
+    max-width: 100%; /* Full width */
+    padding-left: 2%; /* Padding around text */
+    box-sizing: border-box; /* Ensures padding is included in the total width */
+    text-align: left; /* Center the text */
+}
+#toray{
+    color:blue;
+}
+#innovation{
+    color:black;
+    padding-top:0.5%;
+}
+hr{
+    height:2px;
+    background-color: lightblue;
+    width: 98%;
+}
+#screen-number{
+    padding-left:1%;
+    margin-top:-0.5%;
+}
+.logo-login-form{
+    display:flex;
+    width:100%;
+    gap:0.3%;
+    justify-content:center;
+    align-items:center;
+}
+form {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    align-content:left;
+    height:13.5vh;
+    background-color: #5F9EA0; /* Turquoise green */
+    border: none;    /* Light gray border */
+    padding: 20px   /* Padding inside the form */
+
+}
+form label{
+    color:black;
+    margin-left:-50%;
+}
+form input
+{
+    width:50%;
+    margin-left:-30%;
+}
+form button
+{
+    margin-left:-56%;
+    margin-top:5%;
+}
+#userId{
+    margin-left:-55%;
+}
+.message{
+    margin-top:1%;
+    margin-left:35.3%;
+    padding-top:2%;
+    padding-left:1%;
+    border:1px solid black;
+    width: 32%;
+}
+.message p{
+    padding-left:10%;
+}
+.dotted-hr {
+    border: none;
+    border-top: 2px dotted black;
+    height: 1px;
+    width: 90%;
+    margin: 20px 0px 20px 30px;
+    background-color:white;
+}
+.contact{
+    padding-left:20.3%;
+}
+.footer{
+    margin-top:1%;
+    margin-left:35.3%;
+     background-color: #D3D3D3; /* Light grey background */
+    width: 33.1%;
+}

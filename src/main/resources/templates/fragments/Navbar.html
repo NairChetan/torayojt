@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
+<head>
+    <title>Navbar</title>
+    <script src="top.js"></script>
+
+</head>
+<body>
+
+<!-- src/main/resources/templates/fragments/navbar.html -->
+<header th:fragment="Navbar">
+    <!-- Logo section moved outside the header -->
+    <div class="header-logo">
+        <div class="logo-text">
+            <img style="width:80px;margin-top: 10px;" th:src="@{/images/Toray.png}">
+            <p class="company-slogan">Innovation by Chemistry</p>
+            <img th:src="@{/images/gips.jpg}">
+            <p class="login-name" th:text="${#locale.language == 'ja' ? #authentication.principal.partyNameKj : #authentication.principal.partyNameEn}"></p>
+        </div>
+        <!-- Logout option aligned to the right -->
+        <a class="logout" th:href="@{/logout}">Logout</a>
+    </div>
+
+    <!-- Main navigation bar starts here -->
+    <div class="header-menu">
+        <nav>
+            <ul>
+                <li class="active"><a th:href="@{/toppage}" th:text="#{top}">TOPs</a></li>
+                <li><a href="#" th:text="#{request_menu}">Request Menu</a></li>
+                <li><a href="#" th:text="#{answer_menu}">Answer Menu</a></li>
+                <li><a href="#" th:text="#{search}">Search</a></li>
+                <li><a href="#" th:text="#{search_list}">Search List</a></li>
+                <li><a href="#" th:text="#{report_menu}">Report Menu</a></li>
+                <div class="right-side">
+                    <!-- Admin Menu with Dropdown -->
+                    <li>
+                        <a href="#" th:text="#{admin_menu}">Admin Menu</a>
+                        <ul class="dropdown">
+                            <li><a href="/search" th:text="#{notice}">Notice</a></li>
+                            <li><a href="#" th:text="#{gips_guide}">GIPS Guide</a></li>
+                            <li><a href="#" th:text="#{group}">Group</a></li>
+                            <li><a href="#" th:text="#{user}">User</a></li>
+                            <li><a href="#" th:text="#{maintenance}">Maintenance</a></li>
+                            <li><a href="#" th:text="#{refresh_db_info}">Refresh DB Info</a></li>
+                            <li><a href="#" th:text="#{db_definition}">DB Definition</a></li>
+                            <li><a href="#" th:text="#{confirm_authority}">Confirmation of the authority</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <!-- Added form to handle locale change -->
+                        <form action="#" method="get" id="languageForm">
+                            <select name="lang" onchange="document.getElementById('languageForm').submit()">
+                                <option value="en" th:value="'en'" th:selected="${#language_english}"
+                                        th:text="#{language_english}">English
+                                </option>
+                                <option value="ja" th:value="'ja'" th:selected="${#language_japanese}"
+                                        th:text="#{language_japanese}">Japanese
+                                </option>
+                            </select>
+                        </form>
+                    </li>
+                </div>
+            </ul>
+        </nav>
+    </div>
+</header>
+</body>
+</html>

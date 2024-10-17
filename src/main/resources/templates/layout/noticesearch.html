@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search Page</title>
+    <link rel="stylesheet" th:href="@{/css/noticeSearch.css}" href="../../static/css/noticeSearch.css">
+    <!-- jQuery and jQuery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/i18n/jquery-ui-i18n.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Custom Japanese localization for jQuery UI DatePicker
+            $.datepicker.regional['ja'] = {
+                closeText: '閉じる',
+                prevText: '前',
+                nextText: '次',
+                currentText: '今日',
+                monthNames: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                dayNames: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+                dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
+                dayNamesMin: ['日', '月', '火', '水', '木', '金', '土'],
+                weekHeader: '週',
+                dateFormat: 'yyyymmdd',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: true,
+                yearSuffix: '年'
+            };
+
+            $.datepicker.setDefaults($.datepicker.regional['ja']);
+
+            // Initialize datepickers
+            $("#beginYmd, #endYmd").datepicker({
+                dateFormat: 'yymmdd',
+                changeYear: true,
+                changeMonth: true,
+                showButtonPanel: true,
+                beforeShowDay: function (date) {
+                    var day = date.getDay();
+                    if (day === 0) {
+                        return [true, "sunday-highlight"];
+                    } else if (day === 6) {
+                        return [true, "saturday-highlight"];
+                    }
+                    return [true, ""];
+                }
+            });
+
+            // Handle collapse/expand functionality
+            $(".search-close").on("click", function(e) {
+                e.preventDefault();
+                var $contentRows = $(".search-criteria tr:not(:first-child):not(:last-child)");
+
+                if ($contentRows.is(":visible")) {
+                    $contentRows.hide();
+                    $(this).text("[[#{search_criteria_open}]]");
+                } else {
+                    $contentRows.show();
+                    $(this).text("[[#{search_criteria_close}]]");
+                }
+            });
+
+            // Variables for pagination
+            var currentPage = 1;
+            var pageSize = 6;
+
+            // AJAX search
+            function performSearch() {
+                var formData = {
+                    beginYmd: $("#beginYmd").val(),
+                    endYmd: $("#endYmd").val(),
+                    title: $("#title").val(),
+                    text: $("#text").val(),
+                    importantFlg: $("#importantFlg").is(":checked") ? 'Y' : null,
+                    page: currentPage,
+                    size: pageSize,
+                    subject: $("#subject").val()
+                };
+
+                $.ajax({
+                    url: "/list",
+                    type: "GET",
+                    data: formData,
+                    success: function(response) {
+                        $(".results-table tbody").empty();
+                        if (response.data.length > 0) {
+                            $(".results-table").show();
+
+                            $.each(response.data, function(index, baseInfo) {
+                                var seqInfo = baseInfo.seqInfo;
+                                 let endYmdDisplay = baseInfo.endYmd ? ` ~ ${baseInfo.endYmd}` : " ~";
+                                var row = `<tr>
+                                     <td>${baseInfo.beginYmd}${endYmdDisplay}</td>
+                                    <td class="roles-cell" data-seqinfo="${seqInfo}"></td>
+                                    <td><a href="/noticeDetail/${seqInfo}">${baseInfo.title}</a></td>
+                                    <td>${new Date(baseInfo.updTimestamp).toLocaleString()}<br>${baseInfo.partyNameEn}</td>
+                                </tr>`;
+                                $(".results-table tbody").append(row);
+
+                                // Fetch roles based on seqInfo
+                                $.ajax({
+                                    url: 'noticeDetail/roles/' + seqInfo,
+                                    method: 'GET',
+                                    success: function(roles) {
+                                        var rolesCell = $(".roles-cell[data-seqinfo='" + seqInfo + "']");
+                                        rolesCell.empty();
+
+                                        var expectedLength = 9;
+                                        if (roles.length === expectedLength) {
+                                            rolesCell.html('every');
+                                        } else {
+                                            var roleList = roles.map(role => `<div>[${role}]</div>`).join('');
+                                            rolesCell.html(roleList);
+                                        }
+                                    },
+                                    error: function() {
+                                        $(".roles-cell[data-seqinfo='" + seqInfo + "']").html("Error loading roles");
+                                    }
+                                });
+                            });
+
+                            $(".results-info").html(response.totalItems + " hits, displaying " +
+                                ((currentPage - 1) * pageSize + 1) + " to " + Math.min(currentPage * pageSize, response.totalItems)).show();
+                            updatePagination(response.totalPages);
+                        } else {
+                            $(".results-info").html("No results found").show();
+                        }
+                    },
+                    error: function() {
+                        $(".results-info").html("An error occurred while fetching data").show();
+                    }
+                });
+            }
+
+            // Update pagination controls
+            function updatePagination(totalPages) {
+                var paginationHtml = "";
+                for (var i = 1; i <= totalPages; i++) {
+                    paginationHtml += `<button class="pagination-btn" data-page="${i}">${i}</button>`;
+                }
+                $(".pagination").html(paginationHtml);
+            }
+
+            // Handle page change
+            $(document).on("click", ".pagination-btn", function() {
+                currentPage = $(this).data("page");
+                performSearch();
+            });
+
+            // Search button click handler
+            $(".search-btn").on("click", function(event) {
+                event.preventDefault();
+                currentPage = 1; // Reset to page 1 on new search
+
+                // Validation
+                let errors = [];
+                $('#beginYmd, #endYmd').removeClass('error-border');
+                $('#error-messages').hide(); // Hide error messages initially
+
+                let startYmd = $('#beginYmd').val().trim();
+                let endedYmd = $('#endYmd').val().trim();
+
+                if (startYmd && endedYmd) {
+                    function detectDateFormat(dateString) {
+                        if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+                            return dateString;
+                        } else if (/^\d{8}$/.test(dateString)) {
+                            return dateString.slice(0, 4) + '-' + dateString.slice(4, 6) + '-' + dateString.slice(6);
+                        } else if (/^\d{2}-\d{2}-\d{4}$/.test(dateString)) {
+                            const [day, month, year] = dateString.split("-");
+                            return `${year}-${month}-${day}`;
+                        } else {
+                            return null;
+                        }
+                    }
+
+                    let formattedStartYmd = detectDateFormat(startYmd);
+                    let formattedEndedYmd = detectDateFormat(endedYmd);
+
+                    if (formattedStartYmd === null || formattedEndedYmd === null) {
+                        errors.push('Invalid date format. Please use either yyyyMMdd or dd-mm-yyyy.');
+                    } else {
+                        let startDate = Date.parse(formattedStartYmd);
+                        let endDate = Date.parse(formattedEndedYmd);
+
+                        if (isNaN(startDate) || isNaN(endDate)) {
+                            errors.push('Invalid date. Please enter valid dates.');
+                        } else if (startDate > endDate) {
+                            errors.push("[[#{date_error}]]");
+                            $('#beginYmd, #endYmd').addClass('error-border');
+                        }
+                    }
+                }
+
+                // If there are errors, show them and prevent search
+                if (errors.length > 0) {
+                    let errorHtml = '<ul>';
+                    errors.forEach(function(error) {
+                        errorHtml += '<li>' + error + '</li>';
+                    });
+                    errorHtml += '</ul>';
+                    $('#error-messages').html(errorHtml).show();
+
+                    $('html, body').animate({
+                        scrollTop: $("#error-messages").offset().top
+                    }, 500);
+                    return; // Exit the function to prevent the search
+                }
+
+                // Only perform search if there are no errors
+                performSearch();
+            });
+
+            // Dynamically clear error when user modifies input fields
+            $('#beginYmd, #endYmd').on('input', function() {
+                $('#error-messages').hide(); // Hide error messages
+                $(this).removeClass('error-border'); // Remove error border
+            });
+
+            // Role in dropdown
+            $.get('/roles', function(roles) {
+                $('#subject').empty();
+                $('#subject').append('<option value="every">every</option>');
+                roles.forEach(function(role) {
+                    $('#subject').append(`<option value="${role.role}">${role.role} ${role.roleName}</option>`);
+                });
+            }).fail(function() {
+                console.error("Failed to fetch roles.");
+            });
+        });
+    </script>
+    <script>
+        function switchLanguage(lang) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', lang);
+            window.location.href = url;
+        }
+    </script>
+</head>
+<body>
+<div th:replace="~{fragments/Navbar :: Navbar}"></div>
+<div class="breadcrumb-container">
+    <div class="breadcrumb">
+        <span ><a href="/toppage" style="text-decoration:none"  th:text="#{top}">TOP</a></span>
+        <span class="separator">&gt;</span>
+        <span th:text="#{admin_menu}">Admin Menu</span>
+        <span class="separator">&gt;</span>
+        <span th:text="#{notice_list}">Notice List</span>
+    </div>
+    <div class="page-number">S15</div>
+</div>
+<form id="searchForm">
+    <!-- Error Div for displaying validation errors -->
+    <div id="error-messages" class="error-container" style="display: none;"></div>
+
+    <table class="search-criteria">
+        <tr>
+            <td colspan="3" class="header" th:text="#{search_criteria}">Search Criteria</td>
+            <td colspan="1" class="header">
+                <a href="#" class="search-close" th:text="#{search_criteria_close}">Search Criteria Close</a>
+            </td>
+        </tr>
+        <tr class="content-row">
+            <td class="label" th:text="#{display_period}">Display period</td>
+            <td>
+                <input type="text" id="beginYmd" name="beginYmd" placeholder="YYYYMMDD"/>
+                ~
+                <input type="text" id="endYmd" name="endYmd" placeholder="YYYYMMDD"/>
+            </td>
+            <td class="label" th:text="#{severity}">Severity</td>
+            <td>
+                <input type="checkbox" id="importantFlg" name="importantFlg" VALUE="Y"/>
+                <label for="importantFlg" th:text="#{show_only_important}">Show only important</label>
+            </td>
+        </tr>
+        <tr class="content-row">
+            <td class="label" th:text="#{subject_of_publication}">Subject of publication</td>
+            <td colspan="3">
+                <select id="subject" name="subject">
+                    <option value="every">every</option> <!-- Default option -->
+                </select>
+            </td>
+        </tr>
+        <tr class="content-row1">
+            <td class="label" th:text="#{title}">Title</td>
+            <td>
+                <input type="text" id="title" name="title"/>
+            </td>
+            <td class="label" th:text="#{text}">Text</td>
+            <td>
+                <input type="text" id="text" name="text"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" class="button-row">
+                <button type="button" class="new-btn" onclick="window.location.href='/register'" th:text="#{new}">New</button>
+                <button type="submit" class="search-btn" th:text="#{search}">Search</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<!-- Results Section -->
+<div class="results-info" style="display:none;"></div>
+<table class="results-table" style="display:none;">
+    <thead>
+    <tr>
+        <th th:text="#{display_period}">Display period</th>
+        <th th:text="#{subject_of_publication}">Subject of publication</th>
+        <th th:text="#{title}">Title</th>
+        <th th:text="#{update}">Update</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<!-- Pagination Controls -->
+<div class="pagination" style="margin-top: 20px;"></div>
+
+</body>
+</html>
