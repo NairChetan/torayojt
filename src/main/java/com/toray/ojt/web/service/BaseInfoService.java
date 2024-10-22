@@ -40,4 +40,9 @@ public interface BaseInfoService {
     // Insert roles into base_info_view_role table
     void insertBaseInfoRoleWithSeqInfo(BaseInfoViewRoleInsertDto roleInsertDto);
 
+    void insertBaseAttachment(BaseAttachmentInsertDto baseAttachmentInsertDto);
+
+
+
+
 }

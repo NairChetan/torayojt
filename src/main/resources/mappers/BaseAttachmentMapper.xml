@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.toray.ojt.web.mapper.BaseAttachmentMapper">
+    <select id="getFileData" parameterType="Long" resultType="com.toray.ojt.web.dto.BaseAttachmentSelectDto">
+
+        SELECT FILE_OBJECT AS fileObject, FILE_NAME AS fileName
+        FROM BASE_ATTACHMENT
+        WHERE ATTACH_CLASS_NO = #{classNo}
+
+    </select>
+    <insert id="insertBaseAttachment" parameterType="com.toray.ojt.web.dto.BaseAttachmentInsertDto">
+        INSERT INTO BASE_ATTACHMENT (
+        ATTACH_CLASS_NO,
+        ATTACHMENT_SEQ_NO,
+        FILE_NAME,
+        FILE_SIZE,
+        FILE_OBJECT,
+        UPD_TIMESTAMP,
+        UPD_USERID,
+        CRT_TIMESTAMP,
+        CRT_USERID,
+        DELETE_FLG
+        )
+        VALUES (
+        #{attachClassNo},
+        BASE_ATTACHMENT_SEQ.nextval,
+        #{fileName},
+        #{fileSize},
+        #{fileObject,jdbcType=BLOB},
+        SYSDATE,
+        #{updUserid},
+        SYSDATE,
+        #{crtUserid},
+        #{deleteFlg}
+        )
+    </insert>
+</mapper>
+

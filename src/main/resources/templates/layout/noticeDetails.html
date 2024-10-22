@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Notice Detail</title>
@@ -141,7 +141,7 @@
         <tr>
             <td class="label" th:text="#{attachment_file}">Attachment File</td>
             <td>
-                <a th:href="@{'/download/' + ${notice.attachClassNo}}" th:text="${notice.attachClassNo != null ? 'attachment.pdf' : 'No attachment'}"></a>
+                <a th:href="@{'/view/' + ${notice.seqInfo}}" th:text="${notice.seqInfo != null ? 'attachment' : 'No attachment'}"></a>
             </td>
         </tr>
     </table>

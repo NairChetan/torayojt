@@ -2,6 +2,8 @@ package com.toray.ojt.web.service.impl;
 
 import com.toray.ojt.web.dto.*;
 import com.toray.ojt.web.entity.PaginatedResult;
+import com.toray.ojt.web.mapper.BaseAttachmentMapper;
+import com.toray.ojt.web.mapper.BaseAttributeMapper;
 import com.toray.ojt.web.mapper.BaseInfoMapper;
 import com.toray.ojt.web.service.BaseInfoService;
 import org.slf4j.Logger;
@@ -21,9 +23,11 @@ public class BaseInfoServiceImpl implements BaseInfoService {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
     private final BaseInfoMapper baseInfoMapper;
+    private final BaseAttachmentMapper baseAttachmentMapper;
 
-    public BaseInfoServiceImpl(BaseInfoMapper baseInfoMapper) {
+    public BaseInfoServiceImpl(BaseInfoMapper baseInfoMapper,BaseAttachmentMapper baseAttachmentMapper) {
         this.baseInfoMapper = baseInfoMapper;
+        this.baseAttachmentMapper = baseAttachmentMapper;
     }
 
 
@@ -264,6 +268,11 @@ public class BaseInfoServiceImpl implements BaseInfoService {
     @Override
     public void insertBaseInfoRoleWithSeqInfo(BaseInfoViewRoleInsertDto roleInsertDto) {
         baseInfoMapper.insertBaseInfoRoleWithSeqInfo(roleInsertDto);
+    }
+
+    @Override
+    public void insertBaseAttachment(BaseAttachmentInsertDto baseAttachmentInsertDto) {
+        baseAttachmentMapper.insertBaseAttachment(baseAttachmentInsertDto);
     }
 
     private void convertDates(BaseInfoInsertDto dto) throws ParseException {

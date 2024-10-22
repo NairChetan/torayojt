@@ -20,7 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
@@ -164,7 +166,8 @@ public class BaseInfoController {
     @PostMapping("/register")
     public ResponseEntity<String> registerBaseInfo( @Valid @RequestBody @ModelAttribute BaseInfoInsertDto baseInfoInsertDto,
                                    @RequestParam List<String> roles, // Getting checked roles from the form
-                                   Model model, Authentication authentication) {
+                                   @RequestParam("attachment") MultipartFile file,
+                                   Model model, Authentication authentication) throws IOException {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String partyId = userDetails.getPartyId();
         baseInfoInsertDto.setCrtUserId(partyId);
@@ -172,7 +175,25 @@ public class BaseInfoController {
         // Step 1: Insert base info into `base_info` table
         Long seqInfo = baseInfoService.insertBaseInfo(baseInfoInsertDto);
          System.out.println(seqInfo);
-
+        logger.debug("fileName: {}",file.getName());
+        logger.debug("fileSize: {}",file.getSize());
+        logger.debug("classNo: {}",baseInfoInsertDto.getAttachClassNo());
+        byte[] fileObject = file.getBytes();
+        if (fileObject == null || fileObject.length == 0) {
+            // Handle the case when the file is not present
+            model.addAttribute("message", "File must be provided.");
+            return ResponseEntity.badRequest().body("File must be provided.");
+        }
+        logger.debug("seqInfo: {}",baseInfoInsertDto.getSeqInfo());
+        logger.debug("");
+        BaseAttachmentInsertDto baseAttachmentInsertDto = new BaseAttachmentInsertDto();
+        baseAttachmentInsertDto.setAttachClassNo(baseInfoInsertDto.getSeqInfo());
+        baseAttachmentInsertDto.setFileName(file.getOriginalFilename());
+        baseAttachmentInsertDto.setFileSize(file.getSize());
+        baseAttachmentInsertDto.setFileObject(file.getBytes());
+        baseAttachmentInsertDto.setUpdUserid(userDetails.getPartyId());
+        baseAttachmentInsertDto.setCrtUserid(baseInfoInsertDto.getCrtUserId());
+        baseInfoService.insertBaseAttachment(baseAttachmentInsertDto);
         // Step 2: Map roles to the `base_info_view_role` table using the inserted `seqInfo`
         for (String role : roles) {
             BaseInfoViewRoleInsertDto roleInsertDto = new BaseInfoViewRoleInsertDto();
@@ -180,6 +201,7 @@ public class BaseInfoController {
             roleInsertDto.setRole(role);
             baseInfoService.insertBaseInfoRole(roleInsertDto);
         }
+
 
         // Optionally, you can add success messages or handle any validation issues here
         model.addAttribute("message", "Content registered successfully!");
@@ -201,6 +223,7 @@ public class BaseInfoController {
      */
     @GetMapping("/noticeDetail/{seqInfo}")
     public String getNoticeDetail(@PathVariable Long seqInfo, Model model) {
+        logger.debug("seqInfo: {}",seqInfo);
         BaseInfoDetailsBasedOnSeqInfoDto notice = baseInfoService.getBaseInfoBySeqInfo(seqInfo);
         System.out.println(notice.getSeqInfo());
         UserDetailsForUserNameOnlyDto userDetailsForUserNameOnlyDto = userDetailsService.findUserNameOnly(notice.getCrtUserId());

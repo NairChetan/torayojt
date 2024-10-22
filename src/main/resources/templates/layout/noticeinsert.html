@@ -241,7 +241,7 @@ function getByteLength(str) {
         <button type="submit" form="contentForm" class="register-btn" th:text="#{register}">register</button>
     </div>
 
-    <form id="contentForm" th:action="@{/register}" method="post">
+    <form id="contentForm" th:action="@{/register}" method="post" enctype="multipart/form-data">
         <div class="section">
             <h2 th:text="#{display_condition}">Display Condition</h2>
             <table class="condition-table">
@@ -301,7 +301,7 @@ function getByteLength(str) {
                 <tr>
                     <td class="label" th:text="#{attachment_file}">Attachment File</td>
                     <td>
-                        <input type="file" id="attachment" />
+                        <input type="file" id="attachment" name="attachment" />
                     </td>
                 </tr>
             </table>

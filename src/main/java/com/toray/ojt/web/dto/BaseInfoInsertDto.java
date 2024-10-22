@@ -23,6 +23,15 @@ public class BaseInfoInsertDto {
     @Size(max = 4000, message = "Text content cannot exceed 4000 bytes")
     private String text;
     private Long attachClassNo;
+    private byte[] fileObject;
+
+    public byte[] getFileObject() {
+        return fileObject;
+    }
+
+    public void setFileObject(byte[] fileObject) {
+        this.fileObject = fileObject;
+    }
 
     public Timestamp getCrtTimestamp() {
         return crtTimestamp;
