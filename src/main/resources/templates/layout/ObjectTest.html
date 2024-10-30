@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Map Utility</title>
+</head>
+<body>
+<h1>Map Utility Example</h1>
+
+<p><strong>Name:</strong> <span th:text="${myMap['name']}">Default Name</span></p>
+<p><strong>City:</strong> <span th:text="${myMap['city']}">Default City</span></p>
+
+<!-- Loop through all map entries -->
+<h3>Map Entries:</h3>
+<ul>
+    <li th:each="entry : ${myMap}">
+        <span th:text="${entry.key}">Key</span>: <span th:text="${entry.value}">Value</span>
+    </li>
+</ul>
+
+<!-- Display map size -->
+<p><strong>Map Size:</strong> <span th:text="${#maps.size(myMap)}">0</span></p>
+
+<!-- Check if the map is empty -->
+<p th:if="${#maps.isEmpty(myMap)}">The map is empty!</p>
+
+</body>
+</html>

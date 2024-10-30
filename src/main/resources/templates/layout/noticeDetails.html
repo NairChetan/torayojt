@@ -141,7 +141,7 @@
         <tr>
             <td class="label" th:text="#{attachment_file}">Attachment File</td>
             <td>
-                <a th:href="@{'/view/' + ${notice.seqInfo}}" th:text="${notice.seqInfo != null ? 'attachment' : 'No attachment'}"></a>
+                <a th:href="@{'/download/' + ${notice.seqInfo}}" th:text="${notice.seqInfo != null ? 'attachment' : 'No attachment'}"></a>
             </td>
         </tr>
     </table>

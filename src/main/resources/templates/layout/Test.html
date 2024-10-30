@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Array Utility Example</title>
+</head>
+<body>
+<h1>Integer Array Example</h1>
+
+<!-- Display Array Length -->
+<p>Array Length: <span th:text="${#arrays.length(numbers)}"></span></p>
+
+<!-- Iterate Over Array -->
+<h3>Array Elements:</h3>
+<ul>
+    <li th:each="number : ${numbers}" th:text="${number}"></li>
+</ul>
+
+<!-- Access Specific Array Element -->
+<p>First Element: <span th:text="${numbers[0]}"></span></p>
+<p>Last Element: <span th:text="${numbers[4]}"></span></p>
+
+<!-- Check if Array Contains an Element -->
+<p>Contains "3": <span th:text="${#arrays.contains(numbers, 3)}"></span></p>
+<p>Contains "6": <span th:text="${#arrays.contains(numbers, 6)}"></span></p>
+
+<!-- Display Array Elements with a Condition -->
+<h3>Even Numbers:</h3>
+<ul>
+    <li th:each="number : ${numbers}"
+        th:if="${number % 2 == 0}"
+        th:text="${number}">
+    </li>
+</ul>
+
+<!-- Display Sum of Array Elements -->
+<p>Total Sum: <span th:text="${sum}"></span></p>
+</body>
+</html>

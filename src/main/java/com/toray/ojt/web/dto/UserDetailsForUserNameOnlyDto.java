@@ -4,6 +4,14 @@ public class UserDetailsForUserNameOnlyDto {
     private String partyId;
     private String partyNameKj;        // PARTY_NAME_KJ
     private String partyNameKn;        // PARTY_NAME_KN
+
+    public UserDetailsForUserNameOnlyDto(String partyId, String partyNameKj, String partyNameKn, String partyNameEn) {
+        this.partyId = partyId;
+        this.partyNameKj = partyNameKj;
+        this.partyNameKn = partyNameKn;
+        this.partyNameEn = partyNameEn;
+    }
+
     private String partyNameEn;        // PARTY_NAME_EN
 
     public String getPartyId() {
